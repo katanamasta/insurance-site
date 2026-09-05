@@ -25,14 +25,14 @@
   <header style="background:#FBFCFD;border-bottom:1px solid rgba(20,40,75,.1)">
     <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,36px)">
       <a href="index.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
-        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+        <img src="logo-pins.png" alt="PINS" style="height:clamp(40px,4.4vw,56px);width:auto;display:block">
       </a>
       <nav style="display:flex;gap:4px;white-space:nowrap">
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
           <button onClick="{{ t.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:8px 15px;border-radius:100px;background:{{ t.bg }};color:{{ t.color }};transition:all .25s ease">{{ t.label }}</button>
         </sc-for>
       </nav>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+      <div style="margin-left:auto;display:flex;align-items:center;gap:clamp(10px,1.4vw,18px);flex-shrink:0">
         <a href="ubytki.dc.html" style="font-size:14px;color:#5A6B85;white-space:nowrap">Заявить убыток</a>
         <div style="width:32px;height:32px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5A6B85">АС</div>
       </div>
@@ -218,7 +218,7 @@
         <div style="display:flex;flex-direction:column;gap:7px">
           <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
           <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
-          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+          <a href="tel:+79377673907" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">+7 937 767-39-07</a>
         </div>
       </div>
     </details>

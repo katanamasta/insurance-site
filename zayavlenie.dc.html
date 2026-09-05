@@ -31,19 +31,19 @@
 <div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
 
   <header data-noprint="1" style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
-    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(16px,2.4vw,40px)">
       <a href="index.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
-        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+        <img src="logo-pins.png" alt="PINS" style="height:clamp(40px,4.4vw,56px);width:auto;display:block">
       </a>
-      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+      <nav style="display:flex;gap:clamp(12px,1.7vw,22px);font-size:14px;color:#5A6B85;white-space:nowrap;min-width:0;overflow-x:auto;scrollbar-width:none;padding:2px 0">
         <a href="katalog.dc.html" style="color:inherit">Продукты</a>
         <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
         <a href="biznesu.dc.html" style="color:#14284B;font-weight:600">Бизнесу</a>
         <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
         <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
       </nav>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
-        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:clamp(10px,1.4vw,18px);flex-shrink:0">
+        <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><a href="tel:+79377673907" style="font-family:'IBM Plex Mono';font-size:12.5px;line-height:1.3;white-space:nowrap">+7 937 767-39-07</a><a href="mailto:info@pins24.ru" style="font-family:'IBM Plex Mono';font-size:12px;line-height:1.3;white-space:nowrap;color:#5A6B85">info@pins24.ru</a></div>
         <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
       </div>
     </div>
@@ -187,6 +187,7 @@
               </div>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <a href="{{ mailHref }}" style="text-align:center;font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#14284B;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#0A767A">Отправить на info@pins24.ru</a>
               <button onClick="{{ doPrint }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">Скачать PDF</button>
               <button onClick="{{ doWord }}" style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Скачать .doc</button>
               <button onClick="{{ backToForm }}" style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Изменить данные</button>
@@ -196,9 +197,9 @@
           <div data-sheet="1" id="app-sheet" style="background:#FFFFFF;border:1px solid rgba(20,40,75,.14);border-radius:14px;padding:clamp(26px,3.4vw,52px);max-width:860px;font-size:12.5px;line-height:1.5;color:#14284B;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both">
             <div style="display:flex;justify-content:space-between;gap:20px;align-items:start;padding-bottom:14px;border-bottom:1.5px solid #14284B;flex-wrap:wrap">
               <div>
-                <div style="font-size:14px;font-weight:700;letter-spacing:-.01em">ООО «ПИНС Брокер»</div>
-                <div style="font-size:11px;color:#4A5B75;margin-top:3px">Лицензия Банка России СБ-1247 · ИНН 7714823910</div>
-                <div style="font-size:11px;color:#4A5B75">Москва, ул. Расковой, 34, стр. 2 · 8 800 550-31-40</div>
+                <div style="font-size:14px;font-weight:700;letter-spacing:-.01em">ИП Давлетшин Артём Ильгизович</div>
+                <div style="font-size:11px;color:#4A5B75;margin-top:3px">ИП Давлетшин Артём Ильгизович</div>
+                <div style="font-size:11px;color:#4A5B75">Москва, ул. Расковой, 34, стр. 2 · +7 937 767-39-07</div>
               </div>
               <div style="text-align:right;font-family:'IBM Plex Mono';font-size:11px;color:#4A5B75">
                 <div>{{ doc.number }}</div>
@@ -270,7 +271,7 @@
         <div style="display:flex;flex-direction:column;gap:7px">
           <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
           <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
-          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+          <a href="tel:+79377673907" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">+7 937 767-39-07</a>
         </div>
       </div>
     </details>
@@ -1240,7 +1241,7 @@ class Component extends DCLogic {
       declarations: [
         'Сведения, указанные в настоящем заявлении, являются полными и достоверными; заявителю неизвестны обстоятельства, существенно влияющие на степень риска и не указанные выше.',
         'Заявитель уведомлён, что сообщение недостоверных сведений даёт страховщику право требовать признания договора недействительным в соответствии со статьёй 944 Гражданского кодекса РФ.',
-        'Заявитель согласен на обработку указанных данных ООО «ПИНС Брокер» и страховыми компаниями для целей расчёта, заключения и исполнения договора страхования в соответствии с 152-ФЗ.',
+        'Заявитель согласен на обработку указанных данных ИП Давлетшин Артём Ильгизович и страховыми компаниями для целей расчёта, заключения и исполнения договора страхования в соответствии с 152-ФЗ.',
         'Настоящее заявление не является офертой и не влечёт обязанности страховщика заключить договор страхования на заявленных условиях.'
       ]
     };
@@ -1285,6 +1286,28 @@ class Component extends DCLogic {
       },
       back: () => this.setState({ step: Math.max(0, stepIdx - 1) }),
       backToForm: () => this.setState({ done: false }),
+      // Дубль заявления письмом: тело письма собирается из заполненных полей,
+      // документы клиент прикладывает в открывшемся письме.
+      mailHref: (() => {
+        const lines = [];
+        steps.forEach(s => {
+          const rows = (s.fields || []).filter(f => st.v[f.k] && String(st.v[f.k]).trim());
+          if (!rows.length) return;
+          lines.push('— ' + s.title + ' —');
+          rows.forEach(f => lines.push(f.label + ': ' + String(st.v[f.k]).trim()));
+          lines.push('');
+        });
+        const body = [
+          'Заявление на страхование: ' + cur.title,
+          'Заявка ' + (doc && doc.number ? doc.number : ''),
+          '',
+          ...lines,
+          'Документы приложите к этому письму: паспорт или реквизиты, документы на объект, действующий полис.',
+          '',
+          'Отправлено с сайта pins24.ru'
+        ].join('\n');
+        return 'mailto:info@pins24.ru?subject=' + encodeURIComponent('Заявление на страхование — ' + cur.title) + '&body=' + encodeURIComponent(body.slice(0, 1800));
+      })(),
       doPrint: () => window.print(),
       doWord: () => {
         const html = this.sheetHtml();

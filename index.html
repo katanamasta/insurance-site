@@ -37,11 +37,11 @@
 <div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
 
   <header style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
-    <div style="max-width:1240px;margin:0 auto;padding:12px clamp(20px,3vw,36px);min-height:82px;display:flex;align-items:center;gap:clamp(14px,2.2vw,40px);flex-wrap:wrap">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(16px,2.4vw,40px)">
       <a href="#top" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
-        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+        <img src="logo-pins.png" alt="PINS" style="height:clamp(40px,4.4vw,56px);width:auto;display:block">
       </a>
-      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+      <nav style="display:flex;gap:clamp(12px,1.7vw,22px);font-size:14px;color:#5A6B85;white-space:nowrap;min-width:0;overflow-x:auto;scrollbar-width:none;padding:2px 0">
         <a href="katalog.dc.html" style="color:inherit">Продукты</a>
         <a href="calculator.dc.html" style="color:inherit">Сравнение</a>
         <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
@@ -50,8 +50,8 @@
         <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
         <a href="assistent.dc.html" style="color:inherit">Помощник</a>
       </nav>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
-        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:clamp(10px,1.4vw,18px);flex-shrink:0">
+        <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end"><a href="tel:+79377673907" style="font-family:'IBM Plex Mono';font-size:12.5px;line-height:1.3;white-space:nowrap">+7 937 767-39-07</a><a href="mailto:info@pins24.ru" style="font-family:'IBM Plex Mono';font-size:12px;line-height:1.3;white-space:nowrap;color:#5A6B85">info@pins24.ru</a></div>
         <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
       </div>
     </div>
@@ -251,7 +251,7 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:32px;padding-bottom:32px;border-bottom:1px solid rgba(20,40,75,.12)">
       <div>
         <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px">PINS</div>
-        <div style="font-size:13px;color:#7B8AA0;line-height:1.6;max-width:270px">ООО «ПИНС Брокер», лицензия Банка России СБ-1247. Член Ассоциации профессиональных страховых брокеров.</div>
+        <div style="font-size:13px;color:#7B8AA0;line-height:1.6;max-width:270px">ИП Давлетшин Артём Ильгизович </div>
       </div>
       <sc-for list="{{ footerCols }}" as="col" hint-placeholder-count="3">
         <div>
@@ -281,7 +281,7 @@
         <div style="display:flex;flex-direction:column;gap:7px">
           <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
           <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
-          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+          <a href="tel:+79377673907" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">+7 937 767-39-07</a>
         </div>
       </div>
     </details>
@@ -294,17 +294,6 @@ class Component extends DCLogic {
 
   componentDidMount() {
     const root = this.host || document;
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (!e.isIntersecting) return;
-        e.target.style.animation = 'fadeUp .6s cubic-bezier(.2,.7,.3,1) both';
-        e.target.style.animationDelay = (i * 45) + 'ms';
-        io.unobserve(e.target);
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
-    root.querySelectorAll('[data-reveal]').forEach(el => { el.style.opacity = '0'; io.observe(el); });
-    this._io = io;
-
     this._wt = setInterval(() => this.setState(s => ({ w: s.w + 1 })), 2100);
 
     const spot = root.querySelector('[data-spotlight]');
@@ -329,7 +318,6 @@ class Component extends DCLogic {
     }
   }
   componentWillUnmount() {
-    if (this._io) this._io.disconnect();
     if (this._wt) clearInterval(this._wt);
     if (this._area) { this._area.removeEventListener('mousemove', this._move); this._area.removeEventListener('mouseleave', this._leave); }
   }
@@ -338,7 +326,7 @@ class Component extends DCLogic {
     const words = ['машину', 'квартиру', 'здоровье', 'поездку', 'груз', 'бизнес'];
     const word = words[this.state.w % words.length];
 
-    const ticker = ['24 страховые компании', 'Лицензия Банка России СБ-1247', '1 100 000 полисов', 'Выплата в среднем за 11 дней', 'Персональный менеджер для бизнеса', 'Работаем с 2011 года'];
+    const ticker = ['24 страховые компании', 'ИП Давлетшин А. И.', '1 100 000 полисов', 'Выплата в среднем за 11 дней', 'Персональный менеджер для бизнеса', 'Работаем с 2011 года'];
 
     const tabs = ['ОСАГО', 'КАСКО', 'Ипотека'].map((label, i) => ({
       label,
