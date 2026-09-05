@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes lineGrow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:#14284B;font-weight:600">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(30px,3.6vw,50px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:20px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / Урегулирование убытков
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(26px,4vw,52px);align-items:start">
+      <div>
+        <h1 style="font-size:clamp(30px,3.8vw,46px);font-weight:500;letter-spacing:-.035em;line-height:1.05;margin:0 0 18px">Случилось — звоните нам, не страховой</h1>
+        <p style="font-size:17px;color:#5A6B85;line-height:1.55;margin:0 0 24px;max-width:520px;text-wrap:pretty">Куратор объясняет порядок действий на месте, собирает документы и следит за сроками. Если страховая отказала или занизила сумму, подключается юрист. Для клиента это входит в обслуживание.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="#report" style="font-size:15px;font-weight:700;padding:15px 26px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#14284B">Заявить о случае</a>
+          <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:15px;font-weight:600;padding:15px 24px;border-radius:100px;border:1px solid rgba(20,40,75,.2);transition:all .25s ease" style-hover="border-color:#14284B">8 800 550-31-40</a>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+        <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+          <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:20px">
+            <div style="font-family:'IBM Plex Mono';font-size:clamp(20px,2.2vw,26px);letter-spacing:-.03em;color:#0A767A">{{ s.n }}</div>
+            <div style="font-size:13px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px">
+      <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0">Что делать прямо сейчас</h2>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.select }}" style="border:1px solid {{ c.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 15px;border-radius:100px;background:{{ c.bg }};color:{{ c.color }};transition:all .25s ease">{{ c.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(20px,3vw,36px);background:#FFFFFF;border:1px solid rgba(20,40,75,.12);border-radius:18px;padding:clamp(24px,3vw,34px)">
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;letter-spacing:.05em;margin-bottom:14px">ПЕРВЫЕ ДЕЙСТВИЯ</div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ scenario.now }}" as="n" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:30px 1fr;gap:14px;padding:14px 0;border-top:1px solid rgba(20,40,75,.1);animation:fadeUp .4s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ n.delay }}">
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ n.i }}</div>
+              <div style="font-size:15px;line-height:1.5;text-wrap:pretty">{{ n.text }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#6B7A4F;letter-spacing:.05em;margin-bottom:14px">ДОКУМЕНТЫ</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px">
+          <sc-for list="{{ scenario.docs }}" as="d" hint-placeholder-count="4">
+            <div style="display:flex;gap:10px;align-items:baseline;font-size:14px;color:#14284B"><span style="color:#6B7A4F;flex:none">✓</span>{{ d }}</div>
+          </sc-for>
+        </div>
+        <div style="background:#F1FAFB;border:1px solid rgba(15,163,168,.25);border-radius:12px;padding:16px 18px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px">{{ scenario.warnTitle }}</div>
+          <div style="font-size:13px;color:#5A6B85;line-height:1.5;text-wrap:pretty">{{ scenario.warn }}</div>
+        </div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-top:16px">СРОК ПОДАЧИ: {{ scenario.deadline }}</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(26px,4vw,52px)">
+      <div>
+        <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px">Как идёт дело</h2>
+        <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:440px;text-wrap:pretty">Статус виден в кабинете, куратор пишет на каждом этапе. Средний срок по нашим убыткам — 11 дней вместо законных 20.</p>
+      </div>
+      <div>
+        <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:92px 1fr;gap:16px;padding:18px 0;border-top:1px solid rgba(20,40,75,.12)">
+            <div style="font-family:'IBM Plex Mono';font-size:13px;color:#0A767A">{{ t.when }}</div>
+            <div>
+              <div style="font-size:16px;font-weight:700;margin-bottom:5px">{{ t.title }}</div>
+              <div style="font-size:14px;color:#7B8AA0;line-height:1.5;text-wrap:pretty">{{ t.text }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="report" style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="background:#14284B;color:#FBFCFD;border-radius:18px;padding:clamp(26px,3.5vw,44px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,3vw,44px)">
+      <div>
+        <h2 style="font-size:clamp(22px,2.4vw,30px);font-weight:600;letter-spacing:-.03em;margin:0 0 12px;line-height:1.1">Сообщить о страховом случае</h2>
+        <p style="font-size:15px;color:#9AA6B8;line-height:1.55;margin:0 0 20px">Куратор перезвонит в течение 15 минут в рабочее время и в течение часа ночью. Если ситуация срочная — звоните на горячую линию.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ promises }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;align-items:baseline;font-size:14px;color:#FBFCFD"><span style="color:#0A767A;flex:none">·</span>{{ p }}</div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:13px;color:#9AA6B8;margin-bottom:9px">Тип случая</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ formCases }}" as="c" hint-placeholder-count="4">
+              <button onClick="{{ c.select }}" style="border:1px solid {{ c.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;background:{{ c.bg }};color:{{ c.color }};transition:all .2s ease">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px">
+          <input placeholder="Номер полиса" style="width:100%;background:rgba(251,250,247,.08);border:1px solid rgba(251,250,247,.18);border-radius:10px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:15px;color:#FBFCFD">
+          <input placeholder="Телефон" style="width:100%;background:rgba(251,250,247,.08);border:1px solid rgba(251,250,247,.18);border-radius:10px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:15px;color:#FBFCFD">
+        </div>
+        <textarea placeholder="Что произошло, когда и где" style="width:100%;min-height:96px;resize:vertical;background:rgba(251,250,247,.08);border:1px solid rgba(251,250,247,.18);border-radius:10px;padding:14px 16px;outline:none;font-family:'Manrope';font-size:15px;color:#FBFCFD"></textarea>
+        <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:700;padding:15px 0;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#FBFCFD;color:#14284B">Отправить и получить звонок</button>
+        <div style="font-size:12px;color:#7B8AA0;line-height:1.5">Фото и документы можно приложить позже — куратор пришлёт ссылку на загрузку.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1240px;margin:clamp(48px,6vw,72px) auto 0;padding:0 clamp(20px,3vw,36px) 36px">
+    <div style="display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid rgba(20,40,75,.12);font-size:12px;color:#9AA6B8;flex-wrap:wrap">
+      <div>© 2026 PINS. ООО «ПИНС Брокер», лицензия Банка России СБ-1247.</div>
+      <div style="display:flex;gap:18px"><a href="dannye.dc.html" style="color:inherit">Обработка данных</a><a href="o-kompanii.dc.html#legal" style="color:inherit">Раскрытие информации</a></div>
+    </div>
+  </footer>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { c: 0, fc: 0 };
+
+  renderVals() {
+    const stats = [
+      { n: '11 дней', label: 'средний срок выплаты' },
+      { n: '96%', label: 'урегулировано без суда' },
+      { n: '15 минут', label: 'до звонка куратора' },
+      { n: '0 ₽', label: 'сопровождение для клиента' }
+    ];
+
+    const casesData = [
+      {
+        label: 'ДТП',
+        now: [
+          'Включите аварийку, выставите знак, убедитесь, что никто не пострадал. При пострадавших сразу вызывайте скорую и ГИБДД.',
+          'Сфотографируйте машины до перемещения: общий план, номера, повреждения крупно, тормозной путь.',
+          'Позвоните куратору — он скажет, подходит ли ситуация под европротокол или нужен вызов инспектора.',
+          'Обменяйтесь данными со вторым участником: полис, права, телефон.'
+        ],
+        docs: ['Извещение о ДТП или европротокол', 'Права и СТС', 'Полис ОСАГО (или КАСКО)', 'Реквизиты счёта для выплаты'],
+        warnTitle: 'Не подписывайте европротокол при споре о вине',
+        warn: 'Если участники не согласны, кто виноват, или ущерб выше 100 000 ₽, нужен вызов ГИБДД. Иначе выплату могут отказать.',
+        deadline: '5 РАБОЧИХ ДНЕЙ'
+      },
+      {
+        label: 'Залив и пожар',
+        now: [
+          'Перекройте воду или обесточьте помещение, вызовите аварийную службу управляющей компании.',
+          'Не начинайте ремонт и не выбрасывайте повреждённые вещи — их нужно показать эксперту.',
+          'Сфотографируйте и снимите видео: источник, следы на потолке и стенах, повреждённая мебель и техника.',
+          'Позвоните куратору — он согласует срок осмотра со страховой.'
+        ],
+        docs: ['Акт управляющей компании о заливе', 'Полис и документ на право собственности', 'Фото и видео повреждений', 'Чеки на пострадавшую технику, если сохранились'],
+        warnTitle: 'Акт УК — главный документ',
+        warn: 'Без акта, где указана причина и виновник, страховая почти всегда занижает выплату. Требуйте его составление в день происшествия.',
+        deadline: '3 РАБОЧИХ ДНЯ'
+      },
+      {
+        label: 'Здоровье',
+        now: [
+          'При травме или острой ситуации сначала обратитесь за медицинской помощью, оформление — потом.',
+          'Сохраняйте все медицинские документы: справки, выписки, назначения, снимки.',
+          'Позвоните куратору до оплаты дорогих процедур — часть можно провести по прямому расчёту со страховой.',
+          'Соберите чеки и договоры с клиниками, если платили сами.'
+        ],
+        docs: ['Медицинская справка или выписка', 'Больничный лист при нетрудоспособности', 'Чеки и договоры с клиникой', 'Полис и паспорт'],
+        warnTitle: 'Диагноз должен быть в перечне полиса',
+        warn: 'До оплаты крупного лечения уточните у куратора, входит ли случай в программу. По ДМС часть услуг требует предварительного согласования.',
+        deadline: '30 ДНЕЙ'
+      },
+      {
+        label: 'Поездка за границей',
+        now: [
+          'Позвоните на круглосуточную линию сервисной компании, указанную в полисе, до обращения в клинику.',
+          'Назовите номер полиса и симптомы — оператор направит в клинику, которая работает по прямому расчёту.',
+          'Если пришлось платить самому, сохраняйте оригиналы счетов и назначений.',
+          'Сообщите куратору — он проследит, чтобы компенсацию не задерживали.'
+        ],
+        docs: ['Оригиналы счетов клиники', 'Медицинское заключение с диагнозом', 'Загранпаспорт с отметками о поездке', 'Полис ВЗР'],
+        warnTitle: 'Сначала звонок, потом клиника',
+        warn: 'Обращение в больницу без согласования с сервисной компанией — самая частая причина отказа в компенсации по ВЗР.',
+        deadline: '30 ДНЕЙ ПОСЛЕ ВОЗВРАЩЕНИЯ'
+      }
+    ];
+
+    const cases = casesData.map((c, i) => ({
+      label: c.label,
+      select: () => this.setState({ c: i }),
+      bg: this.state.c === i ? '#0A767A' : 'transparent',
+      color: this.state.c === i ? '#FBFCFD' : '#5A6B85',
+      border: this.state.c === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+    }));
+
+    const cur = casesData[this.state.c];
+    const scenario = {
+      ...cur,
+      now: cur.now.map((text, i) => ({ text, i: String(i + 1).padStart(2, '0'), delay: (i * 60) + 'ms' }))
+    };
+
+    const timeline = [
+      { when: '0 часов', title: 'Звонок куратору', text: 'Разбираем ситуацию, определяем, какие документы нужны и куда обращаться в первую очередь.' },
+      { when: '1 день', title: 'Заявление подано', text: 'Куратор формирует комплект и подаёт его в страховую от вашего имени, регистрирует номер дела.' },
+      { when: '3–5 дней', title: 'Осмотр и экспертиза', text: 'Присутствуем на осмотре. Проверяем калькуляцию: заниженные позиции оспариваем сразу.' },
+      { when: '7–10 дней', title: 'Решение страховой', text: 'Если сумма занижена, направляем претензию с независимой оценкой. Спорные дела ведёт юрист.' },
+      { when: '11 дней', title: 'Выплата или ремонт', text: 'Средний срок по нашим делам. Деньги приходят на счёт, ремонт согласуется с выбранной СТО.' }
+    ];
+
+    const promises = [
+      'Куратор ведёт дело от звонка до выплаты',
+      'Юрист при отказе или занижении — без доплат',
+      'Статус дела виден в личном кабинете'
+    ];
+
+    const formCases = ['ДТП', 'Имущество', 'Здоровье', 'Поездка', 'Бизнес'].map((label, i) => ({
+      label,
+      select: () => this.setState({ fc: i }),
+      bg: this.state.fc === i ? '#0A767A' : 'transparent',
+      color: this.state.fc === i ? '#FBFCFD' : '#9AA6B8',
+      border: this.state.fc === i ? '#0A767A' : 'rgba(251,250,247,.22)'
+    }));
+
+    return { stats, cases, scenario, timeline, promises, formCases };
+  }
+}
+</script>
+</body>
+</html>

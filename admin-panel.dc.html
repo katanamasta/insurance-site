@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:#F2F5F8;color:#14284B;-webkit-font-smoothing:antialiased}
+  a{color:#0A767A;text-decoration:none}
+  a:hover{color:#14284B}
+  input,button,select{font-family:'Manrope',system-ui,sans-serif}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<sc-if value="{{ needLogin }}" hint-placeholder-val="{{ false }}">
+  <div style="background:#14284B;color:#FBFCFD;min-height:100vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:center;gap:clamp(28px,5vw,64px);padding:clamp(28px,5vw,72px)">
+    <div>
+      <img src="logo-pins.png" alt="PINS" style="height:48px;width:auto;display:block;margin-bottom:26px">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0FA3A8;letter-spacing:.08em;margin-bottom:14px">ПАНЕЛЬ АДМИНИСТРАТОРА</div>
+      <h1 style="font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px;line-height:1.12">Вход только для владельца</h1>
+      <p style="font-size:15px;color:#B9C4D2;line-height:1.6;margin:0;max-width:52ch;text-wrap:pretty">Здесь выдаются права в CRM и открывается закрытый архив сделок. Вход по логину, паролю и коду подтверждения — сессия завершается через 30 минут неактивности.</p>
+      <div style="display:flex;align-items:center;gap:14px;margin-top:30px;padding-top:24px;border-top:1px solid rgba(251,250,247,.14)">
+        <img src="avatar-ceo.png" alt="" style="width:58px;height:58px;border-radius:50%;object-fit:cover;display:block;flex:none">
+        <div>
+          <div style="font-size:15px;font-weight:700">Давлетшин Артём</div>
+          <div style="font-size:12.5px;color:#9AA6B8;margin-top:2px">CEO · Owner · полный доступ</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#FBFCFD;color:#14284B;border-radius:18px;padding:clamp(24px,3vw,34px);max-width:440px;width:100%">
+      <div style="font-size:17px;font-weight:700;margin-bottom:20px">Авторизация</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Логин</div>
+          <input value="{{ loginValue }}" onChange="{{ setLogin }}" placeholder="a.davletshin" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'IBM Plex Mono';font-size:14.5px;color:#14284B">
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Пароль</div>
+          <input type="password" value="{{ passValue }}" onChange="{{ setPass }}" placeholder="••••••••••••" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'IBM Plex Mono';font-size:14.5px;color:#14284B">
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Код подтверждения из приложения</div>
+          <input value="{{ codeValue }}" onChange="{{ setCode }}" placeholder="6 цифр" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'IBM Plex Mono';font-size:14.5px;color:#14284B">
+        </div>
+        <button onClick="{{ doLogin }}" style="border:none;cursor:pointer;font-size:15px;font-weight:700;padding:14px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Войти</button>
+        <div style="display:{{ errDisplay }};font-size:13px;color:#B03A2E;line-height:1.45">{{ loginError }}</div>
+        <div style="background:#E7EDF3;border-radius:11px;padding:13px 15px;font-family:'IBM Plex Mono';font-size:12px;color:#4A5B75;line-height:1.6">ДЕМО-ДОСТУП · логин a.davletshin · пароль PINS-Admin-2026 · код: любые 6 цифр</div>
+        <div style="font-size:11.5px;color:#9AA6B8;line-height:1.5">В рабочей системе пароль хранится только хешем, код выдаёт приложение-аутентификатор, а после пяти неудачных попыток вход блокируется.</div>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ authed }}" hint-placeholder-val="{{ true }}">
+<div style="background:#F2F5F8;color:#14284B;min-height:100%;display:grid;grid-template-columns:236px minmax(0,1fr);overflow-x:hidden">
+
+  <aside style="background:#14284B;color:#FBFCFD;padding:20px 16px;display:flex;flex-direction:column;gap:24px;min-height:100vh">
+    <div style="display:flex;align-items:center;gap:9px;font-size:15px;font-weight:700;letter-spacing:-.02em;padding:0 6px">
+      <img src="logo-pins.png" alt="PINS" style="height:44px;width:auto;display:block"> · ADMIN
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+        <button onClick="{{ n.select }}" style="border:none;cursor:pointer;text-align:left;font-family:'Manrope';font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;background:{{ n.bg }};color:{{ n.color }};display:flex;align-items:center;justify-content:space-between;gap:10px;transition:all .2s ease">
+          {{ n.label }}
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:{{ n.badgeColor }}">{{ n.badge }}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px">
+      <div style="background:rgba(251,250,247,.06);border-radius:12px;padding:14px;display:flex;gap:11px;align-items:center">
+        <img src="avatar-ceo.png" alt="" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;flex:none">
+        <div style="min-width:0">
+          <div style="font-size:13px;font-weight:600">Давлетшин Артём</div>
+          <div style="font-size:11px;color:#7B8AA0;margin-top:2px">CEO · Owner · MFA включён</div>
+        </div>
+      </div>
+      <button onClick="{{ doLogout }}" style="border:1px solid rgba(251,250,247,.14);background:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;text-align:left;transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Выйти из панели</button>
+      <a href="admin-crm.dc.html" style="font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;border:1px solid rgba(251,250,247,.14);display:flex;justify-content:space-between;gap:10px;transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Открыть CRM<span style="font-family:'IBM Plex Mono';font-size:12px">→</span></a>
+      <a href="glavnaya-b3.dc.html" style="font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;border:1px solid rgba(251,250,247,.14);display:flex;justify-content:space-between;gap:10px;transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Выйти на сайт<span style="font-family:'IBM Plex Mono';font-size:12px">→</span></a>
+    </div>
+  </aside>
+
+  <main style="min-width:0;padding:0 0 60px">
+    <header style="position:sticky;top:0;z-index:40;background:rgba(242,245,248,.93);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,40,75,.1);padding:12px clamp(18px,2.4vw,30px);min-height:62px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="font-size:17px;font-weight:700;letter-spacing:-.02em">{{ pageTitle }}</div>
+      <div style="display:flex;align-items:center;gap:8px;background:#FBFCFD;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:8px 16px;min-width:0;max-width:300px;flex:1 1 160px">
+        <span style="font-size:13px;color:#9AA6B8">⌕</span>
+        <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Имя, почта, роль" style="border:none;outline:none;background:none;font-size:14px;color:#14284B;min-width:0;flex:1">
+      </div>
+      <div style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.05em">ВСЕ ДЕЙСТВИЯ ФИКСИРУЮТСЯ В ЖУРНАЛЕ</div>
+    </header>
+
+    <div style="padding:clamp(18px,2.4vw,26px) clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:16px 18px">
+          <div style="font-family:'IBM Plex Mono';font-size:22px;letter-spacing:-.03em;color:{{ k.color }}">{{ k.n }}</div>
+          <div style="font-size:12.5px;color:#7B8AA0;line-height:1.4;margin-top:5px">{{ k.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:14px clamp(18px,2.4vw,30px) 0;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:18px 20px 12px;flex-wrap:wrap">
+            <div>
+              <div style="font-size:15px;font-weight:700">Зарегистрированные пользователи</div>
+              <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-top:4px;max-width:70ch">Регистрация на сайте даёт только личный кабинет. Доступ в CRM выдаётся здесь: без выданной роли вход в CRM закрыт.</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <div style="display:flex;gap:4px;background:#E7EDF3;border-radius:100px;padding:4px">
+                <sc-for list="{{ userFilters }}" as="f" hint-placeholder-count="3">
+                  <button onClick="{{ f.select }}" style="border:none;cursor:pointer;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:100px;background:{{ f.bg }};color:{{ f.color }};white-space:nowrap;transition:all .2s ease">{{ f.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ userCount }}</div>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <div style="min-width:1080px">
+              <div style="display:grid;grid-template-columns:1.5fr 1.4fr 1fr .8fr 1fr 1.2fr;gap:14px;padding:12px 20px;font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;border-top:1px solid rgba(20,40,75,.08)">
+                <div>ПОЛЬЗОВАТЕЛЬ</div><div>РОЛЬ В CRM</div><div>ДОСТУП В CRM</div><div>КОД ПРИ ВХОДЕ</div><div>ПОСЛЕДНИЙ ВХОД</div><div>ДЕЙСТВИЯ</div>
+              </div>
+              <sc-for list="{{ users }}" as="u" hint-placeholder-count="8">
+                <div style="display:grid;grid-template-columns:1.5fr 1.4fr 1fr .8fr 1fr 1.2fr;gap:14px;padding:14px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);background:{{ u.rowBg }}">
+                  <div style="min-width:0">
+                    <div style="font-size:14px;font-weight:600">{{ u.name }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;word-break:break-all">{{ u.email }}</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:3px">регистрация {{ u.since }} · {{ u.kind }}</div>
+                  </div>
+                  <div style="display:flex;gap:5px;flex-wrap:wrap">
+                    <sc-for list="{{ u.roleOptions }}" as="r" hint-placeholder-count="3">
+                      <button onClick="{{ r.pick }}" style="border:1px solid {{ r.border }};cursor:pointer;font-size:12px;font-weight:600;padding:6px 10px;border-radius:100px;background:{{ r.bg }};color:{{ r.color }};transition:all .2s ease">{{ r.label }}</button>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <button onClick="{{ u.toggleAccess }}" style="border:none;cursor:pointer;width:42px;height:24px;border-radius:100px;background:{{ u.accessBg }};position:relative;flex:none;transition:background .25s ease">
+                      <span style="position:absolute;top:3px;left:{{ u.accessLeft }};width:18px;height:18px;border-radius:50%;background:#FBFCFD;transition:left .25s cubic-bezier(.2,.7,.3,1);display:block"></span>
+                    </button>
+                    <span style="font-size:12px;font-weight:600;color:{{ u.accessColor }}">{{ u.accessLabel }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <button onClick="{{ u.toggleMfa }}" style="border:none;cursor:pointer;width:42px;height:24px;border-radius:100px;background:{{ u.mfaBg }};position:relative;flex:none;transition:background .25s ease">
+                      <span style="position:absolute;top:3px;left:{{ u.mfaLeft }};width:18px;height:18px;border-radius:50%;background:#FBFCFD;transition:left .25s cubic-bezier(.2,.7,.3,1);display:block"></span>
+                    </button>
+                    <div style="min-width:0">
+                      <div style="font-size:12px;font-weight:600;color:{{ u.mfaColor }}">{{ u.mfaLabel }}</div>
+                      <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8">{{ u.mfaChannel }}</div>
+                    </div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:12px;color:#7B8AA0">{{ u.last }}</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button onClick="{{ u.revoke }}" style="border:1px solid rgba(20,40,75,.16);cursor:pointer;font-size:12px;font-weight:600;padding:7px 11px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Отозвать сеансы</button>
+                    <button onClick="{{ u.block }}" style="border:1px solid {{ u.blockBorder }};cursor:pointer;font-size:12px;font-weight:600;padding:7px 11px;border-radius:100px;background:transparent;color:{{ u.blockColor }};transition:all .2s ease">{{ u.blockLabel }}</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;align-items:start">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px">Заявки на доступ</div>
+            <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:16px">Сотрудник запросил роль в CRM. Выдача — только после подтверждения руководителем.</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ requests }}" as="r" hint-placeholder-count="3">
+                <div style="border:1px solid rgba(20,40,75,.1);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;animation:fadeUp .3s ease both">
+                  <div style="min-width:0">
+                    <div style="font-size:14px;font-weight:600">{{ r.name }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ r.note }}</div>
+                  </div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <button onClick="{{ r.approve }}" style="border:none;cursor:pointer;font-size:12.5px;font-weight:700;padding:9px 14px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#14284B">Выдать доступ</button>
+                    <button onClick="{{ r.deny }}" style="border:1px solid rgba(20,40,75,.16);cursor:pointer;font-size:12.5px;font-weight:600;padding:9px 13px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Отклонить</button>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="display:{{ noRequestsDisplay }};font-size:13px;color:#9AA6B8;padding:6px 0">Открытых заявок нет.</div>
+            </div>
+          </div>
+
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px">Пригласить сотрудника</div>
+            <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:16px">Приглашение действует 48 часов. При первом входе сотрудник обязан настроить подтверждение входа.</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <input value="{{ inviteEmail }}" onChange="{{ setInvite }}" placeholder="почта сотрудника" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-size:14.5px;color:#14284B">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ inviteRoles }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.pick }}" style="border:1px solid {{ r.border }};cursor:pointer;font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:100px;background:{{ r.bg }};color:{{ r.color }};transition:all .2s ease">{{ r.label }}</button>
+                </sc-for>
+              </div>
+              <button onClick="{{ sendInvite }}" style="border:none;cursor:pointer;font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Отправить приглашение</button>
+              <div style="font-size:12.5px;color:{{ inviteMsgColor }};line-height:1.45">{{ inviteMsg }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRoles }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px clamp(18px,2.4vw,30px) 0;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow-x:auto">
+          <div style="min-width:820px">
+            <div style="display:grid;grid-template-columns:1.1fr 1.5fr 1.2fr 1.2fr;gap:14px;padding:16px 20px;font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em">
+              <div>РОЛЬ</div><div>ЧТО ВИДИТ В CRM</div><div>ДОКУМЕНТЫ</div><div>ОГРАНИЧЕНИЯ</div>
+            </div>
+            <sc-for list="{{ roleMatrix }}" as="r" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:1.1fr 1.5fr 1.2fr 1.2fr;gap:14px;padding:14px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);font-size:13px">
+                <div style="display:flex;gap:9px;align-items:center;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.color }};flex:none"></span>{{ r.role }}</div>
+                <div style="color:#4A5B75;line-height:1.45">{{ r.scope }}</div>
+                <div style="color:#4A5B75;line-height:1.45">{{ r.docs }}</div>
+                <div style="color:#7B8AA0;line-height:1.45">{{ r.limits }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:12px">ПРАВИЛО ВХОДА</div>
+          <div style="font-size:14.5px;line-height:1.6;color:#B9C4D2;max-width:78ch;text-wrap:pretty">Регистрация на сайте создаёт клиента, а не сотрудника. CRM проверяет роль на сервере при каждом запросе: без выданной роли страница CRM не отдаётся, а прямые ссылки на карточки и документы возвращают отказ. Отзыв доступа действует немедленно — активные сеансы завершаются.</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLog }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px clamp(18px,2.4vw,30px) 0">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden">
+          <div style="padding:18px 20px 12px;font-size:15px;font-weight:700">Журнал изменений прав</div>
+          <sc-for list="{{ log }}" as="l" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:120px 1.4fr 1.6fr;gap:14px;padding:13px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);font-size:13px;animation:fadeUp .3s ease both">
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ l.time }}</div>
+              <div style="font-weight:600">{{ l.who }}</div>
+              <div style="color:#4A5B75;line-height:1.45">{{ l.what }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isArchive }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px clamp(18px,2.4vw,30px) 0;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-size:15px;font-weight:700;margin-bottom:5px">Закрытый архив завершённых сделок</div>
+            <div style="font-size:13px;color:#B9C4D2;line-height:1.55;max-width:76ch;text-wrap:pretty">Сюда попадают сделки, которые менеджер отметил как совершённые: карточка становится только для чтения, документы уходят в закрытый архив. Доступ — Owner; менеджер после закрытия документы не открывает.</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;white-space:nowrap">ДОСТУП: OWNER · ЖУРНАЛИРУЕТСЯ</div>
+        </div>
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden">
+          <sc-for list="{{ archive }}" as="d" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:1.4fr 1.6fr 1fr 2fr;gap:14px;padding:16px 20px;border-top:1px solid rgba(20,40,75,.08);align-items:start">
+              <div>
+                <div style="font-size:14px;font-weight:700">{{ d.client }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:3px">{{ d.id }} · закрыта {{ d.closed }}</div>
+                <div style="font-size:12px;color:{{ d.statusColor }};margin-top:4px">{{ d.kind }}</div>
+              </div>
+              <div style="font-size:13px;color:#4A5B75;line-height:1.45">{{ d.product }}</div>
+              <div>
+                <div style="font-family:'IBM Plex Mono';font-size:14px;color:#14284B">{{ d.premium }}</div>
+                <div style="font-size:12px;color:#9AA6B8;margin-top:4px">{{ d.manager }}</div>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;line-height:1.6">{{ d.docsLine }}</div>
+                <div style="font-size:11.5px;color:#9AA6B8;margin-top:5px">Ссылка на просмотр — 15 минут, скачивание пишется в журнал</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDemo }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:14px clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;align-items:start">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Проверка правила доступа</div>
+          <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:18px;max-width:60ch">Выключите доступ и откройте CRM: вместо рабочего экрана появится отказ. Так это будет работать и в реальной системе — только проверка идёт на сервере.</div>
+          <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;padding:14px 16px;background:#F2F5F8;border-radius:12px">
+            <div>
+              <div style="font-size:14px;font-weight:600">Доступ в CRM для этого браузера</div>
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:{{ demoColor }};margin-top:4px">{{ demoStatus }}</div>
+            </div>
+            <button onClick="{{ demoToggle }}" style="border:none;cursor:pointer;width:44px;height:26px;border-radius:100px;background:{{ demoBg }};position:relative;flex:none;transition:background .25s ease">
+              <span style="position:absolute;top:3px;left:{{ demoLeft }};width:20px;height:20px;border-radius:50%;background:#FBFCFD;transition:left .25s cubic-bezier(.2,.7,.3,1);display:block"></span>
+            </button>
+          </div>
+          <a href="admin-crm.dc.html" style="display:inline-block;margin-top:16px;font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Открыть CRM и проверить</a>
+        </div>
+        <div style="background:#E7EDF3;border-radius:16px;padding:20px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:12px">Что проверяется при входе</div>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <sc-for list="{{ checks }}" as="c" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:13.5px;color:#4A5B75;line-height:1.5">
+                <span style="color:#0A767A">·</span><span>{{ c }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:940}}">
+class Component extends DCLogic {
+  state = {
+    tab: 0, query: '', inviteEmail: '', inviteRole: 'Менеджер', inviteMsg: '', inviteOk: false,
+    filter: 0, mfa: {}, roles: {}, access: {}, blocked: {}, handled: {}, log: [], demo: true,
+    authed: false, login: '', pass: '', code: '', loginError: ''
+  };
+
+  componentDidMount() {
+    try {
+      const v = localStorage.getItem('pins-crm-access');
+      if (v !== null) this.setState({ demo: v !== 'off' });
+      if (localStorage.getItem('pins-admin-auth') === 'ok') this.setState({ authed: true });
+      const raw = localStorage.getItem('pins-mfa-map');
+      if (raw) {
+        const map = JSON.parse(raw);
+        const byId = {};
+        this.userData().forEach(u => {
+          const l = u.email.split('@')[0];
+          if (map[l] !== undefined) byId[u.id] = map[l];
+        });
+        if (Object.keys(byId).length) this.setState({ mfa: byId });
+      }
+    } catch (e) {}
+  }
+
+  archiveData() {
+    return [
+      { id: '№ 4802', client: 'ООО «Верста Логистик»', kind: 'Юридическое лицо', product: 'Автопарк: ОСАГО и КАСКО, 14 ТС', premium: '486 000 ₽', closed: '11.08.2026', manager: 'Литвинова А.', docs: ['Полис и договор.pdf', 'Счёт и оплата.pdf', 'Заявление подписано.pdf', 'Акт услуг.pdf'] },
+      { id: '№ 4795', client: 'ООО «Тёплый Дом»', kind: 'Юридическое лицо', product: 'СМР, ЖК «Северный», 2 корпуса', premium: '1 240 000 ₽', closed: '04.08.2026', manager: 'Литвинова А.', docs: ['Полис и договор.pdf', 'Счёт и оплата.pdf', 'Заявление подписано.pdf', 'Акт услуг.pdf'] },
+      { id: '№ 4781', client: 'ИП Ковалёв С. А.', kind: 'Юридическое лицо', product: 'Имущество склада, 84 млн ₽', premium: '196 400 ₽', closed: '28.07.2026', manager: 'Рахимов Т.', docs: ['Полис и договор.pdf', 'Счёт и оплата.pdf', 'Акт услуг.pdf'] },
+      { id: '№ 4770', client: 'Соколов Алексей', kind: 'Частное лицо', product: 'ОСАГО, оформлено через калькулятор', premium: '9 480 ₽', closed: '21.07.2026', manager: 'без менеджера', docs: ['Полис.pdf'] }
+    ];
+  }
+
+  userData() {
+    return [
+      { id: 'u1', name: 'Давлетшин Артём', email: 'a.davletshin@pins.ru', since: '12.01.2024', role: 'Owner / Admin', access: true, mfa: 'включён', last: '18.08, 09:12' },
+      { id: 'u10', name: 'Марина Ковалёва', email: 'm.kovaleva@pins.ru', since: '18.01.2024', role: 'Owner / Admin', access: true, mfa: 'включён', last: '18.08, 09:40' },
+      { id: 'u2', name: 'Литвинова Анна', email: 'a.litvinova@pins.ru', since: '04.03.2024', role: 'Менеджер', access: true, mfa: 'включён', last: '18.08, 14:22' },
+      { id: 'u3', name: 'Гордеев Максим', email: 'm.gordeev@pins.ru', since: '19.09.2024', role: 'Поддержка', access: true, mfa: 'включён', last: '18.08, 13:47' },
+      { id: 'u4', name: 'Смирнова Елена', email: 'e.smirnova@pins.ru', since: '11.11.2024', role: 'Бухгалтерия', access: true, mfa: 'включён', last: '18.08, 12:31' },
+      { id: 'u5', name: 'Рахимов Тимур', email: 't.rakhimov@pins.ru', since: '02.02.2026', role: 'Менеджер', access: true, mfa: 'не настроен', last: '17.08, 18:04' },
+      { id: 'u6', name: 'Ефимов Павел', email: 'p.efimov@pins.ru', since: '06.06.2026', role: 'Без доступа', access: false, mfa: 'не настроен', last: '15.08, 10:20' },
+      { id: 'u7', name: 'Соколов Алексей', email: 'a.sokolov@mail.ru', since: '24.08.2025', role: 'Без доступа', access: false, mfa: 'СМС-код', last: '18.08, 09:41' },
+      { id: 'u8', name: 'Гурьева Наталья', email: 'n.gurieva@mail.ru', since: '07.09.2025', role: 'Без доступа', access: false, mfa: 'СМС-код', last: '16.08, 20:15' },
+      { id: 'u9', name: 'Шарипова Айгуль', email: 'a.sharipova@mail.ru', since: '01.12.2025', role: 'Без доступа', access: false, mfa: 'СМС-код', last: '14.08, 11:02' }
+    ];
+  }
+
+  now() {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return p(d.getDate()) + '.' + p(d.getMonth() + 1) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  note(what) {
+    this.setState(s => ({ log: [{ time: this.now(), who: 'Давлетшин Артём · CEO', what }].concat(s.log) }));
+  }
+
+  renderVals() {
+    const st = this.state;
+    const roleNames = ['Без доступа', 'Менеджер', 'Бухгалтерия', 'Поддержка', 'Owner / Admin'];
+    const roleColors = { 'Owner / Admin': '#8A5A2B', 'Менеджер': '#0A767A', 'Бухгалтерия': '#5A6B85', 'Поддержка': '#7A6A55', 'Без доступа': '#9AA6B8' };
+
+    const filterNames = ['Все', 'Сотрудники', 'Клиенты сайта'];
+    const userFilters = filterNames.map((label, i) => {
+      const on = st.filter === i;
+      return {
+        label,
+        select: () => this.setState({ filter: i }),
+        bg: on ? '#14284B' : 'transparent',
+        color: on ? '#FBFCFD' : '#5A6B85'
+      };
+    });
+
+    const q = st.query.trim().toLowerCase();
+    const base = this.userData().map(u => {
+      const role = st.roles[u.id] || u.role;
+      const access = st.access[u.id] !== undefined ? st.access[u.id] : u.access;
+      const staff = u.email.endsWith('@pins.ru');
+      const login = u.email.split('@')[0];
+      const mfaOn = st.mfa[u.id] !== undefined ? st.mfa[u.id] : (u.mfa !== 'не настроен');
+      return { ...u, role, staff, login, mfaOn, mfaWay: u.mfa === 'СМС-код' ? 'СМС' : (u.mfa === 'включён' ? 'СМС или почта' : 'СМС'), kind: staff ? 'сотрудник' : 'клиент сайта', access: access && role !== 'Без доступа', blocked: !!st.blocked[u.id] };
+    });
+    const byFilter = st.filter === 1 ? base.filter(u => u.staff) : st.filter === 2 ? base.filter(u => !u.staff) : base;
+    const shown = q ? byFilter.filter(u => (u.name + u.email + u.role).toLowerCase().includes(q)) : byFilter;
+
+    const users = shown.map(u => ({
+      name: u.name, email: u.email, since: u.since, last: u.last, kind: u.kind,
+      rowBg: u.blocked ? 'rgba(138,90,43,.05)' : 'transparent',
+      roleOptions: roleNames.map(label => {
+        const on = u.role === label;
+        return {
+          label,
+          pick: () => {
+            this.setState(s => ({
+              roles: { ...s.roles, [u.id]: label },
+              access: { ...s.access, [u.id]: label !== 'Без доступа' }
+            }));
+            this.note('Роль ' + u.name + ' изменена на «' + label + '»');
+          },
+          bg: on ? '#14284B' : 'transparent',
+          border: on ? '#14284B' : 'rgba(20,40,75,.14)',
+          color: on ? '#FBFCFD' : '#5A6B85'
+        };
+      }),
+      toggleAccess: () => {
+        const next = !u.access;
+        this.setState(s => ({
+          access: { ...s.access, [u.id]: next },
+          roles: { ...s.roles, [u.id]: next ? (u.role === 'Без доступа' ? 'Менеджер' : u.role) : 'Без доступа' }
+        }));
+        this.note((next ? 'Выдан' : 'Отозван') + ' доступ в CRM: ' + u.name);
+      },
+      accessBg: u.access ? '#0A767A' : 'rgba(20,40,75,.18)',
+      accessLeft: u.access ? '21px' : '3px',
+      accessLabel: u.access ? 'открыт' : 'закрыт',
+      accessColor: u.access ? '#0A767A' : '#9AA6B8',
+      mfaLabel: u.mfaOn ? 'включён' : 'выключен',
+      mfaChannel: u.mfaOn ? (u.mfaWay || 'СМС') : 'только пароль',
+      mfaColor: u.mfaOn ? '#0A767A' : '#8A5A2B',
+      mfaBg: u.mfaOn ? '#0A767A' : 'rgba(20,40,75,.18)',
+      mfaLeft: u.mfaOn ? '21px' : '3px',
+      toggleMfa: () => {
+        const next = !u.mfaOn;
+        this.setState(s => ({ mfa: { ...s.mfa, [u.id]: next } }));
+        try {
+          const raw = localStorage.getItem('pins-mfa-map');
+          const map = raw ? JSON.parse(raw) : {};
+          map[u.login] = next;
+          localStorage.setItem('pins-mfa-map', JSON.stringify(map));
+        } catch (e) {}
+        this.note((next ? 'Включён' : 'Отключён') + ' код при входе для ' + u.name + (next ? '' : ' — вход только по паролю'));
+      },
+      revoke: () => this.note('Завершены все сеансы: ' + u.name),
+      block: () => {
+        this.setState(s => ({ blocked: { ...s.blocked, [u.id]: !s.blocked[u.id] } }));
+        this.note((u.blocked ? 'Разблокирован' : 'Заблокирован') + ' пользователь ' + u.name);
+      },
+      blockLabel: u.blocked ? 'Разблокировать' : 'Заблокировать',
+      blockColor: u.blocked ? '#0A767A' : '#8A5A2B',
+      blockBorder: u.blocked ? 'rgba(10,118,122,.35)' : 'rgba(138,90,43,.35)'
+    }));
+
+    const reqData = [
+      { id: 'r1', name: 'Ефимов Павел', note: 'Запросил роль «Менеджер» — принят в отдел продаж 06.06.2026', role: 'Менеджер' },
+      { id: 'r2', name: 'Рахимов Тимур', note: 'Просит расширить до «Бухгалтерия» — доступ к счетам и актам', role: 'Бухгалтерия' },
+      { id: 'r3', name: 'Соколов Алексей', note: 'Клиент запросил доступ в CRM — оснований нет', role: 'Без доступа' }
+    ].filter(r => !st.handled[r.id]);
+
+    const requests = reqData.map(r => ({
+      name: r.name, note: r.note,
+      approve: () => {
+        this.setState(s => ({ handled: { ...s.handled, [r.id]: true } }));
+        this.note('Заявка одобрена: ' + r.name + ' — роль «' + r.role + '»');
+      },
+      deny: () => {
+        this.setState(s => ({ handled: { ...s.handled, [r.id]: true } }));
+        this.note('Заявка отклонена: ' + r.name);
+      }
+    }));
+
+    const inviteRoles = ['Менеджер', 'Бухгалтерия', 'Поддержка', 'Owner / Admin'].map(label => {
+      const on = st.inviteRole === label;
+      return {
+        label,
+        pick: () => this.setState({ inviteRole: label }),
+        bg: on ? '#14284B' : 'transparent',
+        border: on ? '#14284B' : 'rgba(20,40,75,.14)',
+        color: on ? '#FBFCFD' : '#5A6B85'
+      };
+    });
+
+    const navData = [
+      { label: 'Пользователи', badge: String(base.length) },
+      { label: 'Роли и правила', badge: '' },
+      { label: 'Журнал прав', badge: st.log.length ? String(st.log.length) : '' },
+      { label: 'Архив сделок', badge: String(this.archiveData().length) },
+      { label: 'Проверка доступа', badge: '' }
+    ];
+    const nav = navData.map((n, i) => ({
+      ...n,
+      select: () => this.setState({ tab: i }),
+      bg: st.tab === i ? 'rgba(251,250,247,.1)' : 'transparent',
+      color: st.tab === i ? '#FBFCFD' : '#9AA6B8',
+      badgeColor: st.tab === i ? '#0A767A' : '#5A6B85'
+    }));
+
+    const withAccess = base.filter(u => u.access).length;
+    const noMfa = base.filter(u => !u.mfaOn && u.access).length;
+
+    const baseLog = [
+      { time: '18.08 09:14', who: 'Давлетшин Артём · CEO', what: 'Включено обязательное подтверждение входа для всех ролей с доступом к документам' },
+      { time: '17.08 16:02', who: 'Давлетшин Артём · CEO', what: 'Отозван доступ в CRM: Белов И. — увольнение, сеансы завершены' },
+      { time: '15.08 11:40', who: 'Давлетшин Артём · CEO', what: 'Роль Гордеев М. изменена на «Поддержка» — доступ к оригиналам документов закрыт' }
+    ];
+
+    const demo = st.demo;
+    return {
+      authed: st.authed, needLogin: !st.authed,
+      loginValue: st.login, passValue: st.pass, codeValue: st.code,
+      setLogin: (e) => this.setState({ login: e.target.value }),
+      setPass: (e) => this.setState({ pass: e.target.value }),
+      setCode: (e) => this.setState({ code: e.target.value }),
+      loginError: st.loginError,
+      errDisplay: st.loginError ? 'block' : 'none',
+      doLogin: () => {
+        const okLogin = st.login.trim().toLowerCase() === 'a.davletshin';
+        const okPass = st.pass === 'PINS-Admin-2026';
+        const okCode = /^\d{6}$/.test(st.code.trim());
+        if (!okLogin || !okPass) { this.setState({ loginError: 'Неверный логин или пароль.' }); return; }
+        if (!okCode) { this.setState({ loginError: 'Введите шесть цифр кода подтверждения.' }); return; }
+        try { localStorage.setItem('pins-admin-auth', 'ok'); } catch (e) {}
+        this.setState({ authed: true, loginError: '', pass: '', code: '' });
+      },
+      doLogout: () => {
+        try { localStorage.removeItem('pins-admin-auth'); } catch (e) {}
+        this.setState({ authed: false, login: '', pass: '', code: '' });
+      },
+      nav, kpis: [
+        { n: String(base.length), label: 'зарегистрированных пользователей', color: '#14284B' },
+        { n: String(withAccess), label: 'имеют доступ в CRM', color: '#0A767A' },
+        { n: String(reqData.length), label: 'заявок на доступ ждут решения', color: '#8A5A2B' },
+        { n: String(noMfa), label: 'входят без кода подтверждения', color: noMfa ? '#8A5A2B' : '#0A767A' }
+      ],
+      pageTitle: navData[st.tab].label,
+      isUsers: st.tab === 0, isRoles: st.tab === 1, isLog: st.tab === 2, isArchive: st.tab === 3, isDemo: st.tab === 4,
+      archive: this.archiveData().map(d => ({
+        ...d,
+        docsLine: d.docs.join(' · '),
+        statusColor: d.kind === 'Юридическое лицо' ? '#8A5A2B' : '#0A767A'
+      })),
+      users, userFilters, userCount: shown.length + ' из ' + base.length,
+      requests, noRequestsDisplay: requests.length ? 'none' : 'block',
+      query: st.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+      inviteEmail: st.inviteEmail,
+      setInvite: (e) => this.setState({ inviteEmail: e.target.value }),
+      inviteRoles,
+      sendInvite: () => {
+        const mail = st.inviteEmail.trim();
+        if (!mail || mail.indexOf('@') < 1) {
+          this.setState({ inviteMsg: 'Укажите рабочую почту сотрудника.', inviteOk: false });
+          return;
+        }
+        this.setState({ inviteMsg: 'Приглашение отправлено на ' + mail + ' — роль «' + st.inviteRole + '», действует 48 часов.', inviteOk: true, inviteEmail: '' });
+        this.note('Приглашение в CRM: ' + mail + ' — роль «' + st.inviteRole + '»');
+      },
+      inviteMsg: st.inviteMsg,
+      inviteMsgColor: st.inviteOk ? '#0A767A' : '#8A5A2B',
+      roleMatrix: [
+        { role: 'Owner / Admin', scope: 'Все сделки, клиенты, аналитика, права и журнал', docs: 'Просмотр и скачивание всех', limits: 'MFA обязателен, действия в журнале', color: '#8A5A2B' },
+        { role: 'Менеджер', scope: 'Только назначенные клиенты и сделки', docs: 'Документы своих клиентов', limits: 'Не меняет права, не видит аналитику по компании', color: '#0A767A' },
+        { role: 'Бухгалтерия', scope: 'Счета, акты, платежи, пролонгации', docs: 'Только платёжные документы', limits: 'Не видит медицинские и персональные файлы', color: '#5A6B85' },
+        { role: 'Поддержка', scope: 'Обращения и статусы по убыткам', docs: 'Без доступа к оригиналам', limits: 'Не открывает карточки сделок целиком', color: '#7A6A55' },
+        { role: 'Без доступа', scope: 'Только личный кабинет клиента', docs: 'Свои документы в кабинете', limits: 'CRM не открывается ни по прямой ссылке', color: '#9AA6B8' }
+      ],
+      log: st.log.concat(baseLog),
+      demoStatus: demo ? 'доступ открыт — CRM работает' : 'доступ закрыт — CRM вернёт отказ',
+      demoColor: demo ? '#0A767A' : '#8A5A2B',
+      demoBg: demo ? '#0A767A' : 'rgba(20,40,75,.18)',
+      demoLeft: demo ? '21px' : '3px',
+      demoToggle: () => {
+        const next = !st.demo;
+        try { localStorage.setItem('pins-crm-access', next ? 'on' : 'off'); } catch (e) {}
+        this.setState({ demo: next });
+        this.note((next ? 'Открыт' : 'Закрыт') + ' доступ в CRM для текущего браузера (проверка правила)');
+      },
+      checks: [
+        'Пользователь авторизован и сеанс не отозван',
+        'У пользователя есть роль в CRM, а не только кабинет клиента',
+        'Роль разрешает конкретное действие: карточку, документ, экспорт',
+        'Подтверждение входа пройдено для привилегированных операций',
+        'Каждый доступ к документу пишется в журнал с идентификатором пользователя'
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

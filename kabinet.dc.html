@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="background:#FBFCFD;border-bottom:1px solid rgba(20,40,75,.1)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,36px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:4px;white-space:nowrap">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:8px 15px;border-radius:100px;background:{{ t.bg }};color:{{ t.color }};transition:all .25s ease">{{ t.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="ubytki.dc.html" style="font-size:14px;color:#5A6B85;white-space:nowrap">Заявить убыток</a>
+        <div style="width:32px;height:32px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5A6B85">АС</div>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(24px,3vw,40px) clamp(20px,3vw,36px) clamp(48px,6vw,72px)">
+
+    <sc-if value="{{ isPolicies }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px">
+          <div>
+            <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Здравствуйте, Алексей</h1>
+            <p style="font-size:15px;color:#7B8AA0;margin:0">{{ headline }}</p>
+          </div>
+          <a href="katalog.dc.html" style="font-size:15px;font-weight:700;padding:13px 22px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#14284B">Оформить новый полис</a>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:26px">
+          <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+            <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:20px">
+              <div style="font-family:'IBM Plex Mono';font-size:clamp(19px,2.1vw,24px);letter-spacing:-.03em;color:{{ s.color }}">{{ s.n }}</div>
+              <div style="font-size:13px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+          <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+            <button onClick="{{ f.select }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 15px;border-radius:100px;background:{{ f.bg }};color:{{ f.color }};transition:all .25s ease">{{ f.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ policies }}" as="p" hint-placeholder-count="5">
+            <div style="background:#FBFCFD;border:1px solid {{ p.border }};border-radius:14px;padding:18px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:clamp(12px,2vw,20px);align-items:center;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ p.delay }};transition:border-color .25s ease" style-hover="border-color:#0A767A">
+              <div style="min-width:0">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:4px">
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ p.dot }};display:block;flex:none"></span>
+                  <div style="font-size:16px;font-weight:700;letter-spacing:-.01em">{{ p.type }}</div>
+                </div>
+                <div style="font-size:13px;color:#7B8AA0">{{ p.object }}</div>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono';font-size:13px;color:#5A6B85">{{ p.number }}</div>
+                <div style="font-size:12px;color:#9AA6B8;margin-top:3px">{{ p.insurer }}</div>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:{{ p.statusColor }}">{{ p.status }}</div>
+                <div style="font-size:12px;color:#9AA6B8;margin-top:3px">{{ p.term }}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <a href="{{ p.actionHref }}" style="text-align:center;border:1px solid rgba(20,40,75,.18);font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 0;border-radius:100px;background:{{ p.actionBg }};color:{{ p.actionColor }};transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">{{ p.action }}</a>
+                <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:12px;font-weight:600;padding:2px 0;background:none;color:#9AA6B8">Скачать PDF</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isClaims }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Обращения</h1>
+        <p style="font-size:15px;color:#7B8AA0;margin:0 0 24px">Куратор пишет на каждом этапе. Средний срок выплаты по нашим делам — 11 дней.</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ claims }}" as="c" hint-placeholder-count="3">
+            <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:22px;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ c.delay }}">
+              <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+                <div>
+                  <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px">{{ c.title }}</div>
+                  <div style="font-size:13px;color:#7B8AA0">{{ c.meta }}</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-family:'IBM Plex Mono';font-size:18px;letter-spacing:-.03em;color:{{ c.sumColor }}">{{ c.sum }}</div>
+                  <div style="font-size:12px;color:#9AA6B8;margin-top:3px">{{ c.sumNote }}</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:4px;margin-bottom:12px">
+                <sc-for list="{{ c.steps }}" as="s" hint-placeholder-count="4">
+                  <div style="flex:1;height:4px;border-radius:2px;background:{{ s.bg }}"></div>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px">
+                <div style="color:#14284B;font-weight:600">{{ c.stage }}</div>
+                <div style="color:#7B8AA0">Куратор: {{ c.manager }}</div>
+              </div>
+              <div style="font-size:13px;color:#5A6B85;line-height:1.5;margin-top:12px;padding-top:12px;border-top:1px solid rgba(20,40,75,.1);text-wrap:pretty">{{ c.note }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isDocs }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Документы</h1>
+        <p style="font-size:15px;color:#7B8AA0;margin:0 0 20px">Полисы, счета и справки. Всё подписано электронной подписью страховщика.</p>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;align-items:center;background:#E7EDF3;border-radius:14px;padding:16px 20px;margin-bottom:12px">
+          <div style="font-size:13px;color:#4A5B75;line-height:1.5;max-width:640px;text-wrap:pretty">Все договоры и полисы — в PDF с электронной подписью страховщика. Полисы, оформленные онлайн через калькулятор, попадают сюда автоматически в момент оплаты. Ссылка на скачивание действует 15 минут и работает только для вас.</div>
+          <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;white-space:nowrap">хранение до 2031 года</div>
+        </div>
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden">
+          <sc-for list="{{ docs }}" as="d" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:1.6fr 1fr .8fr 100px;gap:16px;padding:16px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);transition:background .25s ease" style-hover="background:#F2F5F8">
+              <div style="font-size:15px;font-weight:600">{{ d.name }}</div>
+              <div>
+                <div style="font-size:13px;color:#7B8AA0">{{ d.kind }}</div>
+                <div style="font-size:11.5px;color:{{ d.srcColor }};margin-top:3px">{{ d.src }}</div>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono';font-size:13px;color:#9AA6B8">{{ d.date }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:11px;color:#B9C4D2">PDF · {{ d.size }} · {{ d.ver }}</div>
+              </div>
+              <button style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 0;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Скачать</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Профиль</h1>
+        <p style="font-size:15px;color:#7B8AA0;margin:0 0 24px">Данные подставляются в новые расчёты, чтобы не заполнять анкету заново.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:24px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:18px">Личные данные</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ profileFields }}" as="f" hint-placeholder-count="4">
+                <div>
+                  <div style="font-size:12px;color:#9AA6B8;margin-bottom:6px">{{ f.label }}</div>
+                  <input value="{{ f.value }}" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:10px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:15px;color:#14284B">
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:24px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px">Вход и безопасность</div>
+            <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:18px">Вход по коду из СМС. Паспортные данные и права видны только вам и вашему менеджеру.</div>
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <sc-for list="{{ security }}" as="s" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding-bottom:13px;border-bottom:1px solid rgba(20,40,75,.07)">
+                  <div>
+                    <div style="font-size:14px;font-weight:600">{{ s.title }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ s.note }}</div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;white-space:nowrap">{{ s.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <button style="margin-top:16px;border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:10px 18px;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Завершить сеансы на других устройствах</button>
+          </div>
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:24px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:18px">Уведомления</div>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="4">
+                <div style="display:flex;justify-content:space-between;gap:16px;align-items:center">
+                  <div>
+                    <div style="font-size:14px;font-weight:600;margin-bottom:3px">{{ n.title }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;line-height:1.4">{{ n.note }}</div>
+                  </div>
+                  <button onClick="{{ n.toggle }}" style="border:none;cursor:pointer;width:44px;height:26px;border-radius:100px;background:{{ n.bg }};position:relative;flex:none;transition:background .25s ease">
+                    <span style="position:absolute;top:3px;left:{{ n.left }};width:20px;height:20px;border-radius:50%;background:#FBFCFD;transition:left .25s cubic-bezier(.2,.7,.3,1);display:block"></span>
+                  </button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { tab: 0, filter: 0, notif: { 0: true, 1: true, 2: false, 3: true }, crmPolicies: [] };
+
+  componentDidMount() {
+    try {
+      const raw = localStorage.getItem('pins-client-policies');
+      if (raw) this.setState({ crmPolicies: JSON.parse(raw) });
+    } catch (e) {}
+  }
+
+  renderVals() {
+    const tabNames = ['Полисы', 'Обращения', 'Документы', 'Профиль'];
+    const tabs = tabNames.map((label, i) => ({
+      label,
+      select: () => this.setState({ tab: i }),
+      bg: this.state.tab === i ? '#14284B' : 'transparent',
+      color: this.state.tab === i ? '#FBFCFD' : '#5A6B85'
+    }));
+
+    const summary = [
+      { n: '6', label: 'действующих полисов', color: '#14284B' },
+      { n: '2', label: 'продлить в этом месяце', color: '#0A767A' },
+      { n: '1', label: 'обращение в работе', color: '#14284B' },
+      { n: '184 300 ₽', label: 'выплачено за 2 года', color: '#6B7A4F' }
+    ];
+
+    const allDemo = [
+      { type: 'ОСАГО', object: 'Toyota Camry · А123ВС777', number: 'ХХХ 0294817364', insurer: 'Ингосстрах', status: 'Заканчивается через 12 дней', statusColor: '#0A767A', term: 'до 24.08.2026', action: 'Продлить', urgent: true, cat: 'Авто' },
+      { type: 'КАСКО', object: 'Toyota Camry · франшиза 30 000 ₽', number: 'КС 118293746', insurer: 'Ингосстрах', status: 'Действует', statusColor: '#6B7A4F', term: 'до 14.03.2027', action: 'Условия', cat: 'Авто' },
+      { type: 'Ипотека и титул', object: 'Квартира · ул. Металлургов, 14', number: 'ИП 553827194', insurer: 'АльфаСтрахование', status: 'Заканчивается через 26 дней', statusColor: '#0A767A', term: 'до 07.09.2026', action: 'Продлить', urgent: true, cat: 'Имущество' },
+      { type: 'Квартира и имущество', object: 'Отделка и вещи · 2,4 млн ₽', number: 'ИМ 771029384', insurer: 'Согласие', status: 'Действует', statusColor: '#6B7A4F', term: 'до 19.01.2027', action: 'Условия', cat: 'Имущество' },
+      { type: 'ДМС', object: 'Программа «Поликлиника плюс»', number: 'ДМ 449182736', insurer: 'Ренессанс Страхование', status: 'Действует', statusColor: '#6B7A4F', term: 'до 01.12.2026', action: 'Клиники', cat: 'Здоровье' },
+      { type: 'ВЗР', object: 'Годовой мультиполис · Шенген', number: 'ВЗ 662910384', insurer: 'Ингосстрах', status: 'Действует', statusColor: '#6B7A4F', term: 'до 30.06.2027', action: 'Условия', cat: 'Путешествия' }
+    ];
+
+    // Полисы по закрытым сделкам приходят из CRM: менеджер меняет статус на
+    // «Сделка совершена», и договор появляется здесь.
+    const fromCrm = (this.state.crmPolicies || []).map(p => {
+      const t = String(p.type || '').toLowerCase();
+      const cat = /осаго|каско|автопарк|зелён/.test(t) ? 'Авто'
+        : /квартир|дом|имуществ|ипотек|титул|склад|груз|ответственност/.test(t) ? 'Имущество'
+        : /дмс|нс|несчастн|жизн|здоров/.test(t) ? 'Здоровье'
+        : /взр|поездк|границ/.test(t) ? 'Путешествия' : 'Имущество';
+      return {
+        type: p.type || 'Полис по сделке',
+        object: p.object || p.address || p.client || '',
+        number: p.no || '',
+        insurer: p.insurer || 'Определяется при оформлении',
+        status: p.status || 'Действует',
+        statusColor: '#6B7A4F',
+        term: (p.from || '') + ' — ' + (p.to || ''),
+        premium: p.premium ? String(p.premium) : (p.insured ? 'сумма ' + p.insured : 'уточняется'),
+        cat,
+        action: 'Открыть договор',
+        href: 'kabinet.dc.html?tab=docs&deal=' + encodeURIComponent(p.no || ''),
+        urgent: false,
+        fresh: true
+      };
+    });
+    const all = [...fromCrm, ...allDemo];
+
+    const cats = ['Все', 'Авто', 'Имущество', 'Здоровье', 'Путешествия'];
+    const filters = cats.map((label, i) => ({
+      label,
+      select: () => this.setState({ filter: i }),
+      bg: this.state.filter === i ? '#0A767A' : 'transparent',
+      color: this.state.filter === i ? '#FBFCFD' : '#5A6B85',
+      border: this.state.filter === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+    }));
+    const active = cats[this.state.filter];
+
+    const policies = all.filter(p => active === 'Все' || p.cat === active).map((p, i) => ({
+      ...p,
+      delay: (i * 50) + 'ms',
+      dot: p.urgent ? '#0A767A' : '#6B7A4F',
+      border: p.urgent ? 'rgba(15,163,168,.3)' : 'rgba(20,40,75,.1)',
+      actionBg: p.urgent ? '#0A767A' : 'transparent',
+      actionColor: p.urgent ? '#FBFCFD' : '#14284B',
+      actionHref: (() => {
+        if (p.href) return p.href;
+        const t = p.type;
+        if (t === 'ОСАГО') return 'calculator.dc.html?w=auto';
+        if (t === 'КАСКО') return 'calculator.dc.html?w=auto';
+        if (t === 'Ипотека и титул') return 'calculator.dc.html?w=ipoteka';
+        if (t === 'Квартира и имущество') return 'zayavlenie.dc.html?p=11';
+        if (t === 'ДМС') return 'zayavlenie.dc.html?p=13';
+        if (t === 'ВЗР') return 'zayavlenie.dc.html?p=10';
+        return 'katalog.dc.html';
+      })()
+    }));
+
+    const claims = [
+      {
+        title: 'Залив от соседей сверху', meta: 'ИМ 771029384 · заявлено 28.07.2026', sum: '92 400 ₽', sumNote: 'предварительная оценка', sumColor: '#14284B',
+        stage: 'Экспертиза завершена, готовится решение', manager: 'Марина Ковалёва', done: 3,
+        note: 'Оценщик учёл потолок, обои в двух комнатах и повреждённый паркет. По акту УК виновник установлен, спора нет — решение ожидаем до 15 августа.'
+      },
+      {
+        title: 'ДТП на парковке', meta: 'ХХХ 0294817364 · заявлено 12.05.2026', sum: '68 100 ₽', sumNote: 'выплачено', sumColor: '#6B7A4F',
+        stage: 'Выплата произведена', manager: 'Игорь Дементьев', done: 4,
+        note: 'Первоначальная калькуляция была ниже на 21 300 ₽. После независимой оценки страховая пересчитала сумму и доплатила разницу.'
+      },
+      {
+        title: 'Перелом руки, горные лыжи', meta: 'ВЗ 662910384 · заявлено 04.02.2026', sum: '141 800 ₽', sumNote: 'оплачено клинике напрямую', sumColor: '#6B7A4F',
+        stage: 'Дело закрыто', manager: 'Игорь Дементьев', done: 4,
+        note: 'Лечение в клинике Инсбрука прошло по прямому расчёту, вы не платили из своих. Дополнительно компенсирована замена билетов.'
+      }
+    ].map((c, i) => ({
+      ...c,
+      delay: (i * 60) + 'ms',
+      steps: [0, 1, 2, 3].map(s => ({ bg: s < c.done ? '#0A767A' : 'rgba(20,40,75,.12)' }))
+    }));
+
+    const docs = [
+      { name: 'Договор и полис ОСАГО ХХХ 0294817364', kind: 'Полис · Ингосстрах', date: '24.08.2025', auto: true, size: '240 КБ' },
+      { name: 'Договор КАСКО КС 118293746', kind: 'Полис · Ингосстрах', date: '14.03.2026', auto: true, size: '386 КБ' },
+      { name: 'Договор ипотечного страхования ИП 553827194', kind: 'Полис · АльфаСтрахование', date: '07.09.2025', auto: true, size: '412 КБ' },
+      { name: 'Справка для банка о действии полиса', kind: 'Справка', date: '11.09.2025', size: '118 КБ' },
+      { name: 'Акт о страховом случае (залив)', kind: 'Урегулирование', date: '05.08.2026', size: '204 КБ' },
+      { name: 'Квитанция об оплате ДМС', kind: 'Платёжный документ', date: '01.12.2025', size: '96 КБ' }
+    ].map((d, i) => ({
+      ...d,
+      ver: 'v' + (i === 1 ? 2 : 1),
+      src: d.auto ? 'оформлено онлайн — загружено автоматически' : 'подготовил менеджер',
+      srcColor: d.auto ? '#0A767A' : '#9AA6B8'
+    }));
+
+    const security = [
+      { title: 'Подтверждение входа', value: 'СМС-код', note: 'Код нужен при каждом входе с нового устройства' },
+      { title: 'Активные сеансы', value: '2 устройства', note: 'iPhone, Москва · Chrome, Москва' },
+      { title: 'Последний вход', value: '18.08, 09:41', note: 'Если это были не вы — завершите сеансы' },
+      { title: 'История доступа к документам', value: 'ведётся', note: 'Видно, кто из сотрудников открывал ваши файлы' }
+    ];
+
+    const profileFields = [
+      { label: 'ФИО', value: 'Соколов Алексей Игоревич' },
+      { label: 'Телефон', value: '+7 916 442-18-03' },
+      { label: 'Почта', value: 'a.sokolov@mail.ru' },
+      { label: 'Водительское удостоверение', value: '77 12 456821, выдано 2012' }
+    ];
+
+    const notifData = [
+      { title: 'Продление полисов', note: 'Напоминание за 30 и за 7 дней' },
+      { title: 'Статус обращения', note: 'Каждый этап урегулирования' },
+      { title: 'Предложения и акции', note: 'Не чаще раза в месяц' },
+      { title: 'Изменения в тарифах', note: 'Когда ваш полис можно продлить дешевле' }
+    ];
+    const notifs = notifData.map((n, i) => {
+      const on = !!this.state.notif[i];
+      return {
+        ...n,
+        toggle: () => this.setState(s => ({ notif: { ...s.notif, [i]: !s.notif[i] } })),
+        bg: on ? '#0A767A' : 'rgba(20,40,75,.18)',
+        left: on ? '21px' : '3px'
+      };
+    });
+
+    return {
+      tabs,
+      isPolicies: this.state.tab === 0,
+      isClaims: this.state.tab === 1,
+      isDocs: this.state.tab === 2,
+      isProfile: this.state.tab === 3,
+      headline: 'Два полиса заканчиваются в этом месяце — продление займёт две минуты.',
+      summary, filters, policies, claims, docs, profileFields, notifs, security
+    };
+  }
+}
+</script>
+</body>
+</html>

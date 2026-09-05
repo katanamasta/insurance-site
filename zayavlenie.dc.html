@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder,textarea::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes stepIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+  @media print{
+    @page{size:A4;margin:14mm 12mm}
+    body{background:#FFFFFF}
+    [data-noprint]{display:none !important}
+    [data-sheet]{box-shadow:none !important;border:none !important;border-radius:0 !important;padding:0 !important;margin:0 !important;max-width:none !important;width:auto !important}
+    [data-sheet] *{color:#000000 !important}
+  }
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header data-noprint="1" style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:#14284B;font-weight:600">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section data-noprint="1" style="max-width:1240px;margin:0 auto;padding:clamp(26px,3.2vw,44px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:18px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / <a href="{{ crumbHref }}" style="color:inherit">{{ crumbLabel }}</a> / Заявление на страхование
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(24px,4vw,52px);align-items:end;padding-bottom:24px;border-bottom:1px solid rgba(20,40,75,.1)">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;border:1px solid rgba(15,163,168,.3);border-radius:100px;padding:6px 13px;margin-bottom:18px">{{ audienceBadge }}</div>
+        <h1 style="font-size:clamp(27px,3.3vw,40px);font-weight:500;letter-spacing:-.035em;line-height:1.06;margin:0">Заявление на страхование</h1>
+      </div>
+      <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:480px;text-wrap:pretty">Заполните анкету по своему направлению — система соберёт готовое заявление по форме страховщика. Его можно скачать, распечатать для подписи и печати или сразу отправить нам: заявка одновременно попадает менеджеру.</p>
+    </div>
+  </section>
+
+  <section data-noprint="1" style="max-width:1240px;margin:0 auto;padding:22px clamp(20px,3vw,36px) 0">
+    <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;color:#7B8AA0;letter-spacing:.04em">НАПРАВЛЕНИЕ СТРАХОВАНИЯ</div>
+      <div style="display:flex;gap:4px;background:#E7EDF3;border-radius:100px;padding:4px">
+        <sc-for list="{{ audTabs }}" as="a" hint-placeholder-count="2">
+          <button onClick="{{ a.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:600;padding:9px 17px;border-radius:100px;background:{{ a.bg }};color:{{ a.color }};white-space:nowrap;display:flex;align-items:center;gap:8px;transition:all .25s ease">{{ a.label }}<span style="font-family:'IBM Plex Mono';font-size:11px;color:{{ a.countColor }}">{{ a.count }}</span></button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+        <button onClick="{{ p.select }}" style="text-align:left;cursor:pointer;background:{{ p.bg }};border:1px solid {{ p.border }};border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px;font-family:'Manrope';transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s ease" style-hover="transform:translateY(-3px);border-color:#0A767A">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;color:{{ p.tagColor }}">{{ p.tag }}</div>
+          <div style="font-size:16px;font-weight:700;letter-spacing:-.02em;color:{{ p.titleColor }}">{{ p.title }}</div>
+          <div style="font-size:13px;color:{{ p.descColor }};line-height:1.45;text-wrap:pretty">{{ p.desc }}</div>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <div style="max-width:1240px;margin:0 auto;padding:clamp(24px,3vw,36px) clamp(20px,3vw,36px) clamp(48px,6vw,72px);display:flex;flex-wrap:wrap;gap:clamp(16px,2.4vw,28px);align-items:start">
+
+    <aside data-noprint="1" style="display:{{ asideDisplay }};flex:0 1 256px;min-width:220px;background:#E7EDF3;border-radius:16px;padding:20px;position:sticky;top:84px">
+      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:14px;letter-spacing:.04em">РАЗДЕЛЫ ЗАЯВЛЕНИЯ</div>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ stepNav }}" as="s" hint-placeholder-count="5">
+          <button onClick="{{ s.select }}" style="border:none;cursor:pointer;text-align:left;font-family:'Manrope';font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;background:{{ s.bg }};color:{{ s.color }};display:flex;align-items:center;gap:10px;transition:all .2s ease">
+            <span style="font-family:'IBM Plex Mono';font-size:11px;color:{{ s.numColor }};flex:none">{{ s.num }}</span>
+            <span style="min-width:0">{{ s.label }}</span>
+            <span style="margin-left:auto;font-size:12px;color:{{ s.checkColor }};flex:none">{{ s.check }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid rgba(20,40,75,.14)">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#4A5B75;margin-bottom:7px">
+          <span>Заполнено</span><span style="font-family:'IBM Plex Mono'">{{ fillPct }}</span>
+        </div>
+        <div style="height:6px;background:rgba(20,40,75,.12);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:{{ fillPct }};background:#0FA3A8;border-radius:3px;transition:width .4s cubic-bezier(.2,.7,.3,1)"></div>
+        </div>
+        <div style="font-size:12px;color:#7B8AA0;line-height:1.5;margin-top:12px">Незаполненные поля попадут в заявление как пропуски — их можно дописать от руки при подписании.</div>
+      </div>
+    </aside>
+
+    <div style="flex:1 1 340px;min-width:0">
+
+      <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+        <div style="display:{{ dealNoteDisplay }};background:#E7EDF3;border-radius:14px;padding:15px 18px;margin-bottom:12px;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="font-size:13.5px;color:#4A5B75;line-height:1.5;min-width:0">{{ dealNote }}</div>
+          <a href="admin-crm.dc.html?tab=leads" style="font-size:13px;font-weight:700;white-space:nowrap">Вернуться в CRM →</a>
+        </div>
+        <div style="display:{{ draftDisplay }};background:#E7EDF3;border-radius:14px;padding:15px 18px;margin-bottom:12px;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+          <div style="font-size:13.5px;color:#4A5B75;line-height:1.5;min-width:0">{{ draftNote }} Продолжить с того же места?</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onClick="{{ restoreDraft }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:700;padding:10px 18px;border-radius:100px;background:#14284B;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#0A767A">Продолжить</button>
+            <button onClick="{{ dropDraft }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:600;padding:10px 16px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .2s ease" style-hover="border-color:#14284B">Начать заново</button>
+          </div>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.12);border-radius:18px;padding:clamp(22px,2.8vw,32px);animation:stepIn .4s cubic-bezier(.2,.7,.3,1) both">
+          <div style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+            <h2 style="font-size:clamp(20px,2.3vw,26px);font-weight:700;letter-spacing:-.025em;margin:0">{{ stepTitle }}</h2>
+            <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">РАЗДЕЛ {{ stepCounter }}</div>
+          </div>
+          <p style="font-size:14px;color:#7B8AA0;margin:0 0 24px;line-height:1.5;max-width:620px">{{ stepHint }}</p>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+            <sc-for list="{{ fields }}" as="f" hint-placeholder-count="6">
+              <div style="grid-column:{{ f.span }};min-width:0">
+                <div style="font-size:13px;color:#5A6B85;margin-bottom:8px">{{ f.label }}<span style="color:#0A767A">{{ f.req }}</span></div>
+
+                <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}">
+                  <input value="{{ f.value }}" onChange="{{ f.set }}" placeholder="{{ f.placeholder }}" style="width:100%;background:#FBFCFD;border:1px solid {{ f.borderColor }};border-radius:11px;padding:13px 15px;outline:none;font-family:{{ f.font }};font-size:15px;color:#14284B">
+                </sc-if>
+
+                <sc-if value="{{ f.isArea }}" hint-placeholder-val="{{ false }}">
+                  <textarea value="{{ f.value }}" onChange="{{ f.set }}" placeholder="{{ f.placeholder }}" style="width:100%;min-height:84px;resize:vertical;background:#FBFCFD;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'Manrope';font-size:15px;color:#14284B"></textarea>
+                </sc-if>
+
+                <sc-if value="{{ f.isChoice }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3">
+                      <button onClick="{{ o.select }}" style="border:1px solid {{ o.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 14px;border-radius:100px;background:{{ o.bg }};color:{{ o.color }};transition:all .2s ease">{{ o.label }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ f.isFile }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ f.attach }}" style="width:100%;text-align:left;cursor:pointer;font-family:'Manrope';background:{{ f.fileBg }};border:1.5px dashed {{ f.fileBorder }};border-radius:11px;padding:13px 15px;display:flex;align-items:center;gap:11px;transition:all .2s ease" style-hover="border-color:#0A767A">
+                    <span style="width:26px;height:26px;border-radius:8px;background:rgba(20,40,75,.06);display:flex;align-items:center;justify-content:center;font-size:13px;color:{{ f.fileColor }};flex:none">{{ f.fileIcon }}</span>
+                    <span style="min-width:0;flex:1">
+                      <span style="display:block;font-size:13px;font-weight:600;color:#14284B;word-break:break-all">{{ f.fileName }}</span>
+                      <span style="display:block;font-size:11px;color:{{ f.fileColor }};margin-top:2px">{{ f.fileState }}</span>
+                    </span>
+                  </button>
+                </sc-if>
+
+                <div style="display:{{ f.errorDisplay }};font-size:12.5px;color:#B03A2E;line-height:1.45;margin-top:7px">{{ f.error }}</div>
+                <div style="font-size:12px;color:#9AA6B8;margin-top:7px;line-height:1.45;display:{{ f.noteDisplay }}">{{ f.note }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid rgba(20,40,75,.1);flex-wrap:wrap">
+            <button onClick="{{ back }}" style="display:{{ backDisplay }};border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:600;padding:14px 22px;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="border-color:#14284B">Назад</button>
+            <button onClick="{{ next }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:700;padding:14px 26px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#14284B">{{ nextLabel }}</button>
+            <div style="font-size:13px;color:#9AA6B8;margin-left:auto">{{ formHint }}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDoc }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div data-noprint="1" style="background:#E7EDF3;border-radius:16px;padding:20px;margin-bottom:14px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+                <div style="font-size:16px;font-weight:700">Заявление {{ doc.number }} принято</div>
+                <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A;border:1px solid rgba(15,163,168,.35);border-radius:100px;padding:4px 11px">ОТВЕТ ДО {{ replyBy }}</div>
+              </div>
+              <div style="font-size:13px;color:#4A5B75;line-height:1.5;max-width:560px;text-wrap:pretty">Менеджер {{ managerName }} уже видит заявление и вернётся с расчётом до {{ replyBy }}. Проверьте данные, распечатайте для подписи и печати или скачайте файл. Ход работы виден в личном кабинете.</div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:11px">
+                <a href="kabinet.dc.html" style="font-size:13.5px;font-weight:700">Следить в личном кабинете →</a>
+                <a href="assistent.dc.html" style="font-size:13.5px;font-weight:600;color:#5A6B85">Спросить помощника</a>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button onClick="{{ doPrint }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">Скачать PDF</button>
+              <button onClick="{{ doWord }}" style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Скачать .doc</button>
+              <button onClick="{{ backToForm }}" style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Изменить данные</button>
+            </div>
+          </div>
+
+          <div data-sheet="1" id="app-sheet" style="background:#FFFFFF;border:1px solid rgba(20,40,75,.14);border-radius:14px;padding:clamp(26px,3.4vw,52px);max-width:860px;font-size:12.5px;line-height:1.5;color:#14284B;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both">
+            <div style="display:flex;justify-content:space-between;gap:20px;align-items:start;padding-bottom:14px;border-bottom:1.5px solid #14284B;flex-wrap:wrap">
+              <div>
+                <div style="font-size:14px;font-weight:700;letter-spacing:-.01em">ООО «ПИНС Брокер»</div>
+                <div style="font-size:11px;color:#4A5B75;margin-top:3px">Лицензия Банка России СБ-1247 · ИНН 7714823910</div>
+                <div style="font-size:11px;color:#4A5B75">Москва, ул. Расковой, 34, стр. 2 · 8 800 550-31-40</div>
+              </div>
+              <div style="text-align:right;font-family:'IBM Plex Mono';font-size:11px;color:#4A5B75">
+                <div>{{ doc.number }}</div>
+                <div>от {{ doc.date }}</div>
+              </div>
+            </div>
+
+            <div style="text-align:center;padding:22px 0 6px">
+              <div style="font-size:16px;font-weight:700;letter-spacing:-.01em;text-wrap:balance">{{ doc.title }}</div>
+              <div style="font-size:11px;color:#4A5B75;margin-top:7px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.45">Является неотъемлемой частью договора страхования. Заполняется Страхователем и подтверждается подписью уполномоченного лица.</div>
+            </div>
+
+            <sc-for list="{{ doc.sections }}" as="s" hint-placeholder-count="5">
+              <div style="margin-top:20px">
+                <div style="font-size:12.5px;font-weight:700;padding:6px 10px;background:#E7EDF3;border-left:3px solid #14284B">{{ s.title }}</div>
+                <div style="border:1px solid rgba(20,40,75,.24);border-top:none">
+                  <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="4">
+                    <div style="display:grid;grid-template-columns:minmax(160px,42%) 1fr;border-bottom:1px solid rgba(20,40,75,.14)">
+                      <div style="padding:8px 10px;color:#3A4A66;border-right:1px solid rgba(20,40,75,.14);background:#FBFCFD">{{ r.label }}</div>
+                      <div style="padding:8px 10px;font-weight:600;color:{{ r.color }};min-width:0;word-break:break-word">{{ r.value }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+
+            <div style="margin-top:22px;font-size:11.5px;line-height:1.55;color:#3A4A66">
+              <div style="font-weight:700;color:#14284B;margin-bottom:6px">Заявитель подтверждает:</div>
+              <sc-for list="{{ doc.declarations }}" as="d" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:16px 1fr;gap:8px;margin-bottom:5px">
+                  <span>—</span><span>{{ d }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;margin-top:30px;padding-top:18px;border-top:1px solid rgba(20,40,75,.2)">
+              <div>
+                <div style="font-size:11.5px;color:#3A4A66;margin-bottom:26px">Руководитель / уполномоченное лицо</div>
+                <div style="border-bottom:1px solid #14284B;margin-bottom:5px"></div>
+                <div style="font-size:10.5px;color:#4A5B75">подпись, М.П.</div>
+                <div style="font-size:11.5px;font-weight:600;margin-top:9px">{{ doc.signer }}</div>
+              </div>
+              <div>
+                <div style="font-size:11.5px;color:#3A4A66;margin-bottom:26px">Дата заполнения</div>
+                <div style="border-bottom:1px solid #14284B;margin-bottom:5px"></div>
+                <div style="font-size:10.5px;color:#4A5B75">число, месяц, год</div>
+                <div style="font-size:11.5px;font-weight:600;margin-top:9px">{{ doc.date }}</div>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;padding-top:12px;border-top:1px dashed rgba(20,40,75,.24);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:10.5px;color:#4A5B75">
+              <div>Служебные отметки: заявка {{ doc.number }} · менеджер назначается автоматически</div>
+              <div style="font-family:'IBM Plex Mono'">стр. 1 из 1</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { product: 0, step: 0, v: {}, done: false, draftFound: false, draft: null, fromDeal: '' };
+
+  componentDidMount() {
+    try {
+      const q = new URLSearchParams(location.search).get('p');
+      const n = parseInt(q, 10);
+      if (!isNaN(n) && n >= 0 && n < this.config().length) this.setState({ product: n });
+      const pre = localStorage.getItem('pins-zayavlenie-prefill');
+      if (pre) {
+        const d = JSON.parse(pre);
+        if (d && d.v && Object.keys(d.v).length) {
+          localStorage.removeItem('pins-zayavlenie-prefill');
+          this.setState(s => ({
+            v: { ...d.v, ...s.v },
+            product: (d.p >= 0 && d.p < this.config().length) ? d.p : s.product,
+            fromDeal: d.deal || '',
+            draftFound: false
+          }));
+          return;
+        }
+      }
+      const raw = localStorage.getItem('pins-zayavlenie-draft');
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d && d.v && Object.keys(d.v).length) this.setState({ draftFound: true, draft: d });
+      }
+    } catch (e) {}
+  }
+
+  docsStep(list) {
+    return {
+      title: 'Документы',
+      hint: 'Загрузите документы сразу — менеджер отправит их страховщику вместе с заявлением одним письмом. Формат: PDF, JPG, DOC, XLSX до 20 МБ на файл. Если файлов нет под рукой, пропустите шаг: менеджер запросит их отдельно.',
+      docs: true,
+      fields: list.map(d => ({ k: 'file_' + d.k, label: d.label, type: 'file', note: d.note, req: d.req, span: 'span 1' }))
+    };
+  }
+
+  config() {
+    const org = {
+      title: 'Сведения о Страхователе',
+      hint: 'Реквизиты подставляются в заявление и в договор. Если часть данных неизвестна, оставьте поле пустым — впишете при подписании.',
+      fields: [
+        { k: 'name', label: 'Полное наименование организации', span: 'span 2', ph: 'Общество с ограниченной ответственностью «Верста Логистик»', req: true },
+        { k: 'inn', label: 'ИНН / КПП', ph: '7714823910 / 771401001', mono: true, req: true },
+        { k: 'ogrn', label: 'ОГРН', ph: '1157746329104', mono: true },
+        { k: 'addrLegal', label: 'Юридический адрес', span: 'span 2', ph: '127015, Москва, ул. Расковой, 34, стр. 2' },
+        { k: 'addrPost', label: 'Фактический адрес', span: 'span 2', ph: 'совпадает с юридическим' },
+        { k: 'head', label: 'Руководитель, должность', ph: 'Генеральный директор Ковалёв С. А.' },
+        { k: 'basis', label: 'Действует на основании', type: 'choice', options: ['Устава', 'Доверенности', 'Приказа'] },
+        { k: 'contact', label: 'Контактное лицо', ph: 'Смирнова Е. В., финансовый директор' },
+        { k: 'phone', label: 'Телефон', ph: '+7 495 118-40-22', mono: true, req: true },
+        { k: 'email', label: 'Электронная почта', ph: 'insurance@company.ru', req: true },
+        { k: 'edo', label: 'Обмен документами', type: 'choice', options: ['ЭДО (Диадок)', 'ЭДО (СБИС)', 'Скан на почту', 'Оригиналы курьером'] }
+      ]
+    };
+
+    const person = {
+      title: 'Сведения о Страхователе',
+      hint: 'Данные подставляются в заявление и в полис. Паспорт нужен только серией и номером — скан загружается отдельно и в модель не передаётся.',
+      fields: [
+        { k: 'fio', label: 'Фамилия, имя, отчество', span: 'span 2', ph: 'Соколов Алексей Игоревич', req: true },
+        { k: 'birth', label: 'Дата рождения', ph: '14.03.1986', mono: true, req: true },
+        { k: 'passport', label: 'Паспорт: серия и номер', ph: '45 12 348271', mono: true },
+        { k: 'addrReg', label: 'Адрес регистрации', span: 'span 2', ph: '127015, Москва, ул. Расковой, 34, кв. 118' },
+        { k: 'phoneF', label: 'Телефон', ph: '+7 916 442-18-03', mono: true, req: true },
+        { k: 'emailF', label: 'Электронная почта', ph: 'a.sokolov@mail.ru', req: true },
+        { k: 'contactWay', label: 'Как связаться', type: 'choice', options: ['Звонок', 'Мессенджер', 'Только почта'] }
+      ]
+    };
+
+    const vehicle = (extra) => ({
+      title: 'Автомобиль',
+      hint: 'Данные берутся из СТС или ПТС. VIN и госномер нужны для проверки в базах ГИБДД и РСА.',
+      fields: [
+        { k: 'carMake', label: 'Марка и модель', span: 'span 2', ph: 'Toyota Camry 2.5', req: true },
+        { k: 'carYear', label: 'Год выпуска', ph: '2019', mono: true, req: true },
+        { k: 'carPower', label: 'Мощность, л. с.', ph: '181', mono: true, req: true },
+        { k: 'carVin', label: 'VIN', ph: 'XW7BF4FK10S123847', mono: true },
+        { k: 'carPlate', label: 'Госномер', ph: 'А 483 ТК 777', mono: true },
+        { k: 'carDoc', label: 'Документ на ТС', type: 'choice', options: ['СТС', 'ПТС', 'Договор купли-продажи'] },
+        { k: 'carUse', label: 'Использование', type: 'choice', options: ['Личное', 'Такси', 'Аренда', 'Учебная езда'] },
+        { k: 'carRegion', label: 'Регион преимущественного использования', span: 'span 2', ph: 'Москва — влияет на территориальный коэффициент' },
+        { k: 'carDrivers', label: 'Допуск к управлению', type: 'choice', options: ['Ограниченный список', 'Без ограничений'] },
+        { k: 'carDriverList', label: 'Водители: ФИО, дата рождения, стаж, права', span: 'span 2', type: 'area', ph: 'Соколов А. И., 14.03.1986, стаж с 2012, 77 12 456821' }
+      ].concat(extra || [])
+    });
+
+    const ftermsBase = (extra) => ({
+      title: 'Срок и оплата',
+      hint: 'Срок действия и способ оплаты. Полис электронный: приходит на почту и в личный кабинет.',
+      fields: [
+        { k: 'fFrom', label: 'Дата начала', ph: '01.09.2026', mono: true, req: true },
+        { k: 'fTerm', label: 'Срок', type: 'choice', options: ['12 месяцев', '6 месяцев', 'На срок поездки', 'Иной'] },
+        { k: 'fPay', label: 'Оплата', type: 'choice', options: ['Единовременно', 'Двумя платежами', 'Рассрочка 12 мес.'] },
+        { k: 'fPrev', label: 'Предыдущий полис', span: 'span 2', ph: 'Ингосстрах, № … до 31.08.2026 — если продлеваете' },
+        { k: 'fNote', label: 'Что важно учесть', span: 'span 2', type: 'area', ph: 'Пожелания по покрытию, сумме, клиникам или сервисам.' }
+      ].concat(extra || [])
+    });
+
+    const terms = (extra) => ({
+      title: 'Условия страхования',
+      hint: 'Срок, франшиза и порядок оплаты. Эти условия проверит менеджер до отправки запроса страховщикам.',
+      fields: [
+        { k: 'periodFrom', label: 'Дата начала страхования', ph: '01.09.2026', mono: true },
+        { k: 'periodTerm', label: 'Срок', type: 'choice', options: ['12 месяцев', '6 месяцев', 'На срок работ', 'Иной'] },
+        { k: 'deductible', label: 'Франшиза', type: 'choice', options: ['Без франшизы', 'Условная', 'Безусловная', 'На выбор страховщика'] },
+        { k: 'deductibleSum', label: 'Размер франшизы', ph: '30 000 ₽ по каждому случаю', mono: true },
+        { k: 'payment', label: 'Порядок оплаты', type: 'choice', options: ['Единовременно', 'Два платежа', 'Ежеквартально', 'Рассрочка 12 мес.'] },
+        { k: 'beneficiary', label: 'Выгодоприобретатель', span: 'span 2', ph: 'ПАО Банк, договор залога № … / Страхователь' },
+        { k: 'losses', label: 'Убытки за последние 3 года', span: 'span 2', type: 'area', ph: 'Даты, характер убытка, сумма выплаты. Если убытков не было — укажите «убытков не было».' },
+        { k: 'prev', label: 'Предыдущий страховщик и номер полиса', span: 'span 2', ph: 'Ингосстрах, полис № … до 31.08.2026' }
+      ].concat(extra || [])
+    });
+
+    return [
+      {
+        tag: 'ИМУЩЕСТВО', title: 'Имущество юридического лица',
+        desc: 'Здания, помещения, оборудование, товарные запасы и перерыв в деятельности.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование имущества юридических лиц',
+        steps: [org, {
+          title: 'Объект страхования',
+          hint: 'Опишите объект так, как он значится в документах: это влияет на тариф и на скорость выплаты при убытке.',
+          fields: [
+            { k: 'objKind', label: 'Вид имущества', span: 'span 2', type: 'choice', options: ['Здание / помещение', 'Оборудование', 'Товарные запасы', 'Отделка и инженерия', 'Комплексно'] },
+            { k: 'objAddr', label: 'Адрес места страхования', span: 'span 2', ph: '141400, Химки, ул. Заводская, 8, корп. 2' },
+            { k: 'objRight', label: 'Право владения', type: 'choice', options: ['Собственность', 'Аренда', 'Лизинг', 'Оперативное управление'] },
+            { k: 'objArea', label: 'Площадь, м²', ph: '640', mono: true },
+            { k: 'objYear', label: 'Год постройки', ph: '2004', mono: true },
+            { k: 'objWalls', label: 'Материал стен и перекрытий', ph: 'Кирпич, ж/б перекрытия' },
+            { k: 'objRoof', label: 'Кровля', ph: 'Профлист по металлическим фермам' },
+            { k: 'objUse', label: 'Назначение и характер деятельности', span: 'span 2', ph: 'Склад хранения непродовольственных товаров, без огневых работ' },
+            { k: 'objFloors', label: 'Этажей в здании', ph: '9', mono: true },
+            { k: 'objFloorUsed', label: 'Занимаемые этажи', ph: '1–2', mono: true },
+            { k: 'objAreaTotal', label: 'Общая площадь здания, м²', ph: '3 400', mono: true },
+            { k: 'objRepair', label: 'Год последнего капитального ремонта', ph: '2019', mono: true },
+            { k: 'objConstr', label: 'Конструктивный тип', span: 'span 2', type: 'choice', options: ['Камень, негорючие перекрытия', 'Камень, деревянные перекрытия или кровля', 'Металлокаркас, негорючие стены', 'Металлокаркас, горючий утеплитель', 'Конструкция из древесины'] },
+            { k: 'objPurpose', label: 'Функциональное назначение', type: 'choice', options: ['Складское', 'Торговое', 'Производственное', 'Административное', 'Жилое', 'Иное'] },
+            { k: 'objNeighbors', label: 'Назначение смежных помещений', ph: 'Выше — офисы, ниже — кафе' },
+            { k: 'objFood', label: 'Общепит по соседству или выше/ниже', type: 'choice', options: ['Нет', 'Да'] },
+            { k: 'objRent', label: 'Часть площадей сдаётся в аренду', type: 'choice', options: ['Нет', 'Да, частично', 'Да, полностью'] },
+            { k: 'objTenants', label: 'Основные арендаторы', span: 'span 2', ph: 'Кто занимает площади и какой деятельностью' },
+            { k: 'objLessor', label: 'Арендодатель, номер и дата договора аренды', span: 'span 2', ph: 'ООО «Депо», договор № 14/А от 01.03.2024' },
+            { k: 'objHeat', label: 'Отопление', type: 'choice', options: ['Центральное', 'Автономное газовое', 'Электрическое', 'Отсутствует, склад неотапливаемый'] },
+            { k: 'objBasement', label: 'Имущество в подвале или в жилом здании', type: 'choice', options: ['Нет', 'Да, подвал', 'Да, жилое здание'] },
+            { k: 'objHazard', label: 'Огне- и взрывоопасные вещества, огневые работы', span: 'span 2', type: 'area', ph: 'Если применяются — что именно, в каком объёме и где хранится. Если нет — укажите «не применяются».' },
+            { k: 'objSauna', label: 'Бани и сауны на территории', type: 'choice', options: ['Нет', 'Да'] },
+            { k: 'objWorn', label: 'Аварийное или ветхое состояние', type: 'choice', options: ['Нет', 'Да'] },
+            { k: 'objBuild', label: 'Строительно-монтажные работы в период страхования', type: 'choice', options: ['Не ведутся', 'Ведутся', 'Запланированы'] },
+            { k: 'objStoreH', label: 'Высота складирования и способ хранения', ph: 'До 4,5 м, стеллажи паллетного типа' },
+            { k: 'objStoreArea', label: 'Площадь складских помещений, м²', ph: '1 800', mono: true }
+          ]
+        }, {
+          title: 'Пожарная защита и охрана',
+          hint: 'Этот раздел даёт основную скидку к тарифу: вывод сигнала на круглосуточный пульт и физическая охрана снижают ставку у всех страховщиков.',
+          fields: [
+            { k: 'objFire', label: 'Пожарная сигнализация', type: 'choice', options: ['Автоматическая, исправна', 'Ручная кнопочная', 'Не установлена'] },
+            { k: 'fireOut', label: 'Куда выведен сигнал АПС', type: 'choice', options: ['Пульт МЧС', 'Пульт службы охраны объекта', 'Внутренний пост', 'Никуда'] },
+            { k: 'fireSensors', label: 'Типы извещателей', span: 'span 2', type: 'choice', options: ['Дымовые', 'Тепловые', 'Дымовые и тепловые', 'Пламени', 'Датчики газа'] },
+            { k: 'fireCover', label: 'Охват территории извещателями, %', ph: '90', mono: true },
+            { k: 'fireYear', label: 'Год установки системы', ph: '2022', mono: true },
+            { k: 'fireService', label: 'Регулярное техобслуживание АПС', type: 'choice', options: ['Да, по договору', 'Нет'] },
+            { k: 'fireSupp', label: 'Автоматическое пожаротушение', type: 'choice', options: ['Отсутствует', 'Спринклерная водяная', 'Порошковая', 'Газовая или хладоновая', 'Пенотушение'] },
+            { k: 'firePrim', label: 'Первичные средства и гидранты', span: 'span 2', ph: 'Огнетушители по нормам, внутренний противопожарный водопровод, гидрант в 60 м' },
+            { k: 'fireAspir', label: 'Система аспирации', type: 'choice', options: ['Не требуется', 'Установлена'], note: 'Для элеваторов, мукомольных и деревообрабатывающих производств' },
+            { k: 'objGuard', label: 'Охранная сигнализация', type: 'choice', options: ['Пульт Росгвардии или МВД', 'Пульт ЧОП с круглосуточным контролем', 'Локальная, без вывода', 'Отсутствует'] },
+            { k: 'guardSensors', label: 'Что защищает сигнализация', span: 'span 2', ph: 'Периметр, перемещение внутри помещений, витрины' },
+            { k: 'guardPhys', label: 'Физическая охрана', type: 'choice', options: ['ЧОП по договору', 'Вневедомственная охрана МВД', 'Служба безопасности', 'Охрана арендодателя', 'Отсутствует'] },
+            { k: 'guardMode', label: 'График охраны', type: 'choice', options: ['Круглосуточно', 'Только во внерабочее время', 'Днём'] },
+            { k: 'guardCount', label: 'Число охранников днём и ночью', ph: '2 днём, 1 ночью', mono: true },
+            { k: 'guardArm', label: 'Оружие у охраны', type: 'choice', options: ['Нет', 'Да'] },
+            { k: 'guardPanic', label: 'Тревожная кнопка', type: 'choice', options: ['Есть', 'Нет'] },
+            { k: 'guardBars', label: 'Защита окон первого и цокольного этажа', type: 'choice', options: ['Решётки или жалюзи на всех', 'Частично', 'Отсутствует', 'Окон на первом этаже нет'] },
+            { k: 'cctv', label: 'Видеонаблюдение', type: 'choice', options: ['Есть, вывод на круглосуточный пост', 'Есть, запись без поста', 'Отсутствует'] },
+            { k: 'cctvKeep', label: 'Срок хранения записей', ph: '30 суток', mono: true }
+          ]
+        }, {
+          title: 'Страховая сумма и риски',
+          hint: 'Страховая сумма указывается по каждой группе имущества. Занижение суммы приводит к пропорциональной выплате.',
+          fields: [
+            { k: 'sumBuilding', label: 'Здания и помещения, ₽', ph: '84 000 000', mono: true },
+            { k: 'sumEquip', label: 'Оборудование, ₽', ph: '21 500 000', mono: true },
+            { k: 'sumGoods', label: 'Товарные запасы, ₽', ph: '9 800 000', mono: true },
+            { k: 'sumFinish', label: 'Отделка внутренняя и внешняя, ₽', ph: '4 200 000', mono: true },
+            { k: 'sumEngin', label: 'Инженерное оборудование и сети, ₽', ph: '3 100 000', mono: true },
+            { k: 'sumGlass', label: 'Стёкла, витрины, остекление, ₽', ph: '600 000', mono: true },
+            { k: 'sumFurn', label: 'Мебель и предметы интерьера, ₽', ph: '1 400 000', mono: true },
+            { k: 'sumIT', label: 'Компьютеры и оргтехника, ₽', ph: '2 300 000', mono: true },
+            { k: 'sumOuter', label: 'Внешние объекты: реклама, антенны, ₽', ph: '250 000', mono: true },
+            { k: 'sumUnfin', label: 'Незавершённое строительство, ₽', ph: '0', mono: true },
+            { k: 'goodsKind', label: 'Состав товарных запасов', span: 'span 2', type: 'choice', options: ['Товары для перепродажи', 'Готовая продукция', 'Сырьё и материалы', 'В том числе ГСМ'] },
+            { k: 'goodsMax', label: 'Максимальная и средняя загрузка склада, ₽', span: 'span 2', ph: 'максимум 14 000 000, в среднем 9 800 000', mono: true },
+            { k: 'vat', label: 'НДС в страховой сумме', type: 'choice', options: ['С учётом НДС', 'Без учёта НДС'] },
+            { k: 'currency', label: 'Валюта суммы', type: 'choice', options: ['Рубли', 'USD', 'EUR'] },
+            { k: 'sumBasis', label: 'Порядок определения суммы', span: 'span 2', type: 'choice', options: ['Балансовая стоимость', 'Восстановительная стоимость', 'Оценка независимого эксперта', 'Заявленная стоимость'] },
+            { k: 'risks', label: 'Риски к покрытию', span: 'span 2', type: 'area', ph: 'Пожар, взрыв, залив, стихийные бедствия, кража со взломом, противоправные действия третьих лиц, поломка оборудования, перерыв в деятельности.' },
+            { k: 'bi', label: 'Перерыв в деятельности', type: 'choice', options: ['Не требуется', 'До 3 месяцев', 'До 6 месяцев', 'До 12 месяцев'] },
+            { k: 'biIncome', label: 'Среднемесячная выручка, ₽', ph: '18 400 000', mono: true }
+          ]
+        }, terms([
+          { k: 'benefRight', label: 'Права выгодоприобретателя на имущество', type: 'choice', options: ['Залог или ипотека', 'Лизинг', 'Аренда', 'Собственность', 'Иное'] },
+          { k: 'benefDoc', label: 'Номер и дата договора залога или лизинга', ph: '№ 4471-З от 12.02.2024', mono: true },
+          { k: 'dual', label: 'Имущество застраховано в других компаниях', type: 'choice', options: ['Нет', 'Да', 'Частично'] },
+          { k: 'dualShare', label: 'Доля двойного страхования, %', ph: '40', mono: true },
+          { k: 'bankArrears', label: 'Просроченная более 30 дней задолженность перед банком или лизингодателем', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'bankruptcy', label: 'Внешнее управление, конкурсное производство, банкротство', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'sanctions', label: 'Санкции США или ЕС в отношении страхователя, акционеров, арендодателя', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'access', label: 'Доступ страхователя к имуществу ограничен', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'thirdParty', label: 'Иные организации на территории страхования', span: 'span 2', ph: 'Виды деятельности других компаний в том же здании' },
+          { k: 'turnover', label: 'Годовой оборот, ₽', ph: '640 000 000', mono: true },
+          { k: 'bankDetails', label: 'Банковские реквизиты: р/с, банк, БИК', span: 'span 2', ph: '40702810400000012345, Сбербанк, БИК 044525225', mono: true }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'balance', label: 'Бухгалтерская отчётность за последний год', note: 'Формы 1 и 2' }
+        ].concat([
+          { k: 'pravo', label: 'Правоустанавливающие документы на объект', req: true, note: 'Свидетельство, выписка ЕГРН или договор аренды' },
+          { k: 'photo', label: 'Фотографии объекта', note: 'Фасад, кровля, внутренние помещения, склад' },
+          { k: 'reestr', label: 'Реестр имущества и оборудования', note: 'Excel с балансовой стоимостью по позициям' },
+          { k: 'losses', label: 'Справка об убытках за 3 года', note: 'От предыдущего страховщика' },
+          { k: 'zalog', label: 'Договор залога, если объект в залоге' },
+          { k: 'guardContract', label: 'Договор с ЧОП или охранной организацией', note: 'Требуют Пари и Росгосстрах при скидке за охрану' },
+          { k: 'fireContract', label: 'Договор на обслуживание пожарной сигнализации' },
+          { k: 'rentContract', label: 'Договор аренды', note: 'Если имущество не в собственности' },
+          { k: 'ocenka', label: 'Отчёт об оценке или выписка из баланса', note: 'Подтверждает действительную стоимость' }
+        ]))]
+      },
+      {
+        tag: 'ПЕРСОНАЛ', title: 'ДМС для сотрудников',
+        desc: 'Коллективная программа: поликлиника, стоматология, госпитализация, телемедицина.',
+        docTitle: 'ЗАЯВЛЕНИЕ на добровольное медицинское страхование сотрудников',
+        steps: [org, {
+          title: 'Состав застрахованных',
+          hint: 'Численность и структура коллектива определяют тариф. Точные списки передаются отдельным файлом после согласования условий.',
+          fields: [
+            { k: 'headcount', label: 'Численность к страхованию', ph: '86', mono: true, req: true },
+            { k: 'family', label: 'Родственники сотрудников', type: 'choice', options: ['Не включаются', 'По желанию за счёт сотрудника', 'Включаются за счёт компании'] },
+            { k: 'ageStruct', label: 'Возрастная структура', span: 'span 2', ph: 'до 30 лет — 24 чел., 30–45 — 47 чел., 45–60 — 15 чел.' },
+            { k: 'cities', label: 'Города присутствия', span: 'span 2', ph: 'Москва — 62 чел., Казань — 14 чел., Новосибирск — 10 чел.' },
+            { k: 'harmful', label: 'Вредные условия труда', type: 'choice', options: ['Отсутствуют', 'Частично', 'Значительная часть штата'] },
+            { k: 'levels', label: 'Уровни программы', type: 'choice', options: ['Единая для всех', 'Два уровня', 'Три уровня и более'] }
+          ]
+        }, {
+          title: 'Наполнение программы',
+          hint: 'Отметьте, что должно входить в программу. Менеджер подберёт клиники под выбранный уровень и бюджет.',
+          fields: [
+            { k: 'progOut', label: 'Поликлиника', type: 'choice', options: ['Базовая сеть', 'Клиники бизнес-класса', 'Премиальные клиники'] },
+            { k: 'progDent', label: 'Стоматология', type: 'choice', options: ['Не включать', 'Лечение и гигиена', 'Расширенная с лимитом'] },
+            { k: 'progHosp', label: 'Госпитализация', type: 'choice', options: ['Экстренная', 'Экстренная и плановая', 'Не включать'] },
+            { k: 'progAmb', label: 'Скорая помощь', type: 'choice', options: ['Городская', 'Коммерческая по городу', 'Город и область'] },
+            { k: 'progTele', label: 'Телемедицина', type: 'choice', options: ['Включить без лимита', 'Включить с лимитом', 'Не включать'] },
+            { k: 'progCheck', label: 'Чек-апы и вакцинация', type: 'choice', options: ['Не включать', 'Вакцинация от гриппа', 'Чек-ап раз в год'] },
+            { k: 'progSum', label: 'Страховая сумма на человека, ₽', ph: '3 000 000', mono: true },
+            { k: 'progBudget', label: 'Ориентир бюджета на человека, ₽/год', ph: '52 000', mono: true },
+            { k: 'progClinics', label: 'Обязательные клиники', span: 'span 2', type: 'area', ph: 'Перечислите клиники, которые должны быть в программе (например, рядом с офисом или уже привычные сотрудникам).' },
+            { k: 'progCopay', label: 'Соплатёж сотрудника', type: 'choice', options: ['Нет', '10%', '20%', 'Только сверх лимита'] }
+          ]
+        }, terms([
+          { k: 'prevRatio', label: 'Убыточность прошлого периода, %', ph: '78', mono: true }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'balance', label: 'Бухгалтерская отчётность за последний год', note: 'Формы 1 и 2' }
+        ].concat([
+          { k: 'spisok', label: 'Список сотрудников к страхованию', req: true, note: 'ФИО, дата рождения, город, уровень программы' },
+          { k: 'prevProg', label: 'Действующая программа ДМС', note: 'Полис и приложение с наполнением' },
+          { k: 'lossStat', label: 'Статистика обращений и убыточности', note: 'От текущего страховщика' },
+          { k: 'clinics', label: 'Пожелания по клиникам', note: 'Список в любом формате' }
+        ]))]
+      },
+      {
+        tag: 'ПЕРСОНАЛ', title: 'Корпоративный НС',
+        desc: 'Несчастный случай для сотрудников: круглосуточно или на время работы.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование сотрудников от несчастных случаев и болезней',
+        steps: [org, {
+          title: 'Состав застрахованных',
+          hint: 'Тариф зависит от профессий и класса риска по каждой группе. Списки сотрудников передаются файлом после согласования условий.',
+          fields: [
+            { k: 'nsCount', label: 'Численность к страхованию', ph: '124', mono: true, req: true },
+            { k: 'nsCover', label: 'Время действия покрытия', type: 'choice', options: ['Круглосуточно', 'Только на время работы', 'Работа и дорога до места работы'], req: true },
+            { k: 'nsProf', label: 'Профессии и должности', span: 'span 2', type: 'area', ph: 'Монтажники на высоте — 34 чел., водители — 18 чел., складские работники — 42 чел., офис — 30 чел.' },
+            { k: 'nsRisk', label: 'Класс профессионального риска', type: 'choice', options: ['Офисный персонал', 'Производство и склад', 'Работы на высоте и строительство', 'Смешанный состав'] },
+            { k: 'nsShift', label: 'Режим работы', type: 'choice', options: ['Стандартный день', 'Сменный график', 'Вахта'] },
+            { k: 'nsAge', label: 'Возрастная структура', span: 'span 2', ph: 'до 30 лет — 38 чел., 30–45 — 56 чел., 45–60 — 30 чел.' },
+            { k: 'nsSport', label: 'Спорт и корпоративные мероприятия', type: 'choice', options: ['Не покрывать', 'Любительский спорт', 'Соревнования и сборы'] },
+            { k: 'nsTrips', label: 'Служебные поездки', type: 'choice', options: ['Отсутствуют', 'По России', 'Включая зарубежные'] }
+          ]
+        }, {
+          title: 'Покрытие и суммы',
+          hint: 'Страховая сумма назначается на человека. Отметьте риски, которые должны войти в договор.',
+          fields: [
+            { k: 'nsSum', label: 'Страховая сумма на человека, ₽', ph: '1 000 000', mono: true, req: true },
+            { k: 'nsSumMode', label: 'Порядок суммы', type: 'choice', options: ['Единая для всех', 'По группам должностей', 'Кратно годовому доходу'] },
+            { k: 'nsDeath', label: 'Смерть в результате НС', type: 'choice', options: ['Включить', 'Не включать'] },
+            { k: 'nsDisab', label: 'Инвалидность', type: 'choice', options: ['I и II группа', 'Все группы', 'Не включать'] },
+            { k: 'nsTable', label: 'Травмы по таблице выплат', type: 'choice', options: ['Включить', 'Не включать'] },
+            { k: 'nsHosp', label: 'Госпитализация, выплата за день', type: 'choice', options: ['Не включать', '0,1% от суммы', '0,2% от суммы'] },
+            { k: 'nsSick', label: 'Временная нетрудоспособность', type: 'choice', options: ['Не включать', 'С 8-го дня', 'С 15-го дня'] },
+            { k: 'nsIll', label: 'Смерть от болезни', type: 'choice', options: ['Не включать', 'Включить', 'Включить с ожиданием 3 месяца'] },
+            { k: 'nsCrit', label: 'Критические заболевания', type: 'choice', options: ['Не включать', 'Включить с лимитом'] },
+            { k: 'nsPay', label: 'Выгодоприобретатель', type: 'choice', options: ['По закону — наследники', 'Назначается сотрудником', 'Работодатель'] },
+            { k: 'nsGost', label: 'Требование договора или тендера', span: 'span 2', type: 'area', ph: 'Если сумма и риски заданы контрактом с заказчиком или отраслевым соглашением — приведите формулировку.' }
+          ]
+        }, terms([
+          { k: 'nsPrev', label: 'Случаи за прошлый период', ph: '2 обращения, выплата 180 000 ₽', span: 'span 2' }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'nsList', label: 'Список сотрудников к страхованию', req: true, note: 'ФИО, дата рождения, должность, страховая сумма' },
+          { k: 'nsStaff', label: 'Штатное расписание или справка о численности', note: 'Подтверждает состав по должностям' },
+          { k: 'nsSout', label: 'Карты специальной оценки условий труда', note: 'Для производства и работ повышенной опасности' },
+          { k: 'nsPolicy', label: 'Действующий полис НС', note: 'Если страхование продлевается' },
+          { k: 'nsContract', label: 'Требования заказчика по страхованию', note: 'Выдержка из контракта или тендерной документации' }
+        ])]
+      },
+      {
+        tag: 'ГРУЗЫ · ГЕНЕРАЛЬНЫЙ', title: 'Грузы: генеральный договор',
+        desc: 'Все перевозки года по одному договору с ежемесячным бордеро.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование грузов по генеральному договору',
+        steps: [org, {
+          title: 'Характер перевозок',
+          hint: 'Генеральный договор покрывает все отправки за период. Тариф считается от планового оборота и структуры маршрутов.',
+          fields: [
+            { k: 'role', label: 'Роль заявителя', type: 'choice', options: ['Грузовладелец', 'Экспедитор', 'Перевозчик'] },
+            { k: 'cargoTypes', label: 'Виды грузов', span: 'span 2', type: 'area', ph: 'Бытовая техника в заводской упаковке, электроника, комплектующие. Опасных грузов нет.' },
+            { k: 'turnover', label: 'Плановый оборот за год, ₽', ph: '1 240 000 000', mono: true, req: true },
+            { k: 'shipments', label: 'Количество отправок в год', ph: '840', mono: true },
+            { k: 'maxShipment', label: 'Максимальная стоимость одной отправки, ₽', ph: '18 000 000', mono: true },
+            { k: 'geo', label: 'География', type: 'choice', options: ['Россия', 'Россия и ЕАЭС', 'Международные', 'Смешанная'] },
+            { k: 'transport', label: 'Виды транспорта', span: 'span 2', type: 'choice', options: ['Автомобильный', 'Авто и ж/д', 'Море и авто', 'Мультимодальные'] },
+            { k: 'routes', label: 'Основные маршруты', span: 'span 2', type: 'area', ph: 'Москва — Екатеринбург — Новосибирск, Санкт-Петербург — Москва, Шанхай — Владивосток — Москва.' },
+            { k: 'carriers', label: 'Привлекаемые перевозчики', span: 'span 2', ph: 'Собственный парк 14 машин, наёмные перевозчики по договорам' },
+            { k: 'storage', label: 'Промежуточное хранение', type: 'choice', options: ['Без хранения', 'До 10 суток', 'До 30 суток', 'Складская обработка'] },
+            { k: 'packing', label: 'Упаковка', ph: 'Паллеты, стретч, заводская тара' }
+          ]
+        }, {
+          title: 'Покрытие и лимиты',
+          hint: 'Условия покрытия задаются по оговоркам Института лондонских страховщиков либо по правилам страховщика.',
+          fields: [
+            { k: 'cover', label: 'Условия страхования', span: 'span 2', type: 'choice', options: ['С ответственностью за все риски (ICC A)', 'С ответственностью за частную аварию (ICC B)', 'Без ответственности за повреждения (ICC C)'] },
+            { k: 'extra', label: 'Дополнительные риски', span: 'span 2', type: 'area', ph: 'Кража, недостача, повреждение при погрузке, забастовки, военные риски, температурный режим.' },
+            { k: 'limitOne', label: 'Лимит по одной перевозке, ₽', ph: '20 000 000', mono: true },
+            { k: 'limitAgg', label: 'Агрегатный лимит, ₽', ph: '120 000 000', mono: true },
+            { k: 'declare', label: 'Порядок заявления отправок', type: 'choice', options: ['Ежемесячное бордеро', 'Каждая отправка отдельно', 'Автоматическое покрытие'] },
+            { k: 'valuation', label: 'Определение страховой суммы', type: 'choice', options: ['Стоимость по инвойсу', 'Инвойс + фрахт', 'Инвойс + фрахт + 10%'] }
+          ]
+        }, terms([
+          { k: 'benefRight', label: 'Права выгодоприобретателя на имущество', type: 'choice', options: ['Залог или ипотека', 'Лизинг', 'Аренда', 'Собственность', 'Иное'] },
+          { k: 'benefDoc', label: 'Номер и дата договора залога или лизинга', ph: '№ 4471-З от 12.02.2024', mono: true },
+          { k: 'dual', label: 'Имущество застраховано в других компаниях', type: 'choice', options: ['Нет', 'Да', 'Частично'] },
+          { k: 'dualShare', label: 'Доля двойного страхования, %', ph: '40', mono: true },
+          { k: 'bankArrears', label: 'Просроченная более 30 дней задолженность перед банком или лизингодателем', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'bankruptcy', label: 'Внешнее управление, конкурсное производство, банкротство', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'sanctions', label: 'Санкции США или ЕС в отношении страхователя, акционеров, арендодателя', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'access', label: 'Доступ страхователя к имуществу ограничен', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'thirdParty', label: 'Иные организации на территории страхования', span: 'span 2', ph: 'Виды деятельности других компаний в том же здании' },
+          { k: 'turnover', label: 'Годовой оборот, ₽', ph: '640 000 000', mono: true },
+          { k: 'bankDetails', label: 'Банковские реквизиты: р/с, банк, БИК', span: 'span 2', ph: '40702810400000012345, Сбербанк, БИК 044525225', mono: true }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'balance', label: 'Бухгалтерская отчётность за последний год', note: 'Формы 1 и 2' }
+        ].concat([
+          { k: 'carriers', label: 'Договоры с перевозчиками', note: 'Основные, можно выборочно' },
+          { k: 'routes', label: 'Реестр маршрутов и объёмов', req: true, note: 'Excel: направления, частота, стоимость отправок' },
+          { k: 'packing', label: 'Схема упаковки и крепления груза', note: 'Фото или описание' },
+          { k: 'losses', label: 'Справка об убытках за 3 года' },
+          { k: 'prevPolicy', label: 'Действующий генеральный договор' }
+        ]))]
+      },
+      {
+        tag: 'ГРУЗЫ · РАЗОВАЯ', title: 'Грузы: разовая перевозка',
+        desc: 'Одна отправка: полис можно получить за час до выхода машины.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование груза (разовая перевозка)',
+        steps: [org, {
+          title: 'Груз и перевозка',
+          hint: 'Данные должны совпадать с транспортными документами: расхождения в номере ТС или накладной осложняют выплату.',
+          fields: [
+            { k: 'cargoName', label: 'Наименование груза', span: 'span 2', ph: 'Станок фрезерный DMG, 1 единица, в деревянной обрешётке', req: true },
+            { k: 'cargoValue', label: 'Стоимость груза по документам, ₽', ph: '14 600 000', mono: true, req: true },
+            { k: 'cargoWeight', label: 'Вес / объём', ph: '4 200 кг / 12 м³', mono: true },
+            { k: 'cargoPack', label: 'Упаковка', ph: 'Обрешётка, крепление на паллете' },
+            { k: 'cargoDocs', label: 'Транспортные документы', span: 'span 2', ph: 'ТТН № 4821 от 18.08.2026, инвойс № INV-1140' },
+            { k: 'from', label: 'Пункт отправления', ph: 'Гамбург, Германия' },
+            { k: 'to', label: 'Пункт назначения', ph: 'Химки, Московская обл.' },
+            { k: 'via', label: 'Перегрузки и промежуточные пункты', span: 'span 2', ph: 'Перегрузка в порту Санкт-Петербурга, хранение до 3 суток' },
+            { k: 'transportKind', label: 'Вид транспорта', type: 'choice', options: ['Автомобильный', 'Железнодорожный', 'Морской', 'Мультимодальный'] },
+            { k: 'vehicle', label: 'Номер ТС, вагона, рейса', ph: 'А123ВС777 / рейс MSC-4471', mono: true },
+            { k: 'carrier', label: 'Перевозчик', ph: 'ООО «Транслайн», договор № 118' },
+            { k: 'dateFrom', label: 'Дата начала перевозки', ph: '18.08.2026', mono: true },
+            { k: 'dateTo', label: 'Планируемая дата прибытия', ph: '27.08.2026', mono: true }
+          ]
+        }, {
+          title: 'Покрытие',
+          hint: 'Для разовой отправки покрытие начинается с момента погрузки и действует до выгрузки в пункте назначения.',
+          fields: [
+            { k: 'cover', label: 'Условия страхования', span: 'span 2', type: 'choice', options: ['С ответственностью за все риски (ICC A)', 'С ответственностью за частную аварию (ICC B)', 'Без ответственности за повреждения (ICC C)'] },
+            { k: 'sumInsured', label: 'Страховая сумма, ₽', ph: '15 200 000', mono: true },
+            { k: 'valuation', label: 'Расчёт суммы', type: 'choice', options: ['Стоимость по инвойсу', 'Инвойс + фрахт', 'Инвойс + фрахт + 10%'] },
+            { k: 'extra', label: 'Дополнительные риски', span: 'span 2', type: 'area', ph: 'Кража, недостача, повреждение при погрузке и выгрузке, температурный режим.' },
+            { k: 'beneficiaryOne', label: 'Выгодоприобретатель', span: 'span 2', ph: 'Грузополучатель / Страхователь' },
+            { k: 'deductible', label: 'Франшиза', type: 'choice', options: ['Без франшизы', 'Безусловная', 'На выбор страховщика'] },
+            { k: 'urgency', label: 'Срочность', type: 'choice', options: ['Полис нужен сегодня', 'В течение 1–2 дней', 'До конца недели'] }
+          ]
+        }, this.docsStep([
+          { k: 'invoice', label: 'Инвойс или счёт на груз', req: true, note: 'Подтверждает страховую сумму' },
+          { k: 'ttn', label: 'Транспортная накладная, CMR или ж/д квитанция', req: true },
+          { k: 'spec', label: 'Спецификация или упаковочный лист' },
+          { k: 'carrierDoc', label: 'Договор с перевозчиком' },
+          { k: 'photo', label: 'Фото груза и упаковки', note: 'Особенно для негабарита и техники' },
+          { k: 'egrul', label: 'Карточка предприятия или выписка ЕГРЮЛ' }
+        ])]
+      },
+      {
+        tag: 'ОТВЕТСТВЕННОСТЬ', title: 'Ответственность и СРО',
+        desc: 'ОСГОП, допуски СРО, качество работ, ответственность перед третьими лицами.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование гражданской ответственности',
+        steps: [org, {
+          title: 'Предмет ответственности',
+          hint: 'Укажите, какая деятельность страхуется и перед кем возникает ответственность.',
+          fields: [
+            { k: 'liabKind', label: 'Вид ответственности', span: 'span 2', type: 'choice', options: ['Перед третьими лицами', 'За качество работ и услуг', 'Требование СРО', 'ОСГОП (перевозка пассажиров)', 'Ответственность директоров'] },
+            { k: 'activity', label: 'Вид деятельности по ОКВЭД', span: 'span 2', ph: '41.20 Строительство жилых и нежилых зданий' },
+            { k: 'objects', label: 'Объекты и территория', span: 'span 2', type: 'area', ph: 'Строительная площадка ЖК «Северный», два корпуса, Московская обл.' },
+            { k: 'revenue', label: 'Выручка за прошлый год, ₽', ph: '742 000 000', mono: true },
+            { k: 'staff', label: 'Численность работников', ph: '124', mono: true },
+            { k: 'limitOne', label: 'Лимит по одному случаю, ₽', ph: '10 000 000', mono: true },
+            { k: 'limitAgg', label: 'Агрегатный лимит, ₽', ph: '50 000 000', mono: true },
+            { k: 'retro', label: 'Ретроактивный период', type: 'choice', options: ['Не требуется', '1 год', '3 года', 'С даты регистрации'] },
+            { k: 'requirement', label: 'Требования заказчика или СРО', span: 'span 2', type: 'area', ph: 'Приведите формулировку из договора или регламента СРО, если она есть.' }
+          ]
+        }, terms([
+          { k: 'benefRight', label: 'Права выгодоприобретателя на имущество', type: 'choice', options: ['Залог или ипотека', 'Лизинг', 'Аренда', 'Собственность', 'Иное'] },
+          { k: 'benefDoc', label: 'Номер и дата договора залога или лизинга', ph: '№ 4471-З от 12.02.2024', mono: true },
+          { k: 'dual', label: 'Имущество застраховано в других компаниях', type: 'choice', options: ['Нет', 'Да', 'Частично'] },
+          { k: 'dualShare', label: 'Доля двойного страхования, %', ph: '40', mono: true },
+          { k: 'bankArrears', label: 'Просроченная более 30 дней задолженность перед банком или лизингодателем', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'bankruptcy', label: 'Внешнее управление, конкурсное производство, банкротство', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'sanctions', label: 'Санкции США или ЕС в отношении страхователя, акционеров, арендодателя', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'access', label: 'Доступ страхователя к имуществу ограничен', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'thirdParty', label: 'Иные организации на территории страхования', span: 'span 2', ph: 'Виды деятельности других компаний в том же здании' },
+          { k: 'turnover', label: 'Годовой оборот, ₽', ph: '640 000 000', mono: true },
+          { k: 'bankDetails', label: 'Банковские реквизиты: р/с, банк, БИК', span: 'span 2', ph: '40702810400000012345, Сбербанк, БИК 044525225', mono: true }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'balance', label: 'Бухгалтерская отчётность за последний год', note: 'Формы 1 и 2' }
+        ].concat([
+          { k: 'sro', label: 'Свидетельство СРО или лицензия', req: true },
+          { k: 'contract', label: 'Договор с заказчиком с требованиями к страхованию', req: true },
+          { k: 'objects', label: 'Перечень объектов и площадок' },
+          { k: 'claims', label: 'История претензий за 3 года' }
+        ]))]
+      },
+      {
+        tag: 'АВТОПАРК', title: 'Автопарк компании',
+        desc: 'ОСАГО и КАСКО от пяти машин с единым сроком и рассрочкой.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование транспортных средств юридического лица',
+        steps: [org, {
+          title: 'Состав парка',
+          hint: 'Полный список машин передаётся отдельным файлом. Здесь достаточно сводных данных для расчёта.',
+          fields: [
+            { k: 'fleetCount', label: 'Количество ТС', ph: '14', mono: true, req: true },
+            { k: 'fleetKinds', label: 'Типы ТС', span: 'span 2', type: 'choice', options: ['Легковые', 'Легковые и грузовые', 'Грузовые и спецтехника', 'Автобусы'] },
+            { k: 'fleetValue', label: 'Суммарная стоимость парка, ₽', ph: '68 400 000', mono: true },
+            { k: 'fleetAge', label: 'Возраст машин', ph: 'от 1 до 7 лет, средний 3 года' },
+            { k: 'fleetUse', label: 'Характер эксплуатации', span: 'span 2', ph: 'Междугородние перевозки, пробег до 120 000 км в год' },
+            { k: 'fleetCover', label: 'Что страхуем', span: 'span 2', type: 'choice', options: ['Только ОСАГО', 'ОСАГО и КАСКО', 'КАСКО с франшизой', 'ОСАГО, КАСКО, НС водителей'] },
+            { k: 'fleetDrivers', label: 'Допуск к управлению', type: 'choice', options: ['Без ограничений', 'По списку водителей', 'Смешанно'] },
+            { k: 'fleetRepair', label: 'Ремонт', type: 'choice', options: ['У официального дилера', 'На СТО страховщика', 'На своей базе'] },
+            { k: 'fleetLosses', label: 'Убытки за 3 года', span: 'span 2', type: 'area', ph: 'Количество заявленных случаев и общая сумма выплат по парку.' }
+          ]
+        }, terms([
+          { k: 'benefRight', label: 'Права выгодоприобретателя на имущество', type: 'choice', options: ['Залог или ипотека', 'Лизинг', 'Аренда', 'Собственность', 'Иное'] },
+          { k: 'benefDoc', label: 'Номер и дата договора залога или лизинга', ph: '№ 4471-З от 12.02.2024', mono: true },
+          { k: 'dual', label: 'Имущество застраховано в других компаниях', type: 'choice', options: ['Нет', 'Да', 'Частично'] },
+          { k: 'dualShare', label: 'Доля двойного страхования, %', ph: '40', mono: true },
+          { k: 'bankArrears', label: 'Просроченная более 30 дней задолженность перед банком или лизингодателем', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'bankruptcy', label: 'Внешнее управление, конкурсное производство, банкротство', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'sanctions', label: 'Санкции США или ЕС в отношении страхователя, акционеров, арендодателя', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'access', label: 'Доступ страхователя к имуществу ограничен', type: 'choice', options: ['Нет', 'Да'] },
+          { k: 'thirdParty', label: 'Иные организации на территории страхования', span: 'span 2', ph: 'Виды деятельности других компаний в том же здании' },
+          { k: 'turnover', label: 'Годовой оборот, ₽', ph: '640 000 000', mono: true },
+          { k: 'bankDetails', label: 'Банковские реквизиты: р/с, банк, БИК', span: 'span 2', ph: '40702810400000012345, Сбербанк, БИК 044525225', mono: true }
+        ]), this.docsStep([
+          { k: 'ustav', label: 'Устав (титул и страницы с полномочиями)', req: true },
+          { k: 'egrul', label: 'Выписка из ЕГРЮЛ', note: 'Не старше 30 дней' },
+          { k: 'order', label: 'Документ о полномочиях руководителя', note: 'Протокол, приказ или доверенность' },
+          { k: 'balance', label: 'Бухгалтерская отчётность за последний год', note: 'Формы 1 и 2' }
+        ].concat([
+          { k: 'sts', label: 'СТС и ПТС по всем машинам', req: true, note: 'Архивом или Excel-реестром' },
+          { k: 'fleetList', label: 'Реестр парка', req: true, note: 'Марка, VIN, год, стоимость, пробег' },
+          { k: 'drivers', label: 'Список водителей с данными прав' },
+          { k: 'lossHistory', label: 'Справка о убытках по парку за 3 года' }
+        ]))]
+      },
+      {
+        fiz: true, tag: 'АВТО · ОСАГО', title: 'ОСАГО',
+        desc: 'Обязательный полис. Заявление нужно, когда расчёт в калькуляторе не проходит: спорный КБМ, такси, юрлицо-собственник.',
+        docTitle: 'ЗАЯВЛЕНИЕ о заключении договора ОСАГО',
+        steps: [person, vehicle([
+          { k: 'osagoKbm', label: 'КБМ и история', span: 'span 2', type: 'area', ph: 'Класс по предыдущему полису, безаварийные годы, расхождение с АИС ОСАГО, если оно есть.' },
+          { k: 'osagoPrev', label: 'Предыдущий полис ОСАГО', span: 'span 2', ph: 'Ингосстрах, серия ХХХ № 0294817364 до 24.08.2026' },
+          { k: 'osagoTrailer', label: 'Прицеп', type: 'choice', options: ['Нет', 'Есть — включить в полис'] },
+          { k: 'osagoOwnerType', label: 'Собственник', type: 'choice', options: ['Физическое лицо', 'Юридическое лицо', 'Лизинг'] }
+        ]), ftermsBase(), this.docsStep([
+          { k: 'osagoPassport', label: 'Паспорт собственника', req: true, note: 'Страница с данными' },
+          { k: 'osagoSts', label: 'СТС или ПТС', req: true },
+          { k: 'osagoVu', label: 'Водительские удостоверения всех водителей', req: true },
+          { k: 'osagoDiag', label: 'Диагностическая карта', note: 'Для такси и коммерческого использования' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'АВТО · КАСКО', title: 'КАСКО',
+        desc: 'Ущерб, угон и стихия. Варианты с франшизой и без, ремонт у дилера или на своей СТО.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование транспортного средства (КАСКО)',
+        steps: [person, vehicle([
+          { k: 'kaskoValue', label: 'Страховая сумма (стоимость ТС), ₽', ph: '2 480 000', mono: true, req: true },
+          { k: 'kaskoCredit', label: 'Автомобиль в кредите или лизинге', type: 'choice', options: ['Нет', 'В кредите', 'В лизинге'] },
+          { k: 'kaskoBank', label: 'Банк-выгодоприобретатель', ph: 'ПАО Банк, договор № …' },
+          { k: 'kaskoRisks', label: 'Что включить', span: 'span 2', type: 'choice', options: ['Только ущерб', 'Ущерб и угон', 'Полное КАСКО', 'Полное КАСКО и GAP'] },
+          { k: 'kaskoFranchise', label: 'Франшиза', type: 'choice', options: ['Без франшизы', '15 000 ₽', '30 000 ₽', '50 000 ₽'] },
+          { k: 'kaskoRepair', label: 'Ремонт', type: 'choice', options: ['У официального дилера', 'На СТО страховщика', 'На своей СТО', 'Выплата деньгами'] },
+          { k: 'kaskoOptions', label: 'Дополнительно', span: 'span 2', type: 'choice', options: ['Не нужно', 'Эвакуатор и техпомощь', 'Подменный автомобиль', 'НС водителя и пассажиров'] },
+          { k: 'kaskoGuard', label: 'Хранение и противоугонные системы', span: 'span 2', ph: 'Охраняемая парковка, спутниковая система, штатный иммобилайзер' },
+          { k: 'kaskoLosses', label: 'Убытки за последние 3 года', span: 'span 2', type: 'area', ph: 'Даты, характер повреждений, суммы выплат. Если убытков не было — так и напишите.' }
+        ]), ftermsBase(), this.docsStep([
+          { k: 'kaskoPassport', label: 'Паспорт собственника', req: true },
+          { k: 'kaskoSts', label: 'СТС и ПТС', req: true },
+          { k: 'kaskoVu', label: 'Водительские удостоверения', req: true },
+          { k: 'kaskoPhoto', label: 'Фотографии автомобиля', note: 'Четыре ракурса и салон — заменяют осмотр по многим программам' },
+          { k: 'kaskoCreditDoc', label: 'Кредитный или лизинговый договор', note: 'Если есть выгодоприобретатель' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'АВТО · ЗЕЛЁНАЯ КАРТА', title: 'Зелёная карта',
+        desc: 'Автогражданка для поездки за границу: Беларусь, Азербайджан, Турция, Иран. От 15 дней.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование по системе «Зелёная карта»',
+        steps: [person, vehicle([
+          { k: 'gcZone', label: 'Зона действия', span: 'span 2', type: 'choice', options: ['Беларусь', 'Азербайджан', 'Турция', 'Иран', 'Несколько стран'], req: true },
+          { k: 'gcFrom', label: 'Даты поездки', span: 'span 2', ph: '10.09.2026 — 25.09.2026', mono: true, req: true },
+          { k: 'gcTerm', label: 'Срок полиса', type: 'choice', options: ['15 дней', '1 месяц', '3 месяца', '1 год'] },
+          { k: 'gcPurpose', label: 'Цель поездки', type: 'choice', options: ['Личная', 'Перегон автомобиля', 'Коммерческая перевозка'] },
+          { k: 'gcTrailer', label: 'Прицеп', type: 'choice', options: ['Нет', 'Есть — нужен отдельный полис'] },
+          { k: 'gcBorder', label: 'Пункт пересечения границы', span: 'span 2', ph: 'Например, Смоленск — Красная Горка' }
+        ]), ftermsBase(), this.docsStep([
+          { k: 'gcPassport', label: 'Загранпаспорт водителя', req: true },
+          { k: 'gcSts', label: 'СТС или ПТС', req: true },
+          { k: 'gcVu', label: 'Водительское удостоверение', req: true },
+          { k: 'gcPower', label: 'Доверенность или договор аренды', note: 'Если водитель не собственник' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'ПУТЕШЕСТВИЯ · ВЗР', title: 'Поездка за границу (ВЗР)',
+        desc: 'Медицина в поездке, отмена тура, спорт и требования визового центра.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование граждан, выезжающих за рубеж',
+        steps: [person, {
+          title: 'Поездка и покрытие',
+          hint: 'Страна, даты и характер отдыха определяют и цену, и то, что вообще будет покрыто. Спорт и работа за рубежом включаются отдельно.',
+          fields: [
+            { k: 'vzrCountry', label: 'Страна или зона поездки', span: 'span 2', ph: 'Шенген (Италия, Франция) / Турция / Весь мир', req: true },
+            { k: 'vzrFrom', label: 'Даты поездки', ph: '10.09.2026 — 24.09.2026', mono: true, req: true },
+            { k: 'vzrPeople', label: 'Количество застрахованных', ph: '2 взрослых, 1 ребёнок', mono: true },
+            { k: 'vzrAges', label: 'Возраст участников', span: 'span 2', ph: '40, 38 и 7 лет — возраст влияет на тариф' },
+            { k: 'vzrSum', label: 'Страховая сумма', type: 'choice', options: ['35 000 €', '50 000 €', '100 000 €', 'Иная'] },
+            { k: 'vzrPurpose', label: 'Цель поездки', type: 'choice', options: ['Отдых', 'Виза', 'Работа', 'Учёба', 'Спорт'] },
+            { k: 'vzrSport', label: 'Активный отдых и спорт', span: 'span 2', type: 'choice', options: ['Не планируется', 'Горные лыжи и сноуборд', 'Дайвинг', 'Мотоцикл или квадроцикл', 'Соревнования'] },
+            { k: 'vzrCancel', label: 'Отмена поездки', type: 'choice', options: ['Не нужна', 'Включить', 'Только для авиабилетов'] },
+            { k: 'vzrMulti', label: 'Тип полиса', type: 'choice', options: ['Однократная поездка', 'Годовой мультиполис'] },
+            { k: 'vzrHealth', label: 'Хронические заболевания и беременность', span: 'span 2', type: 'area', ph: 'Указывается, чтобы страховщик не отказал в выплате по этому основанию. Если ничего нет — напишите «нет».' }
+          ]
+        }, ftermsBase(), this.docsStep([
+          { k: 'passportScan', label: 'Паспорт (страница с данными)', req: true, note: 'Загранпаспорт всех выезжающих' },
+          { k: 'tickets', label: 'Билеты или бронь', note: 'Нужны для страхования отмены поездки' },
+          { k: 'visaReq', label: 'Требования визового центра', note: 'Если консульство просит особые условия' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'ИМУЩЕСТВО · ЧАСТНОЕ', title: 'Квартира и дом',
+        desc: 'Отделка, вещи и ответственность перед соседями. Без осмотра до 3 млн ₽.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование имущества граждан',
+        steps: [person, {
+          title: 'Формат полиса',
+          hint: 'Коробочный полис — фиксированные суммы и цена, без осмотра и без описи имущества: подходит, если жильё типовое, а суммы устраивают. Классический расчёт — суммы под ваш объект, опись дорогих вещей и выбор рисков.',
+          fields: [
+            { k: 'homeFormat', label: 'Что оформляем', span: 'span 2', type: 'choice', options: ['Коробочный полис', 'Классический расчёт', 'Показать оба варианта'], req: true },
+            { k: 'homeBox', label: 'Коробочный продукт', span: 'span 2', type: 'choice', options: ['Базовая — 2 700 ₽/год', 'Оптимум — 4 900 ₽/год', 'Максимум — 8 400 ₽/год', 'Дача — 3 400 ₽/год'], note: 'Базовая: отделка 500 000 ₽, имущество 200 000 ₽, ответственность 300 000 ₽. Оптимум: 1 000 000 / 500 000 / 500 000 ₽. Максимум: 2 000 000 / 1 000 000 / 1 000 000 ₽. Дача: строение 1 000 000 ₽ и ответственность 300 000 ₽.' },
+            { k: 'homeBoxTerm', label: 'Срок коробки', type: 'choice', options: ['12 месяцев', '6 месяцев (дача)'] },
+            { k: 'homeBoxCount', label: 'Количество полисов', ph: '1', mono: true, note: 'Например, отдельно на квартиру и на дачу' },
+            { k: 'homeClassicWhy', label: 'Почему нужен классический расчёт', span: 'span 2', type: 'area', ph: 'Суммы выше коробочных, дорогая отделка или техника, деревянный дом, сдаётся в аренду, требование банка, отдельная опись ценных вещей.' }
+          ]
+        }, {
+          title: 'Объект и покрытие',
+          hint: 'Опишите жильё так, как оно значится в документах: тип строения, материалы и охрана напрямую влияют на тариф.',
+          fields: [
+            { k: 'homeKind', label: 'Тип объекта', type: 'choice', options: ['Квартира', 'Дом', 'Дача', 'Апартаменты'], req: true },
+            { k: 'homeRight', label: 'Право на объект', type: 'choice', options: ['Собственность', 'Аренда', 'Ипотека'] },
+            { k: 'homeAddr', label: 'Адрес объекта', span: 'span 2', ph: '127015, Москва, ул. Металлургов, 14, кв. 118' },
+            { k: 'homeArea', label: 'Площадь, м²', ph: '64', mono: true },
+            { k: 'homeYear', label: 'Год постройки', ph: '2004', mono: true },
+            { k: 'homeWalls', label: 'Материал стен', type: 'choice', options: ['Панель или монолит', 'Кирпич', 'Дерево', 'Смешанный'] },
+            { k: 'homeLive', label: 'Проживание', type: 'choice', options: ['Постоянное', 'Сезонное', 'Сдаётся в аренду'] },
+            { k: 'homeSumFinish', label: 'Отделка и инженерия, ₽', ph: '1 400 000', mono: true },
+            { k: 'homeSumThings', label: 'Домашнее имущество, ₽', ph: '900 000', mono: true },
+            { k: 'homeSumWalls', label: 'Конструктив, ₽', ph: 'если страхуете стены — 6 200 000', mono: true },
+            { k: 'homeLiab', label: 'Ответственность перед соседями', type: 'choice', options: ['Не нужна', 'До 500 000 ₽', 'До 1 000 000 ₽', 'До 3 000 000 ₽'] },
+            { k: 'homeGuard', label: 'Охрана и защита', type: 'choice', options: ['Консьерж', 'Сигнализация на пульт', 'Видеонаблюдение', 'Нет'] },
+            { k: 'homeRisks', label: 'Риски к покрытию', span: 'span 2', type: 'area', ph: 'Залив, пожар, кража со взломом, взрыв газа, стихийные бедствия, действия третьих лиц.' },
+            { k: 'homeLosses', label: 'Убытки за последние 3 года', span: 'span 2', type: 'area', ph: 'Например: залив от соседей сверху в 2024 году, выплата 78 000 ₽. Если убытков не было — так и напишите.' }
+          ]
+        }, ftermsBase(), this.docsStep([
+          { k: 'homeDocs', label: 'Документ о праве на объект', req: true, note: 'Выписка ЕГРН, договор купли-продажи или ДДУ' },
+          { k: 'homePhoto', label: 'Фотографии помещений', note: 'Комнаты, кухня, санузел — для суммы свыше 3 млн ₽' },
+          { k: 'homeMortgage', label: 'Кредитный договор', note: 'Если объект в ипотеке — нужны требования банка' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'ЖИЗНЬ · НС', title: 'Несчастный случай',
+        desc: 'Травмы, госпитализация и инвалидность. Взрослым и детям, круглосуточно.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование от несчастных случаев',
+        steps: [person, {
+          title: 'Кого страхуем и от чего',
+          hint: 'Профессия и спорт — главные факторы тарифа. Программу для ребёнка оформляет родитель.',
+          fields: [
+            { k: 'nsWho', label: 'Кого страхуем', type: 'choice', options: ['Себя', 'Ребёнка', 'Семью', 'Другого человека'], req: true },
+            { k: 'nsCount', label: 'Количество застрахованных', ph: '2', mono: true },
+            { k: 'nsNames', label: 'Застрахованные: ФИО и даты рождения', span: 'span 2', type: 'area', ph: 'Соколова Мария Алексеевна, 09.05.2018' },
+            { k: 'nsJob', label: 'Профессия и характер работы', span: 'span 2', ph: 'Инженер, офис / монтажник на высоте / водитель' },
+            { k: 'nsSport', label: 'Спорт и увлечения', span: 'span 2', type: 'choice', options: ['Без спорта', 'Любительский спорт', 'Единоборства', 'Экстремальный спорт', 'Соревнования'] },
+            { k: 'nsCover', label: 'Действие полиса', type: 'choice', options: ['Круглосуточно', 'Только на работе', 'Только в спорте и на отдыхе'] },
+            { k: 'nsSum', label: 'Страховая сумма на человека, ₽', ph: '1 000 000', mono: true, req: true },
+            { k: 'nsRisks', label: 'Что включить', span: 'span 2', type: 'choice', options: ['Травма и госпитализация', 'Травма, инвалидность, смерть', 'Расширенная с выплатой по дням'] },
+            { k: 'nsHealth', label: 'Состояние здоровья и инвалидность', span: 'span 2', type: 'area', ph: 'Хронические заболевания, установленная инвалидность, перенесённые операции. Скрытые сведения — основание для отказа в выплате.' }
+          ]
+        }, ftermsBase(), this.docsStep([
+          { k: 'nsPassport', label: 'Паспорт страхователя', req: true, note: 'Страница с данными' },
+          { k: 'nsBirth', label: 'Свидетельство о рождении ребёнка', note: 'Если страхуется несовершеннолетний' },
+          { k: 'nsMed', label: 'Медицинские документы', note: 'Только по запросу страховщика — в модель не передаются' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'ЖИЗНЬ И ЗДОРОВЬЕ', title: 'Жизнь, здоровье и ДМС',
+        desc: 'Рисковые и накопительные программы, личное ДМС с выбором клиник.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование жизни и здоровья',
+        steps: [person, {
+          title: 'Программа',
+          hint: 'Выберите тип программы и объём: от рискового полиса до накопительного договора с налоговым вычетом.',
+          fields: [
+            { k: 'lifeKind', label: 'Тип программы', span: 'span 2', type: 'choice', options: ['Рисковая (защита)', 'Накопительная', 'Инвестиционная', 'Личное ДМС'], req: true },
+            { k: 'lifeSum', label: 'Страховая сумма, ₽', ph: '3 000 000', mono: true },
+            { k: 'lifePay', label: 'Взнос, ₽', ph: '4 500 в месяц', mono: true },
+            { k: 'lifeTerm', label: 'Срок программы', type: 'choice', options: ['1 год', '5 лет', '10 лет', 'До 65 лет'] },
+            { k: 'lifeTax', label: 'Налоговый вычет', type: 'choice', options: ['Важен', 'Не важен'] },
+            { k: 'dmsScope', label: 'Если ДМС: объём', span: 'span 2', type: 'choice', options: ['Поликлиника', 'Поликлиника и стоматология', 'С госпитализацией', 'Максимальная программа'] },
+            { k: 'dmsClinics', label: 'Желаемые клиники', span: 'span 2', ph: 'Перечислите клиники, которые должны быть в программе' },
+            { k: 'lifeSmoke', label: 'Курение', type: 'choice', options: ['Не курю', 'Курю'] },
+            { k: 'lifeHealth', label: 'Здоровье: важные сведения', span: 'span 2', type: 'area', ph: 'Хронические заболевания, операции, наблюдение у специалистов. Страховщик может назначить медосмотр.' },
+            { k: 'lifeBenef', label: 'Выгодоприобретатели', span: 'span 2', ph: 'Супруга Соколова М. А. — 100%' }
+          ]
+        }, ftermsBase(), this.docsStep([
+          { k: 'lifePassport', label: 'Паспорт', req: true, note: 'Страница с данными' },
+          { k: 'lifeAnketa', label: 'Медицинская анкета', note: 'Форма страховщика — пришлём после расчёта' },
+          { k: 'lifeMed', label: 'Выписки и результаты обследований', note: 'Только по запросу андеррайтера' }
+        ])]
+      },
+      {
+        fiz: true, tag: 'ИПОТЕКА И ТИТУЛ · НЕТИПОВОЙ', title: 'Ипотека и титул: нетиповой случай',
+        desc: 'Когда калькулятор не считает: доля, залог по нескольким объектам, спорная история права, апартаменты, дом на землях ИЖС.',
+        docTitle: 'ЗАЯВЛЕНИЕ на страхование при ипотеке и страхование титула',
+        steps: [person, {
+          title: 'Кредит и требования банка',
+          hint: 'Банк диктует состав рисков и минимальную страховую сумму. Приложите требования — андеррайтер сверит их до расчёта.',
+          fields: [
+            { k: 'mtgBank', label: 'Банк-кредитор', span: 'span 2', ph: 'ПАО Сбербанк / ВТБ / Альфа-Банк', req: true },
+            { k: 'mtgContract', label: 'Кредитный договор №', ph: '№ 44-1180294 от 12.07.2021', mono: true },
+            { k: 'mtgDebt', label: 'Остаток задолженности, ₽', ph: '6 480 000', mono: true, req: true },
+            { k: 'mtgTermLeft', label: 'Срок до погашения', ph: '14 лет 3 месяца' },
+            { k: 'mtgCover', label: 'Что требует банк', span: 'span 2', type: 'choice', options: ['Только конструктив', 'Конструктив и жизнь', 'Конструктив, жизнь, титул', 'Титул отдельно'] },
+            { k: 'mtgSumBasis', label: 'Страховая сумма считается от', type: 'choice', options: ['Остатка долга', 'Стоимости объекта', 'Требования банка'] },
+            { k: 'mtgBenef', label: 'Выгодоприобретатель', span: 'span 2', ph: 'Банк в размере остатка задолженности, далее — собственник' }
+          ]
+        }, {
+          title: 'Объект и право собственности',
+          hint: 'Нетиповым делает объект или история права: доля, несколько собственников, наследство, торги, перепланировка, апартаменты и дома на землях ИЖС.',
+          fields: [
+            { k: 'mtgKind', label: 'Тип объекта', span: 'span 2', type: 'choice', options: ['Квартира', 'Апартаменты', 'Дом с участком', 'Доля в объекте', 'Коммерческое помещение', 'Строящийся объект (ДДУ)'], req: true },
+            { k: 'mtgAddr', label: 'Адрес объекта', span: 'span 2', ph: '141400, Химки, ул. Заводская, 8, кв. 42' },
+            { k: 'mtgValue', label: 'Стоимость по оценке, ₽', ph: '9 200 000', mono: true },
+            { k: 'mtgArea', label: 'Площадь, м²', ph: '58,4', mono: true },
+            { k: 'mtgYear', label: 'Год постройки', ph: '1998', mono: true },
+            { k: 'mtgShare', label: 'Доля в праве', ph: '1/2 — если объект в долях', mono: true },
+            { k: 'mtgOwners', label: 'Собственники', span: 'span 2', ph: 'Соколов А. И. — 1/2, Соколова М. А. — 1/2, среди них несовершеннолетние' },
+            { k: 'mtgHistory', label: 'Как приобреталось право', span: 'span 2', type: 'choice', options: ['Договор купли-продажи', 'ДДУ и переуступка', 'Наследство', 'Дарение', 'Приватизация', 'Торги или банкротство'] },
+            { k: 'mtgDeals', label: 'Сделки за последние 3 года', span: 'span 2', type: 'area', ph: 'Сколько раз объект переходил из рук в руки, кто был собственником, были ли доверенности и представители по сделке.' },
+            { k: 'mtgTitleRisk', label: 'Что настораживает в истории права', span: 'span 2', type: 'area', ph: 'Наследники и отказы, права несовершеннолетних, материнский капитал, признаки банкротства продавца, судебные споры, незарегистрированная перепланировка.' },
+            { k: 'mtgTitleTerm', label: 'Срок страхования титула', type: 'choice', options: ['1 год', '3 года', '10 лет', 'На срок кредита'] },
+            { k: 'mtgSpecial', label: 'Особые обстоятельства', span: 'span 2', type: 'area', ph: 'Земли ИЖС и назначение участка, деревянные строения, отсутствие отделки, аренда объекта третьим лицам, залог по нескольким объектам одновременно.' }
+          ]
+        }, ftermsBase(), this.docsStep([
+          { k: 'mtgLoan', label: 'Кредитный договор и требования банка к страхованию', req: true, note: 'Раздел о страховании целиком' },
+          { k: 'mtgEgrn', label: 'Выписка из ЕГРН', req: true, note: 'Расширенная, с историей переходов права' },
+          { k: 'mtgTitleDocs', label: 'Правоустанавливающие документы', req: true, note: 'ДКП, ДДУ, свидетельство о наследстве — что применимо' },
+          { k: 'mtgReport', label: 'Отчёт об оценке объекта', note: 'Не старше 6 месяцев' },
+          { k: 'mtgPlan', label: 'Технический план или поэтажный план', note: 'Если была перепланировка — с отметкой о согласовании' },
+          { k: 'mtgPhoto', label: 'Фотографии объекта', note: 'Комнаты, санузел, фасад и участок для дома' },
+          { k: 'mtgCourt', label: 'Судебные документы по объекту', note: 'Если по объекту были или идут споры' }
+        ])]
+      }
+    ];
+  }
+
+  saveDraft(v, product, step) {
+    try { localStorage.setItem('pins-zayavlenie-draft', JSON.stringify({ v, product, step, at: Date.now() })); } catch (e) {}
+  }
+
+  set(k) {
+    return (e) => {
+      const val = e.target.value;
+      this.setState(s => {
+        const v = { ...s.v, [k]: val };
+        this.queueDraft(v, s.product, s.step);
+        return { v };
+      });
+    };
+  }
+
+  queueDraft(v, product, step) {
+    clearTimeout(this._draftTimer);
+    this._draftTimer = setTimeout(() => this.saveDraft(v, product, step), 400);
+  }
+
+  clearDraft() {
+    clearTimeout(this._draftTimer);
+    try { localStorage.removeItem('pins-zayavlenie-draft'); } catch (e) {}
+  }
+  attach(k, label) {
+    return () => {
+      const has = this.state.v[k];
+      const name = has ? '' : this.fakeName(label);
+      this.setState(s => ({ v: { ...s.v, [k]: name } }));
+    };
+  }
+  fakeName(label) {
+    const t = label.toLowerCase();
+    if (t.includes('устав')) return 'Ustav-2021.pdf';
+    if (t.includes('егрюл') || t.includes('выписка')) return 'Vypiska-EGRUL-17-08-2026.pdf';
+    if (t.includes('баланс') || t.includes('отчётность')) return 'Balans-2025.xlsx';
+    if (t.includes('фото')) return 'Foto-obekta.zip';
+    if (t.includes('реестр') || t.includes('список') || t.includes('перечень')) return 'Reestr.xlsx';
+    if (t.includes('договор')) return 'Dogovor.pdf';
+    if (t.includes('полис') || t.includes('убыт')) return 'Polis-i-ubytki.pdf';
+    if (t.includes('накладн') || t.includes('инвойс')) return 'TTN-4821.pdf';
+    if (t.includes('свидетельство') || t.includes('правоуст')) return 'Pravo-sobstvennosti.pdf';
+    if (t.includes('лицензи') || t.includes('сро')) return 'Svidetelstvo-SRO.pdf';
+    if (t.includes('птс') || t.includes('сts') || t.includes('стс')) return 'STS-parka.zip';
+    return 'Dokument.pdf';
+  }
+  pick(k, val) {
+    return () => this.setState(s => {
+      const v = { ...s.v, [k]: val };
+      this.queueDraft(v, s.product, s.step);
+      return { v };
+    });
+  }
+
+  docNumber() {
+    const p = this.state.product + 1;
+    const fiz = !!this.config()[this.state.product].fiz;
+    return '№ ' + (fiz ? 'ЗФ-' : 'ЗЮ-') + p + '4' + (821 + this.state.product);
+  }
+
+  sheetHtml() {
+    const el = document.getElementById('app-sheet');
+    if (!el) return '';
+    return '<html><head><meta charset="utf-8"><title>' + this.docTitle() + '</title></head><body style="font-family:Times New Roman,serif;font-size:12pt">' + el.innerHTML + '</body></html>';
+  }
+  docTitle() { return this.config()[this.state.product].docTitle; }
+
+  // Заполненное заявление уходит в раздел «Заявки» CRM: менеджер видит его наравне
+  // с обращениями из помощника и калькулятора.
+  pushToCrm(cur, v) {
+    const pick = (...keys) => { for (const k of keys) { if (v[k] && String(v[k]).trim()) return String(v[k]).trim(); } return ''; };
+    const entry = {
+      at: Date.now(),
+      source: 'Заявление с сайта',
+      data: {
+        product: cur.title,
+        company: pick('orgName', 'name'),
+        inn: pick('inn'),
+        owner: pick('head', 'fio', 'director'),
+        phone: pick('phone', 'phoneF', 'contactPhone'),
+        email: pick('email', 'emailF'),
+        address: pick('objAddr', 'homeAddr', 'addrReg', 'addrLegal'),
+        area: pick('objArea', 'homeArea'),
+        sum: pick('sumInsured', 'homeSumFinish', 'sumBuilding', 'nsSum', 'mtgSum'),
+        request: pick('note', 'comment', 'risks', 'program')
+      },
+      filledFields: Object.keys(v).length
+    };
+    try {
+      const raw = localStorage.getItem('pins-crm-inbox');
+      const list = raw ? JSON.parse(raw) : [];
+      list.unshift(entry);
+      localStorage.setItem('pins-crm-inbox', JSON.stringify(list.slice(0, 60)));
+      // Полный набор полей забирает бланк страховщика и карточка сделки.
+      const store = JSON.parse(localStorage.getItem('pins-crm-lead-edits') || '{}');
+      store[entry.at] = v;
+      localStorage.setItem('pins-crm-lead-edits', JSON.stringify(store));
+    } catch (e) {}
+  }
+
+  renderVals() {
+    const st = this.state;
+    const cfg = this.config();
+    const cur = cfg[st.product];
+    const steps = cur.steps;
+    const stepIdx = Math.min(st.step, steps.length - 1);
+    const step = steps[stepIdx];
+
+    const isFiz = !!cur.fiz;
+    const audTabs = [
+      { label: 'Частным лицам', fiz: true, count: cfg.filter(p => p.fiz).length },
+      { label: 'Юридическим лицам', fiz: false, count: cfg.filter(p => !p.fiz).length }
+    ].map(t => {
+      const on = isFiz === t.fiz;
+      const first = cfg.findIndex(p => !!p.fiz === t.fiz);
+      return {
+        label: t.label,
+        count: t.count + (t.count === 1 ? ' форма' : t.count < 5 ? ' формы' : ' форм'),
+        select: () => this.setState({ product: first, step: 0, done: false }),
+        bg: on ? '#14284B' : 'transparent',
+        color: on ? '#FBFCFD' : '#5A6B85',
+        countColor: on ? '#9AA6B8' : '#9AA6B8'
+      };
+    });
+
+    const products = cfg.map((p, i) => ({ p, i })).filter(x => !!x.p.fiz === isFiz).map(({ p, i }) => {
+      const on = st.product === i;
+      return {
+        tag: p.tag, title: p.title, desc: p.desc,
+        select: () => this.setState({ product: i, step: 0, done: false }),
+        bg: on ? '#14284B' : '#FFFFFF',
+        border: on ? '#14284B' : 'rgba(20,40,75,.12)',
+        tagColor: on ? '#0A767A' : '#9AA6B8',
+        titleColor: on ? '#FBFCFD' : '#14284B',
+        descColor: on ? '#9AA6B8' : '#7B8AA0'
+      };
+    });
+
+    const filledIn = (s) => s.fields.filter(f => (st.v[f.k] || '').toString().trim()).length;
+    const stepNav = steps.map((s, i) => {
+      const on = stepIdx === i && !st.done;
+      const full = filledIn(s) === s.fields.length;
+      const some = filledIn(s) > 0;
+      return {
+        label: s.title, num: String(i + 1).padStart(2, '0'),
+        select: () => this.setState({ step: i, done: false }),
+        bg: on ? '#14284B' : 'transparent',
+        color: on ? '#FBFCFD' : '#3A4A66',
+        numColor: on ? '#0A767A' : '#9AA6B8',
+        check: full ? '✓' : some ? '•' : '',
+        checkColor: full ? '#6B7A4F' : '#0A767A'
+      };
+    });
+
+    const totalFields = steps.reduce((a, s) => a + s.fields.length, 0);
+    const filledTotal = steps.reduce((a, s) => a + filledIn(s), 0);
+    const fillPct = Math.round((filledTotal / totalFields) * 100) + '%';
+
+    const checkField = (f, raw) => {
+      const v = (raw || '').toString().trim();
+      if (!v) return '';
+      const k = f.k.toLowerCase();
+      if (k.indexOf('phone') === 0 || k === 'wa') {
+        if (v.replace(/\D/g, '').length < 11) return 'Телефон должен содержать 11 цифр, например +7 916 442-18-03';
+      }
+      if (k.indexOf('email') === 0) {
+        if (!/^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v)) return 'Проверьте адрес: нужен вид имя@домен.ру';
+      }
+      if (k === 'carvin' || k === 'vin') {
+        if (v.replace(/\s/g, '').length !== 17) return 'VIN состоит из 17 символов';
+      }
+      if (k === 'inn') {
+        const d = v.replace(/\D/g, '');
+        if (d.length !== 10 && d.length !== 12) return 'ИНН: 10 цифр для организации, 12 для ИП';
+      }
+      if (k === 'ogrn') {
+        const d = v.replace(/\D/g, '');
+        if (d.length !== 13 && d.length !== 15) return 'ОГРН: 13 цифр, ОГРНИП: 15';
+      }
+      if (k === 'passport') {
+        if (v.replace(/\D/g, '').length !== 10) return 'Серия и номер паспорта — 10 цифр';
+      }
+      if (k === 'birth' || k === 'ffrom') {
+        if (!/^\d{2}[.\-/]\d{2}[.\-/]\d{4}/.test(v)) return 'Дата в формате ДД.ММ.ГГГГ';
+      }
+      return '';
+    };
+
+    const fields = step.fields.map(f => {
+      const val = st.v[f.k] || '';
+      const type = f.type || 'text';
+      const err = checkField(f, val);
+      return {
+        error: err,
+        errorDisplay: err ? 'block' : 'none',
+        borderColor: err ? 'rgba(176,58,46,.55)' : 'rgba(20,40,75,.16)',
+        label: f.label,
+        req: f.req ? ' *' : '',
+        span: f.span === 'span 2' ? '1 / -1' : 'span 1',
+        value: val,
+        placeholder: f.ph || '',
+        font: f.mono ? "'IBM Plex Mono'" : "'Manrope'",
+        set: this.set(f.k),
+        isText: type === 'text',
+        isArea: type === 'area',
+        isChoice: type === 'choice',
+        isFile: type === 'file',
+        fileName: val || 'Файл не выбран',
+        fileState: val ? 'Загружен' : 'Прикрепить',
+        fileBg: val ? 'rgba(107,122,79,.08)' : '#FBFCFD',
+        fileBorder: val ? 'rgba(107,122,79,.4)' : 'rgba(20,40,75,.2)',
+        fileColor: val ? '#5C6B45' : '#7B8AA0',
+        fileIcon: val ? '✓' : '+',
+        attach: this.attach(f.k, f.label),
+        note: f.note || '',
+        noteDisplay: f.note ? 'block' : 'none',
+        options: (f.options || []).map(o => ({
+          label: o,
+          select: this.pick(f.k, o),
+          bg: val === o ? '#14284B' : 'transparent',
+          color: val === o ? '#FBFCFD' : '#5A6B85',
+          border: val === o ? '#14284B' : 'rgba(20,40,75,.18)'
+        }))
+      };
+    });
+
+    const dash = '—';
+    const val = (k) => (st.v[k] || '').toString().trim() || dash;
+    const docSections = steps.map(s => ({
+      title: s.title,
+      rows: s.fields.map(f => {
+        const v = (st.v[f.k] || '').toString().trim();
+        return { label: f.label, value: v || dash, color: v ? '#14284B' : '#9AA6B8' };
+      })
+    }));
+
+    const doc = {
+      number: this.docNumber(),
+      date: '17.08.2026',
+      title: cur.docTitle,
+      signer: val('head') !== dash ? val('head') : '_______________________',
+      sections: docSections,
+      declarations: [
+        'Сведения, указанные в настоящем заявлении, являются полными и достоверными; заявителю неизвестны обстоятельства, существенно влияющие на степень риска и не указанные выше.',
+        'Заявитель уведомлён, что сообщение недостоверных сведений даёт страховщику право требовать признания договора недействительным в соответствии со статьёй 944 Гражданского кодекса РФ.',
+        'Заявитель согласен на обработку указанных данных ООО «ПИНС Брокер» и страховыми компаниями для целей расчёта, заключения и исполнения договора страхования в соответствии с 152-ФЗ.',
+        'Настоящее заявление не является офертой и не влечёт обязанности страховщика заключить договор страхования на заявленных условиях.'
+      ]
+    };
+
+    return {
+      products, stepNav, fillPct, audTabs,
+      audienceBadge: cur.fiz ? 'ФОРМА ДЛЯ ЧАСТНЫХ ЛИЦ' : 'ФОРМА ДЛЯ ЮРИДИЧЕСКИХ ЛИЦ',
+      crumbLabel: cur.fiz ? 'Частным лицам' : 'Юридическим лицам',
+      crumbHref: cur.fiz ? 'katalog.dc.html' : 'biznesu.dc.html',
+      gridCols: st.done ? 'minmax(0,1fr)' : 'repeat(auto-fit,minmax(260px,1fr))',
+      asideDisplay: st.done ? 'none' : 'block',
+      isForm: !st.done, isDoc: st.done,
+      dealNoteDisplay: st.fromDeal ? 'flex' : 'none',
+      dealNote: st.fromDeal ? ('Данные перенесены из котировки ' + st.fromDeal + ' в CRM. Проверьте поля и дополните то, чего не было в диалоге.') : '',
+      replyBy: (() => { const d = new Date(); d.setDate(d.getDate() + 1); return String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + '.' + d.getFullYear(); })(),
+      managerName: cur.fiz ? 'Литвинова Анна' : 'Рахимов Тимур',
+      stepTitle: step.title, stepHint: step.hint,
+      stepCounter: (stepIdx + 1) + ' ИЗ ' + steps.length,
+      fields,
+      backDisplay: stepIdx > 0 ? 'inline-block' : 'none',
+      nextLabel: stepIdx === steps.length - 1 ? 'Сформировать заявление' : 'Далее',
+      formHint: stepIdx === steps.length - 1 ? 'Заявление можно будет отредактировать' : 'Поля со звёздочкой нужны для расчёта',
+      next: () => {
+        if (stepIdx === steps.length - 1) {
+          this.clearDraft();
+          this.pushToCrm(cur, st.v);
+          this.setState({ done: true, draftFound: false, draft: null });
+        } else {
+          this.saveDraft(st.v, st.product, stepIdx + 1);
+          this.setState({ step: stepIdx + 1 });
+        }
+      },
+      draftDisplay: (st.draftFound && !st.done) ? 'flex' : 'none',
+      draftNote: st.draft ? 'Есть незаконченное заявление: заполнено ' + Object.keys(st.draft.v).length + ' полей.' : '',
+      restoreDraft: () => {
+        const d = st.draft;
+        if (d) this.setState({ v: d.v, product: d.product || 0, step: d.step || 0, draftFound: false });
+      },
+      dropDraft: () => {
+        try { localStorage.removeItem('pins-zayavlenie-draft'); } catch (e) {}
+        this.setState({ draftFound: false, draft: null });
+      },
+      back: () => this.setState({ step: Math.max(0, stepIdx - 1) }),
+      backToForm: () => this.setState({ done: false }),
+      doPrint: () => window.print(),
+      doWord: () => {
+        const html = this.sheetHtml();
+        if (!html) return;
+        const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Zayavlenie-' + (st.product + 1) + '.doc';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      },
+      doc
+    };
+  }
+}
+</script>
+</body>
+</html>

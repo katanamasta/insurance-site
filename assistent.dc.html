@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:#F2F5F8;color:#14284B;-webkit-font-smoothing:antialiased}
+  a{color:#0A767A;text-decoration:none}
+  a:hover{color:#14284B}
+  button{font-family:'Manrope',system-ui,sans-serif}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="background:#F2F5F8;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(242,245,248,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Личный кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1040px;margin:0 auto;padding:clamp(26px,3.2vw,44px) clamp(20px,3vw,36px) clamp(48px,5vw,80px)">
+    <div style="display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap;margin-bottom:22px">
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:10px">ПОМОЩНИК PINS</div>
+        <h1 style="font-size:clamp(25px,3vw,36px);font-weight:600;letter-spacing:-.035em;margin:0 0 8px;max-width:22ch;text-wrap:pretty">Консультация и заявка в одном диалоге</h1>
+        <p style="font-size:15px;color:#5A6B85;line-height:1.55;margin:0;max-width:62ch;text-wrap:pretty">{{ subtitle }}</p>
+      </div>
+      <div style="display:flex;gap:4px;background:#E7EDF3;border-radius:100px;padding:4px">
+        <sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+          <button onClick="{{ m.select }}" style="border:none;cursor:pointer;font-size:13px;font-weight:600;padding:9px 16px;border-radius:100px;background:{{ m.bg }};color:{{ m.color }};white-space:nowrap;transition:all .25s ease">{{ m.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:{{ crmBarDisplay }};background:#14284B;color:#FBFCFD;border-radius:14px 14px 0 0;padding:13px 20px;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600">Литвинова А. · роль: Менеджер · сделка {{ dealId }}</div>
+      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">ДОСТУП К ОРИГИНАЛАМ — ПО ЖУРНАЛУ · AI ВИДИТ ТОЛЬКО ПОЛЯ</div>
+    </div>
+
+    <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:{{ dialogRadius }};overflow:hidden">
+      <div ref="{{ scrollRef }}" style="height:clamp(380px,48vh,520px);overflow-y:auto;padding:22px 22px 8px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ messages }}" as="m" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:{{ m.align }};animation:fadeUp .35s cubic-bezier(.2,.7,.3,1) both">
+            <div style="max-width:78%;background:{{ m.bg }};color:{{ m.color }};border:1px solid {{ m.border }};border-radius:{{ m.radius }};padding:14px 17px">
+              <div style="display:{{ m.roleDisplay }};font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;margin-bottom:7px">{{ m.role }}</div>
+              <div style="font-size:14.5px;line-height:1.6;white-space:pre-line;text-wrap:pretty">{{ m.text }}</div>
+              <div style="display:{{ m.filesDisplay }};font-family:'IBM Plex Mono';font-size:12px;color:{{ m.filesColor }};margin-top:9px;padding-top:9px;border-top:1px solid {{ m.rule }}">{{ m.files }}</div>
+              <div style="display:{{ m.citeDisplay }};font-family:'IBM Plex Mono';font-size:11.5px;line-height:1.5;color:#0A767A;margin-top:10px;padding-top:9px;border-top:1px solid {{ m.rule }}">{{ m.cite }}</div>
+              <div style="display:{{ m.flagDisplay }};font-size:13px;font-weight:600;color:#8A5A2B;margin-top:10px">{{ m.flag }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="border-top:1px solid rgba(20,40,75,.1);padding:16px 22px 20px;background:#FBFCFD">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <sc-for list="{{ chips }}" as="c" hint-placeholder-count="2">
+            <button onClick="{{ c.pick }}" style="border:1px solid {{ c.border }};cursor:pointer;font-size:13px;font-weight:600;padding:9px 15px;border-radius:100px;background:{{ c.bg }};color:{{ c.color }};transition:all .25s ease" style-hover="border-color:#0A767A;color:#0A767A">{{ c.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;background:#F2F5F8;border:1px solid rgba(20,40,75,.12);border-radius:100px;padding:5px 5px 5px 18px">
+          <input value="{{ draft }}" onChange="{{ setDraft }}" onKeyDown="{{ onKey }}" placeholder="{{ placeholder }}" style="flex:1;min-width:0;background:none;border:none;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+          <button onClick="{{ send }}" style="border:none;cursor:{{ sendCursor }};font-size:14px;font-weight:700;padding:11px 22px;border-radius:100px;background:{{ sendBg }};color:#FBFCFD;white-space:nowrap;transition:background .25s ease">{{ sendLabel }}</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:11px">
+          <div style="font-size:12px;color:#9AA6B8;line-height:1.5;max-width:60ch">Отвечает языковая модель с инструкцией держать тему диалога и опираться на правила страхования и нормы РФ; под каждым ответом — основание. Если модель недоступна, отвечает встроенная база правил — это видно по подписи над сообщением. Оригиналы паспорта и медицинских документов в модель не передаются.</div>
+          <button onClick="{{ reset }}" style="border:none;background:none;cursor:pointer;font-size:12px;font-weight:600;color:#5A6B85;white-space:nowrap">Начать диалог заново</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px 22px">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:700">Полный цикл: запрос → сделка</div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A">{{ stageNote }}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+          <div style="border-top:3px solid {{ s.line }};padding-top:11px;transition:border-color .35s ease">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">{{ s.n }}</div>
+            <div style="font-size:13.5px;font-weight:600;color:{{ s.color }};line-height:1.35">{{ s.label }}</div>
+            <div style="font-size:11.5px;color:#9AA6B8;margin-top:4px">{{ s.state }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px 22px">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px">
+        <div style="font-size:15px;font-weight:700">{{ cardTitle }}</div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A">{{ filledNote }}</div>
+      </div>
+      <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:16px;max-width:70ch">{{ cardNote }}</div>
+      <div style="display:{{ riskHintDisplay }};background:#E7EDF3;border-radius:12px;padding:13px 16px;font-size:13px;color:#4A5B75;line-height:1.5;margin-bottom:12px;text-wrap:pretty">{{ riskHint }}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px">
+        <sc-for list="{{ fields }}" as="f" hint-placeholder-count="10">
+          <div style="background:{{ f.bg }};border:1px solid {{ f.border }};border-radius:11px;padding:13px 15px;transition:all .4s ease">
+            <div style="font-size:12px;color:#9AA6B8;margin-bottom:5px">{{ f.label }}</div>
+            <sc-if value="{{ f.isProduct }}" hint-placeholder-val="{{ false }}">
+              <select value="{{ f.value }}" onChange="{{ f.set }}" style="width:100%;background:none;border:none;outline:none;cursor:pointer;font-family:'IBM Plex Mono';font-size:13.5px;color:#14284B;padding:0;appearance:none">
+                <option value="">выберите вид страхования</option>
+                <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="4">
+                  <option value="{{ o.v }}">{{ o.v }}</option>
+                </sc-for>
+              </select>
+            </sc-if>
+            <sc-if value="{{ f.isPlain }}" hint-placeholder-val="{{ true }}">
+              <input value="{{ f.value }}" onChange="{{ f.set }}" placeholder="{{ f.ph }}" style="width:100%;background:none;border:none;outline:none;font-family:'IBM Plex Mono';font-size:13.5px;color:#14284B;padding:0">
+            </sc-if>
+            <div style="display:{{ f.fromDisplay }};font-size:11px;color:{{ f.fromColor }};margin-top:5px">{{ f.from }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:{{ handoffDisplay }};margin-top:14px;background:#E7EDF3;border-radius:12px;padding:15px 18px;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+        <div style="font-size:13.5px;color:#4A5B75;line-height:1.5;max-width:64ch">{{ handoffText }}</div>
+        <a href="admin-crm.dc.html?tab=leads" style="font-size:13px;font-weight:700;white-space:nowrap">Открыть в CRM →</a>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid rgba(20,40,75,.09);align-items:center">
+<button onClick="{{ pushCrm }}" style="border:1px solid {{ pushBorder }};cursor:{{ pushCursor }};font-family:'Manrope';font-size:14px;font-weight:700;padding:12px 22px;border-radius:100px;background:{{ pushBg }};color:{{ pushColor }};transition:all .25s ease">{{ pushLabel }}</button>
+        <button onClick="{{ clearFields }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:12px 20px;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="border-color:#B03A2E;color:#B03A2E">Очистить поля</button>
+        <div style="font-size:12.5px;color:{{ syncColor }};line-height:1.45;min-width:0">{{ syncNote }}</div>
+        <a href="admin-crm.dc.html?tab=leads" style="display:{{ syncLinkDisplay }};font-size:13px;font-weight:700;white-space:nowrap">Открыть заявку в CRM →</a>
+      </div>
+      <div style="display:{{ ctaDisplay }};margin-top:14px;gap:10px;flex-wrap:wrap">
+        <a href="{{ formHref }}" style="font-size:14px;font-weight:700;padding:13px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Открыть расчёт с этими данными</a>
+        <a href="zayavlenie.dc.html" style="font-size:14px;font-weight:600;padding:13px 24px;border-radius:100px;border:1px solid rgba(20,40,75,.2);color:#14284B;transition:border-color .25s ease" style-hover="border-color:#14284B">Перейти к заявлению</a>
+      </div>
+    </div>
+  </div>
+
+  <footer style="max-width:1040px;margin:0 auto;padding:0 clamp(20px,3vw,36px) 40px;font-size:12px;color:#9AA6B8;line-height:1.5">
+    Ответы помощника носят справочный характер и основаны на действующих правилах страхования и нормативных актах РФ. Спорные ситуации ведёт менеджер.
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { mode: 0, draft: '', turns: [], product: '', formHref: '', handoff: '', topic: '', busy: false, awaiting: '', edits: {}, sync: '', synced: false };
+
+  parseMoney(raw) {
+    const s = (raw || '').replace(/\s+/g, ' ').trim();
+    const m = s.match(/(\d+(?:[.,]\d+)?)\s*(млн|миллион\S*|тыс\S*|000)?/i);
+    if (!m) return '';
+    let n = parseFloat(m[1].replace(',', '.'));
+    const unit = (m[2] || '').toLowerCase();
+    if (/млн|миллион/.test(unit)) n = n * 1000000;
+    else if (/тыс/.test(unit)) n = n * 1000;
+    if (!n) return '';
+    return Math.round(n).toLocaleString('ru-RU') + ' ₽';
+  }
+
+  parseRisks(text, keys) {
+    const out = {};
+    const t = (text || '').toLowerCase();
+    const rules = [
+      { k: 'sumConstruct', re: /конструктив\S*\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumFinish', re: /отделк\S*\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumGoods', re: /(?:домашн\S*\s*)?имуществ\S*\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumEquip', re: /(?:оборудован\S*|техник\S*)\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumLiab', re: /(?:гражданк\S*|гражданск\S*\s*ответственност\S*|ответственност\S*)\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumBuilding', re: /(?:здани\S*|помещен\S*)\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumStock', re: /(?:товар\S*|запас\S*|остат\S*)\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumBI', re: /перерыв\S*\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ },
+      { k: 'sumCargo', re: /груз\S*\s*(?:на\s*)?([\d\s.,]+(?:млн|миллион\S*|тыс\S*)?)/ }
+    ];
+    rules.forEach(r => {
+      if (keys.indexOf(r.k) < 0) return;
+      const m = t.match(r.re);
+      if (!m) return;
+      const v = this.parseMoney(m[1]);
+      if (v) out[r.k] = v;
+    });
+    const addr = (text || '').match(/((?:ул\.?|улиц\S*|просп\S*|шоссе|переул\S*)?\s*[А-ЯЁ][а-яё]+(?:ская|ный|ная|вая|инская)?\s*,?\s*(?:д\.?\s*)?\d+[а-я]?(?:\s*(?:к|корп\S*|стр\S*)\.?\s*\d+)?(?:\s*кв\.?\s*\d+)?)/);
+    if (addr && keys.indexOf('address') >= 0) out.address = addr[1].replace(/\s+/g, ' ').trim();
+    const area = (text || '').match(/(\d{1,4})\s*(?:кв\.?\s?м|м2|м²|метр\S*)/i);
+    if (area && keys.indexOf('area') >= 0) out.area = area[1] + ' м²';
+    const yn = [
+      { k: 'gas', yes: /есть газ|газов\S*|с газом|газ есть/i, no: /без газа|нет газа|электр\S* плит/i },
+      { k: 'fireAlarm', yes: /пожарн\S*\s*сигнализац\S*\s*(есть|имеется)?|есть пожарн/i, no: /без пожарн|нет пожарн/i },
+      { k: 'alarm', yes: /охранн\S*\s*сигнализац|есть охран|на охране|сигнализац\S*\s*есть/i, no: /без охран|нет охран|без сигнализац/i },
+      { k: 'sprinkler', yes: /спринклер/i, no: /без спринклер|нет спринклер/i },
+      { k: 'rent', yes: /сда[её]тся|в аренд|арендатор/i, no: /не сда[её]тся|для себя|живу сам|собственн\S* использован/i }
+    ];
+    yn.forEach(r => {
+      if (keys.indexOf(r.k) < 0) return;
+      if (r.no.test(t)) out[r.k] = 'нет';
+      else if (r.yes.test(t)) out[r.k] = 'да';
+    });
+    const phone = (text || '').match(/(?:\+7|8|7)[\s\-()]*\d{3}[\s\-()]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}/);
+    if (phone && keys.indexOf('phone') >= 0) out.phone = phone[0].trim();
+    return out;
+  }
+
+  guessField(text, keys) {
+    const v = text.trim();
+    if (/^(да|нет|есть|нету|не сдаётся|не сдается|сдаётся|сдается|своё|свое)\b/i.test(v)) {
+      const yn = keys.filter(k => ['gas', 'fireAlarm', 'alarm', 'sprinkler', 'rent'].indexOf(k) >= 0 && !this.state.edits[k])[0];
+      if (yn) return yn;
+    }
+    const has = (k) => keys.indexOf(k) >= 0;
+    if (/^\+?[78][\s\-()0-9]{9,}$/.test(v) && has('phone')) return 'phone';
+    if (/^\d{2}[.\-/]\d{2}[.\-/]\d{4}$/.test(v) && has('date')) return 'date';
+    if (/м2|м²|кв\.?\s?м|метр/i.test(v) && has('area')) return 'area';
+    if (/^\d{1,4}$/.test(v) && has('area') && Number(v) <= 2000) return 'area';
+    if (/^[A-HJ-NPR-Z0-9]{17}$/i.test(v) && has('vin')) return 'vin';
+    if (/год|месяц|мес\.|\d+\s*дн/i.test(v) && has('term')) return 'term';
+    if (/улиц|ул\.|просп|шоссе|переул|дом\s?\d|д\.\s?\d/i.test(v) && has('address')) return 'address';
+    if (/водител/i.test(v) && has('drivers')) return 'drivers';
+    if (/челов|сотрудник/i.test(v) && has('people')) return 'people';
+    if (/млн|миллион|тысяч|₽|руб/i.test(v)) {
+      const risk = keys.filter(k => k.indexOf('sum') === 0 && !this.state.edits[k])[0];
+      if (risk) return risk;
+    }
+    return '';
+  }
+
+  nextEmptyField(edits) {
+    const chosen = (edits && edits.product) || this.state.product || '';
+    if (!chosen) return 'product';
+    let keys = this.fieldKeys(chosen).filter(k => k !== 'status' && k !== 'product');
+    const risks = keys.filter(k => k.indexOf('sum') === 0);
+    if (risks.some(k => edits && edits[k])) keys = keys.filter(k => k.indexOf('sum') !== 0);
+    const empty = keys.filter(k => !(edits && edits[k]));
+    return empty.length ? empty[0] : '';
+  }
+
+  nextAskText(edits, forceKey) {
+    const k = forceKey || this.nextEmptyField(edits);
+    if (!k) return ' Все нужные поля заполнены — можно передавать менеджеру в CRM.';
+    const q = {
+      product: 'Какой вид страхования нужен?',
+      city: 'В каком городе используется автомобиль?',
+      vin: 'Назовите VIN — 17 символов.',
+      plate: 'Какой госномер?',
+      drivers: 'Сколько водителей допущено к управлению?',
+      date: 'С какой даты нужен полис?',
+      term: 'На какой срок — год или меньше?',
+      phone: 'На какой телефон отправить расчёт?',
+      address: 'Какой адрес объекта?',
+      area: 'Какая площадь в квадратных метрах?',
+      bank: 'Какой банк выдал ипотеку?',
+      company: 'Как называется организация?',
+      activity: 'Какой основной вид деятельности?',
+      limit: 'Какой лимит ответственности нужен?',
+      cargo: 'Что за груз и в какой упаковке?',
+      route: 'Какой маршрут перевозки?',
+      people: 'Сколько человек нужно застраховать?',
+      program: 'Какая программа нужна — поликлиника, стоматология, госпитализация?',
+      country: 'В какую страну поездка?',
+      sum: 'На какую сумму страхуем?',
+      sumConstruct: 'Какая сумма по конструктиву — стены, перекрытия?',
+      sumFinish: 'Какая сумма по отделке и инженерии?',
+      sumGoods: 'Какая сумма по домашнему имуществу?',
+      sumEquip: 'Какая сумма по оборудованию и технике?',
+      sumLiab: 'Какой лимит гражданской ответственности перед соседями?',
+      sumBuilding: 'Какая сумма по зданиям и помещениям?',
+      sumEquipBiz: 'Какая сумма по оборудованию?',
+      sumStock: 'Какой максимальный остаток товара на складе?',
+      sumBI: 'Какая сумма по перерыву в деятельности?',
+      sumCargo: 'Какая стоимость груза по инвойсу?',
+      gas: 'В помещении есть газ — плита или колонка?',
+      fireAlarm: 'Есть пожарная сигнализация?',
+      alarm: 'Есть охранная сигнализация или охрана?',
+      sprinkler: 'Есть спринклерная система тушения?',
+      rent: 'Помещение сдаётся в аренду или используется вами?'
+    }[k];
+    return q ? '\n\n' + q : '';
+  }
+
+  fieldLabels() {
+    return {
+      product: 'Продукт', city: 'Регион использования', vin: 'VIN', plate: 'Госномер',
+      drivers: 'Водители', date: 'Дата начала', term: 'Срок страхования', phone: 'Телефон',
+      address: 'Адрес объекта', area: 'Площадь', bank: 'Банк', company: 'Организация',
+      activity: 'Вид деятельности', limit: 'Лимит ответственности', cargo: 'Груз и упаковка',
+      route: 'Маршрут', people: 'Количество человек', program: 'Программа', country: 'Страна поездки',
+      sum: 'Сумма', sumConstruct: 'Конструктив', sumFinish: 'Отделка и инженерия',
+      sumGoods: 'Домашнее имущество', sumEquip: 'Оборудование и техника',
+      sumLiab: 'Гражданская ответственность', sumBuilding: 'Здания и помещения',
+      sumEquipBiz: 'Оборудование', sumStock: 'Товарные запасы',
+      sumBI: 'Перерыв в деятельности', sumCargo: 'Стоимость груза', status: 'Статус',
+      gas: 'Газ в помещении', fireAlarm: 'Пожарная сигнализация', alarm: 'Охранная сигнализация',
+      sprinkler: 'Спринклерное тушение', rent: 'Сдаётся в аренду'
+    };
+  }
+
+  productList() {
+    return [
+      { v: 'ОСАГО', group: 'auto' },
+      { v: 'КАСКО', group: 'auto' },
+      { v: 'Зелёная карта', group: 'auto' },
+      { v: 'Автопарк ОСАГО и КАСКО', group: 'auto' },
+      { v: 'Квартира и имущество', group: 'realty' },
+      { v: 'Дом и дача', group: 'realty' },
+      { v: 'Ипотека и титул', group: 'mortgage' },
+      { v: 'Имущество предприятия', group: 'biz' },
+      { v: 'Перерыв в производстве', group: 'biz' },
+      { v: 'СМР (строительно-монтажные риски)', group: 'biz' },
+      { v: 'Грузы и перевозки', group: 'cargo' },
+      { v: 'Ответственность перед третьими лицами', group: 'liability' },
+      { v: 'ДМС', group: 'health' },
+      { v: 'НС и ДМС для сотрудников', group: 'health' },
+      { v: 'Несчастный случай', group: 'health' },
+      { v: 'Поездка за границу (ВЗР)', group: 'travel' }
+    ];
+  }
+
+  groupOf(product) {
+    const p = (product || '').toLowerCase();
+    if (!p) return '';
+    const found = this.productList().filter(x => x.v.toLowerCase() === p)[0];
+    if (found) return found.group;
+    if (/осаго|каско|зелён|автопарк|автомобил/.test(p)) return 'auto';
+    if (/ипотек|титул/.test(p)) return 'mortgage';
+    if (/квартир|дом|дач|имуществ\S* граждан/.test(p)) return 'realty';
+    if (/предприят|перерыв|смр|строительн|склад/.test(p)) return 'biz';
+    if (/груз|перевоз/.test(p)) return 'cargo';
+    if (/ответственност/.test(p)) return 'liability';
+    if (/дмс|несчастн|сотрудник|здоров/.test(p)) return 'health';
+    if (/взр|поездк|границ|виз/.test(p)) return 'travel';
+    return '';
+  }
+
+  fieldKeys(product) {
+    const g = this.groupOf(product);
+    const base = ['product'];
+    const tail = ['phone', 'status'];
+    const mid = {
+      auto: ['city', 'vin', 'plate', 'drivers', 'date', 'term'],
+      realty: ['address', 'area', 'sumConstruct', 'sumFinish', 'sumGoods', 'sumEquip', 'sumLiab', 'gas', 'fireAlarm', 'alarm', 'rent', 'date', 'term'],
+      mortgage: ['bank', 'address', 'sumConstruct', 'sumFinish', 'sumLiab', 'gas', 'fireAlarm', 'rent', 'date', 'term'],
+      biz: ['company', 'address', 'sumBuilding', 'sumEquipBiz', 'sumStock', 'sumFinish', 'sumLiab', 'sumBI', 'fireAlarm', 'sprinkler', 'alarm', 'rent', 'date', 'term'],
+      cargo: ['cargo', 'route', 'sumCargo', 'sumLiab', 'date', 'term'],
+      liability: ['company', 'activity', 'limit', 'date', 'term'],
+      health: ['company', 'people', 'program', 'date', 'term'],
+      travel: ['country', 'people', 'date', 'term', 'sum']
+    }[g] || ['city', 'date', 'term', 'sum'];
+    return base.concat(mid, tail);
+  }
+
+  persist(edits, turns) {
+    clearTimeout(this._t);
+    this._t = setTimeout(() => {
+      try { localStorage.setItem('pins-assistant-card', JSON.stringify({ edits, turns, at: Date.now() })); } catch (e) {}
+    }, 350);
+  }
+  scrollRef = React.createRef();
+
+  stickBottom() {
+    const el = this.scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+  componentDidMount() {
+    this.stickBottom();
+    try {
+      const raw = localStorage.getItem('pins-assistant-card');
+      if (raw) {
+        const d = JSON.parse(raw);
+        if (d && (d.edits || d.turns)) this.setState({ edits: d.edits || {}, turns: d.turns || [] });
+      }
+    } catch (e) {}
+  }
+  componentDidUpdate() { this.stickBottom(); }
+
+  topics() {
+    return [
+      { id: 'osago', docs: 'По ОСАГО: паспорт собственника, СТС или ПТС, права всех водителей, диагностическая карта для машин старше четырёх лет.', name: 'ОСАГО', re: /осаго|автогражданк|обязательн\S* страхован/i,
+        text: 'ОСАГО обязателен для любого автомобиля, допущенного к движению. Для расчёта нужны СТС или ПТС, водительские удостоверения всех, кто будет за рулём, и адрес регистрации собственника — от него зависит территориальный коэффициент.\n\nЦену определяет страховщик по единым правилам: базовая ставка плюс коэффициенты за регион, возраст и стаж водителя, мощность и историю убытков (КБМ).',
+        cite: 'Основание: ФЗ № 40-ФЗ, ст. 9 — коэффициенты страховых тарифов; ст. 15 п. 3 — перечень документов.',
+        product: 'ОСАГО, легковой автомобиль', form: 'zayavlenie.dc.html?p=7' },
+      { id: 'kbm', name: 'КБМ и скидка за безаварийность', re: /кбм|безаварийн|класс вожден|скидк\S* за езд/i,
+        text: 'КБМ считается по единой базе АИС ОСАГО, а не по словам страховщика. Если коэффициент применён неверно, его восстанавливают по заявлению: страховщик пересчитывает премию и возвращает переплату.\n\nВаш случай требует сверки в базе и переписки с прошлым страховщиком — это спорная ситуация, её ведёт менеджер.',
+        cite: 'Основание: Правила ОСАГО (Положение Банка России № 431-П) — порядок применения КБМ по данным АИС ОСАГО.',
+        flag: 'Передано менеджеру: сверка КБМ в АИС ОСАГО, срок 1 рабочий день.' },
+      { id: 'kasko', docs: 'По КАСКО: те же документы плюс осмотр автомобиля, для подержанной машины — фотографии по кругу.', name: 'КАСКО', re: /каско|угон|ущерб автомоб|франшиз/i,
+        text: 'КАСКО покрывает ущерб, угон и повреждения от стихии и третьих лиц. Цена зависит от стоимости машины, франшизы, места хранения и того, где будет ремонт — у дилера или на СТО страховщика.\n\nФраншиза 30 000 ₽ обычно снижает премию на 15–20%: имеет смысл, если мелкие царапины вы не собираетесь заявлять.',
+        cite: 'Основание: правила добровольного страхования транспорта страховщика; ст. 943 ГК РФ — условия договора определяются правилами страхования.',
+        product: 'КАСКО, легковой автомобиль', form: 'zayavlenie.dc.html?p=8' },
+      { id: 'zaliv', docs: 'По заливу: заявление в страховую, акт управляющей компании о причине протечки, фотографии повреждений с датой, документ о праве на квартиру, смета или заключение о стоимости ремонта, паспорт заявителя.', name: 'Залив', re: /зали|затопил|прорвал|сосед|протечк|вода с потолка/i,
+        text: 'При заливе зафиксируйте повреждения в день обнаружения: фотографии с датой, показания счётчиков, акт управляющей компании. Страховщик обязан рассмотреть заявление, даже если акт УК получить не удалось — причину можно доказать другими документами.\n\nСрок рассмотрения и выплаты указан в правилах страхования: обычно 15–20 рабочих дней с момента полного комплекта документов.',
+        cite: 'Основание: ст. 929 и 947 ГК РФ; правила страхования имущества граждан — порядок и сроки рассмотрения заявления.',
+        product: 'Квартира и имущество', form: 'zayavlenie.dc.html?p=11' },
+      { id: 'otkaz', generic: true, name: 'Отказ в выплате', re: /отказ|не плат|занизил|недоплат|снизил\S* сумму/i,
+        text: 'Отказ должен быть письменным и со ссылкой на конкретный пункт правил. Порядок действий: запросить мотивированный отказ, проверить, входит ли основание в перечень исключений, при несогласии — претензия страховщику, затем финансовый уполномоченный и суд.\n\nЧаще всего отказы держатся на исключениях, о которых клиент не знал, и на несвоевременном уведомлении. Это спорная ситуация — её ведёт менеджер.',
+        cite: 'Основание: ФЗ № 123-ФЗ о финансовом уполномоченном; ст. 964 ГК РФ — основания освобождения страховщика от выплаты.',
+        flag: 'Передано менеджеру: разбор отказа и подготовка претензии.' },
+      { id: 'ipoteka', docs: 'По ипотеке и титулу: кредитный договор или его номер, отчёт об оценке, выписка ЕГРН, паспорт заёмщика, требования банка к покрытию.', name: 'Ипотека и титул', re: /ипотек|титул|залог|банк требует/i,
+        text: 'Банк требует страхование конструктива, а часто ещё жизнь заёмщика и титул. Страховая сумма считается либо от остатка долга, либо от стоимости объекта — это указано в кредитном договоре.\n\nТитул защищает от потери права собственности: он нужен, если у объекта сложная история — наследство, доли, торги, несовершеннолетние собственники.',
+        cite: 'Основание: ФЗ № 102-ФЗ об ипотеке, ст. 31 — страхование заложенного имущества; требования банка к составу рисков.',
+        product: 'Ипотека и титул', form: 'calculator.dc.html?w=ipoteka' },
+      { id: 'vzr', docs: 'По поездке: паспорт, даты и страна поездки, для визы — требования консульства к сумме покрытия.', name: 'Поездки за границу', re: /взр|за границ|шенген|поездк|виз[аы]|турци|путешеств/i,
+        text: 'Для визы обычно требуется покрытие не менее 35 000 € и действие полиса на весь срок пребывания. Активный отдых — горные лыжи, дайвинг, мотоцикл — включается отдельно: без этой опции такие случаи не покрываются.\n\nХронические заболевания и беременность указывайте в заявлении: скрытые сведения дают страховщику законное основание отказать.',
+        cite: 'Основание: правила страхования граждан, выезжающих за рубеж; визовые требования консульств стран Шенгена.',
+        product: 'Поездка за границу (ВЗР)', form: 'zayavlenie.dc.html?p=10' },
+      { id: 'dms', docs: 'По ДМС: численность сотрудников, желаемая программа, список клиник, для расчёта — возрастная структура без персональных данных.', name: 'ДМС', re: /дмс|поликлиник|стоматолог|медицин|врач/i,
+        text: 'ДМС бывает личным и коллективным. Цена зависит от объёма: поликлиника, стоматология, госпитализация, а также от списка клиник — именно он влияет на тариф сильнее всего.\n\nДля коллектива от 10 человек условия заметно лучше, чем для личной программы, и появляется рассрочка.',
+        cite: 'Основание: ФЗ № 323-ФЗ об охране здоровья; правила добровольного медицинского страхования страховщика.',
+        product: 'ДМС', form: 'zayavlenie.dc.html?p=13' },
+      { id: 'gruz', docs: 'По грузам: характер груза и упаковка, маршрут и вид транспорта, стоимость отправки, транспортные документы.', name: 'Грузы и перевозки', re: /груз|перевозк|cmr|логистик|экспедитор/i,
+        text: 'Груз и ответственность перевозчика — два разных договора. Груз страхует владелец на стоимость по инвойсу, ответственность перевозчика покрывает его вину перед заказчиком в пределах, установленных законом или конвенцией.\n\nДля регулярных отправок генеральный договор дешевле разовых полисов: премия считается от планового оборота.',
+        cite: 'Основание: гл. 40 ГК РФ и Устав автомобильного транспорта; Конвенция CMR — ответственность перевозчика при международных перевозках.',
+        product: 'Страхование грузов', form: 'zayavlenie.dc.html?p=3' },
+      { id: 'smr', docs: 'По стройке: договор подряда, смета, график работ, сведения о технике и складе материалов на площадке.', name: 'СМР и стройка', re: /смр|строительн|подряд|стройк|\\bсро\\b/i,
+        text: 'СМР покрывает объект строительства, материалы и технику на весь срок работ, а ответственность перед третьими лицами оформляется отдельным разделом. Требования к составу рисков обычно диктует заказчик или условия СРО.\n\nПосле сдачи объекта действует период гарантийной эксплуатации — его включают в договор отдельно.',
+        cite: 'Основание: гл. 37 ГК РФ; требования к членам СРО по ФЗ № 315-ФЗ; условия контракта заказчика.',
+        product: 'СМР (строительно-монтажные риски)', form: 'zayavlenie.dc.html?p=5' },
+      { id: 'kvartira', docs: 'По квартире и дому: документ о праве, площадь и год постройки, фотографии внутри и снаружи, для дома — материал стен и наличие охраны.', name: 'Квартира и дом', re: /квартир|дом|дач|имуществ|отделк|пожар/i,
+        text: 'Страхуют три вещи по отдельности: конструктив, отделку с инженерией и домашнее имущество. Плюс ответственность перед соседями — она закрывает ваши заливы у них.\n\nДо 3 млн ₽ обычно без осмотра, по фотографиям. Коробочный полис дешевле, но суммы в нём фиксированные: если отделка дороже, нужен классический расчёт.',
+        cite: 'Основание: ст. 930 ГК РФ — страхование имущественного интереса; правила страхования имущества граждан.',
+        product: 'Квартира и имущество', form: 'zayavlenie.dc.html?p=11' },
+      { id: 'ns', docs: 'По несчастному случаю: паспорт, характер работы или занятий, медицинская анкета для крупных сумм.', name: 'Несчастный случай', re: /несчастн|травм|инвалидност|перелом/i,
+        text: 'Полис от несчастного случая платит за травму, госпитализацию, инвалидность и смерть. Тариф определяют профессия и спорт: офисная работа и монтаж на высоте различаются в разы.\n\nДля ребёнка полис оформляет родитель, действие обычно круглосуточное, включая школу и секции.',
+        cite: 'Основание: правила страхования от несчастных случаев; ст. 934 ГК РФ — договор личного страхования.',
+        product: 'Несчастный случай', form: 'zayavlenie.dc.html?p=12' },
+      { id: 'sklad', docs: 'Для склада нужны: свидетельство о праве или договор аренды, план помещения, ведомость имущества с балансовой стоимостью, максимальный остаток товара на складе, сведения о пожарной сигнализации и охране, справка об убытках за три года.', name: 'Имущество бизнеса', re: /склад|цех|производств|оборудован|товарн|офис|магазин|помещен|здани/i,
+        text: 'Имущество предприятия страхуют по группам: здания и помещения, оборудование, товарные запасы, отделка. Для склада ключевые вопросы — стоимость запасов на пике, пожарная сигнализация и спринклеры, охрана и вид хранения.\n\nОтдельно считают перерыв в деятельности: он покрывает недополученную прибыль и постоянные расходы, пока помещение восстанавливают.',
+        cite: 'Основание: ст. 929 и 930 ГК РФ — страхование имущественного интереса; правила страхования имущества юридических лиц.',
+        product: 'Имущество предприятия', form: 'zayavlenie.dc.html?p=0' },
+      { id: 'pereryv', docs: 'Для перерыва в деятельности: отчёт о финансовых результатах за последний год, расшифровка постоянных расходов и фонда оплаты труда, срок восстановления производства по вашей оценке. Основной полис на имущество должен быть оформлен.', name: 'Перерыв в деятельности', re: /перерыв|простой|остановк|недополученн|упущенн/i,
+        text: 'Перерыв в деятельности покрывает постоянные расходы и прибыль за период восстановления — обычно до 12 месяцев. Считается от финансовых показателей: выручка, себестоимость, фонд оплаты труда.\n\nСтрахуется только вместе с имуществом: без основного полиса перерыв не оформляют.',
+        cite: 'Основание: правила страхования от перерыва в производстве; ст. 933 ГК РФ — страхование предпринимательского риска.',
+        product: 'Перерыв в производстве', form: 'zayavlenie.dc.html?p=0' },
+      { id: 'otvet', docs: 'По ответственности: карточка организации, описание деятельности и площадок, требуемый лимит и его основание (договор с заказчиком, устав СРО, закон), справка об убытках.', name: 'Ответственность', re: /ответственност|третьим лиц|осгоп|вред здоровью|директор/i,
+        text: 'Ответственность перед третьими лицами покрывает вред, который вы причинили: здоровью, имуществу, а по расширенным программам — судебные расходы. Лимит выбирают по требованиям заказчика или закона.\n\nДля перевозки пассажиров ОСГОП обязателен, для членов СРО и подрядчиков состав рисков диктует договор.',
+        cite: 'Основание: ст. 931 ГК РФ; ФЗ № 67-ФЗ об ОСГОП; требования СРО по ФЗ № 315-ФЗ.',
+        product: 'Ответственность перед третьими лицами', form: 'zayavlenie.dc.html?p=5' },
+      { id: 'park', docs: 'По автопарку: реестр машин с VIN, годом и стоимостью, копии СТС, список допущенных водителей с правами и стажем, справка об убытках за три года.', name: 'Автопарк', re: /автопарк|парк машин|корпоративн|служебн/i,
+        text: 'Автопарк от пяти машин оформляют одним договором с единым сроком: проще администрировать и дешевле за счёт объёма. Телематика и франшиза дают дополнительную скидку.\n\nНужен реестр парка: марка, VIN, год, стоимость, пробег, плюс справка об убытках за три года.',
+        cite: 'Основание: ФЗ № 40-ФЗ — ОСАГО для юридических лиц; правила добровольного страхования транспорта.',
+        product: 'Автопарк ОСАГО и КАСКО', form: 'zayavlenie.dc.html?p=6' },
+      { id: 'sotr', docs: 'По сотрудникам: списочная численность, штатные должности и характер работ, возрастная структура, для ДМС — желаемая программа и список клиник. Персональные данные — после выбора условий.', name: 'Сотрудники', re: /сотрудник|персонал|коллектив|работник|командировк/i,
+        text: 'Для персонала обычно комбинируют три вещи: несчастный случай на производстве, ДМС коллектива и полисы для командировок. Тариф по НС зависит от характера работ, по ДМС — от объёма программы и списка клиник.\n\nОт 10 человек условия заметно лучше: появляется рассрочка и возможность включить членов семьи.',
+        cite: 'Основание: ст. 934 ГК РФ; ФЗ № 323-ФЗ; ст. 214 ТК РФ — обязанности работодателя по охране труда.',
+        product: 'НС и ДМС для сотрудников', form: 'zayavlenie.dc.html?p=2' },
+      { id: 'greencard', docs: 'По зелёной карте: СТС, паспорт, срок и страны поездки. На прицеп — отдельный полис.', name: 'Зелёная карта', re: /зелён|беларус|азербайджан|иран/i,
+        text: 'Зелёная карта — автогражданка для поездки за границу: Беларусь, Азербайджан, Турция, Иран. Минимальный срок 15 дней, оформляется до пересечения границы.\n\nНа прицеп нужен отдельный полис. Если водитель не собственник, потребуется доверенность или договор аренды.',
+        cite: 'Основание: международная система страхования «Зелёная карта»; ФЗ № 40-ФЗ, ст. 31.',
+        product: 'Зелёная карта', form: 'zayavlenie.dc.html?p=9' },
+      { id: 'dokumenty', generic: true, name: 'Документы', re: /документ|что нужно|какие бумаг|перечень/i,
+        text: 'Базовый набор зависит от продукта. По автомобилю: СТС или ПТС, водительские удостоверения, паспорт собственника. По имуществу: документ о праве и фотографии. По здоровью: паспорт и медицинская анкета.\n\nПрикрепите файлы в диалог — я разберу, что к чему относится, и заполню поля заявки.',
+        cite: 'Основание: ст. 944 ГК РФ — обязанность сообщить существенные обстоятельства; правила страхования по каждому виду.' },
+      { id: 'srok', generic: true, name: 'Сроки выплаты', re: /срок выплат|когда заплат|сколько ждать|через сколько/i,
+        text: 'Срок указан в правилах страхования и считается с даты, когда собран полный комплект документов, а не с даты события. По ОСАГО это 20 календарных дней, по добровольным видам обычно 15–20 рабочих дней.\n\nЕсли срок нарушен, положена неустойка: по ОСАГО — 1% от суммы за каждый день просрочки.',
+        cite: 'Основание: ФЗ № 40-ФЗ, ст. 12 п. 21 — срок выплаты и неустойка за просрочку.' },
+      { id: 'broker', generic: true, name: 'Работа брокера', re: /броке|комисси|дороже|зачем вы нужны|чем отличает/i,
+        text: 'Брокер не продаёт свой полис: мы сравниваем условия страховщиков и объясняем разницу. Комиссию платит страховая компания из своего тарифа, поэтому цена для вас такая же, как при обращении напрямую.\n\nОтличие в убытке: с компанией разговаривает куратор, а не вы.',
+        cite: 'Основание: ФЗ № 4015-1 «Об организации страхового дела в РФ», ст. 8 — деятельность страховых брокеров.' }
+    ];
+  }
+
+  systemPrompt() {
+    const topicList = this.topics().map(t => t.name).join(', ');
+    return [
+      'Ты — консультант страхового брокера PINS (Россия). Отвечаешь клиентам по страхованию: подбор, условия, документы, убытки, пролонгация.',
+      'Правила ответа:',
+      '1. Отвечай ТОЛЬКО по последнему вопросу клиента и строго в контексте текущей темы диалога. Не переключайся на другой вид страхования, пока клиент сам не сменил тему.',
+      '2. Если клиент задал общий вопрос («какие документы», «сколько ждать», «сколько стоит»), понимай его как вопрос о теме, которую вы обсуждаете сейчас.',
+      '3. Объём: два коротких абзаца, максимум пять предложений всего. Без списков, без заголовков, без эмодзи.',
+      '4. Последней строкой всегда пиши: ОСНОВАНИЕ: и норму или документ (статья ГК РФ, номер федерального закона, правила страхования по этому виду). Не выдумывай номера — если не уверен, пиши «правила страхования по данному виду».',
+      '5. Точные тарифы и итоговую цену не называй: их считает страховая компания. Можешь назвать, от чего цена зависит.',
+      '6. Персональные данные не запрашивай сверх необходимого, паспортные и медицинские документы не проси присылать в чат.',
+      '7. Если вопрос не о страховании, коротко скажи, что помогаешь только по страхованию, и предложи темы: ' + topicList + '.',
+      '8. Спорные ситуации (отказ в выплате, суд, занижение суммы) заверши фразой, что подключается юрист брокера.',
+      '9. Пиши по-русски, спокойно и по делу, без рекламных оборотов.',
+      'Если из сообщений клиента ясны конкретные данные (продукт, город, VIN, госномер, дата, срок, число водителей, сумма, телефон), вызови инструмент fill_card, чтобы заполнить карточку менеджера.'
+    ].join('\n');
+  }
+
+  async askModel(text) {
+    if (!(window.claude && window.claude.complete)) throw new Error('no-model');
+    const history = (this.state.turns || []).slice(-12).map(m => ({
+      role: m.who === 'user' ? 'user' : 'assistant',
+      content: m.text
+    }));
+    const fillCard = {
+      name: 'fill_card',
+      description: 'Заполнить карточку заявки в CRM данными, которые клиент назвал в диалоге.',
+      input_schema: {
+        type: 'object',
+        properties: {
+          product: { type: 'string', description: 'Вид страхования из списка: ' + this.productList().map(x => x.v).join(', ') },
+          city: { type: 'string' }, vin: { type: 'string' }, plate: { type: 'string' },
+          drivers: { type: 'string' }, date: { type: 'string' }, term: { type: 'string' },
+          address: { type: 'string', description: 'Адрес объекта' },
+          area: { type: 'string', description: 'Площадь, например 70 м²' },
+          bank: { type: 'string' }, company: { type: 'string' }, activity: { type: 'string' },
+          limit: { type: 'string' }, cargo: { type: 'string' }, route: { type: 'string' },
+          people: { type: 'string' }, program: { type: 'string' }, country: { type: 'string' },
+          phone: { type: 'string' }, sum: { type: 'string' },
+          sumConstruct: { type: 'string', description: 'Сумма по конструктиву' },
+          sumFinish: { type: 'string', description: 'Сумма по отделке и инженерии' },
+          sumGoods: { type: 'string', description: 'Сумма по домашнему имуществу' },
+          sumEquip: { type: 'string', description: 'Сумма по оборудованию и технике' },
+          sumLiab: { type: 'string', description: 'Лимит гражданской ответственности' },
+          sumBuilding: { type: 'string', description: 'Сумма по зданиям и помещениям' },
+          sumEquipBiz: { type: 'string', description: 'Сумма по оборудованию предприятия' },
+          sumStock: { type: 'string', description: 'Сумма по товарным запасам' },
+          sumBI: { type: 'string', description: 'Сумма по перерыву в деятельности' },
+          sumCargo: { type: 'string', description: 'Стоимость груза' },
+          asking: { type: 'string', description: 'Ключ поля, про которое ты задаёшь вопрос в этом ответе: area, address, date, term, phone, sumConstruct и т.д. Пусто, если вопроса нет.' }
+        }
+      },
+      run: async (input) => {
+        const clean = {};
+        const asking = (input && input.asking) ? String(input.asking) : '';
+        Object.keys(input || {}).forEach(k => { if (k !== 'asking' && input[k]) clean[k] = String(input[k]); });
+        if (asking) this._asking = asking;
+        if (Object.keys(clean).length) {
+          this.setState(s => {
+            const edits = { ...s.edits, ...clean };
+            this.persist(edits, s.turns);
+            return { edits, product: clean.product || s.product };
+          });
+        }
+        return 'ok';
+      }
+    };
+    const cur = this.state.topic ? (this.topics().filter(x => x.id === this.state.topic)[0] || null) : null;
+    const st0 = this.state;
+    const chosen = st0.edits.product || st0.product || '';
+    const keys = this.fieldKeys(chosen);
+    const lab = this.fieldLabels();
+    const filledList = keys.filter(k => st0.edits[k]).map(k => lab[k] + ' = ' + st0.edits[k]);
+    const emptyList = keys.filter(k => !st0.edits[k] && k !== 'status').map(k => lab[k]);
+    const ctxLine = [
+      cur ? 'Текущая тема диалога: ' + cur.name + '. Отвечай в её рамках, пока клиент не сменил тему явно.' : '',
+      chosen ? 'Выбранный продукт: ' + chosen + '.' : '',
+      filledList.length ? 'Уже заполнено в карточке: ' + filledList.join('; ') + '.' : '',
+      emptyList.length ? 'Ещё не заполнено: ' + emptyList.join(', ') + '. После ответа задай ОДИН короткий вопрос про первое незаполненное поле.' : '',
+      'Если клиент ответил коротко («70», «Москва», «на год»), это ответ на твой прошлый вопрос: сразу вызови fill_card с этим значением в нужном поле и подтверди одной фразой, что записал.'
+    ].filter(Boolean).join('\n');
+    const out = await window.claude.complete({
+      model: 'claude-sonnet-4-5',
+      max_tokens: 700,
+      system: this.systemPrompt() + (ctxLine ? '\n' + ctxLine : ''),
+      messages: history.concat([{ role: 'user', content: text }]),
+      tools: [fillCard]
+    });
+    const raw = (out || '').trim();
+    if (!raw) throw new Error('empty');
+    const i = raw.search(/ОСНОВАНИЕ\s*:/i);
+    if (i > 0) {
+      return { text: raw.slice(0, i).trim(), cite: raw.slice(i).trim(), by: 'ии' };
+    }
+    return { text: raw, cite: 'Ответ по правилам страхования и нормам РФ. Спорные случаи подтверждает юрист брокера.', by: 'ии' };
+  }
+
+  answer(text, ctxId) {
+    const t = (text || '').toLowerCase();
+    if (!t.trim()) return null;
+    const all = this.topics();
+    const ctx = ctxId ? all.filter(x => x.id === ctxId)[0] : null;
+    const hit = all.filter(x => x.re.test(t));
+
+    // общий вопрос в продолжение темы — отвечаем в её контексте
+    const generic = hit.filter(x => x.generic);
+    const specific = hit.filter(x => !x.generic);
+    if (ctx && generic.length && !specific.length) {
+      const g = generic[0];
+      if (g.id === 'dokumenty' && !ctx.docs) {
+        return {
+          text: 'Продолжаем по теме «' + ctx.name + '».\n\nСостав документов по этому виду зависит от объекта и страховщика: обычно нужны заявление, документ о праве или договор, подтверждение стоимости и паспорт заявителя. Точный перечень соберёт менеджер после уточнения условий.',
+          cite: 'Основание: ст. 944 ГК РФ; правила страхования по виду «' + ctx.name + '».',
+          product: ctx.product, form: ctx.form, topicId: ctx.id
+        };
+      }
+      if (g.id === 'dokumenty' && ctx.docs) {
+        return {
+          text: 'Продолжаем по теме «' + ctx.name + '».\n\n' + ctx.docs + '\n\nПрикрепите файлы в диалог — я разберу, что к чему относится, и заполню поля заявки.',
+          cite: 'Основание: ст. 944 ГК РФ — обязанность сообщить существенные обстоятельства; правила страхования по виду «' + ctx.name + '».',
+          product: ctx.product, form: ctx.form, topicId: ctx.id
+        };
+      }
+      return {
+        text: 'Продолжаем по теме «' + ctx.name + '».\n\n' + g.text,
+        cite: g.cite, flag: g.flag, product: ctx.product, form: ctx.form, topicId: ctx.id
+      };
+    }
+
+    if (!hit.length && ctx) {
+      return {
+        text: 'Уточните вопрос по теме «' + ctx.name + '» — что именно интересует: состав покрытия, исключения, документы, сроки или стоимость?\n\nЕсли тема сменилась, напишите новый продукт словом: «склад», «залив», «виза», «автопарк».',
+        cite: 'Отвечаю в рамках заданной темы, чтобы не смешивать правила разных видов страхования.',
+        product: ctx.product, form: ctx.form, topicId: ctx.id
+      };
+    }
+
+    if (!hit.length) {
+      return {
+        text: 'Не понял запрос — уточните, о чём речь. Мои темы: авто (ОСАГО, КАСКО, зелёная карта, автопарк), ипотека и титул, квартира и дом, имущество бизнеса и перерыв в деятельности, ответственность, грузы и перевозки, стройка и СМР, ДМС и несчастный случай, поездки за границу, а также убытки — сроки, документы, отказы.\n\nНапишите одним словом, что интересует: «склад», «залив», «виза», «автопарк».',
+        cite: 'Отвечаю только по правилам страхования и нормативным актам РФ. Если данных не хватает, передаю вопрос менеджеру.'
+      };
+    }
+    if (hit.length > 1) {
+      const first = (specific[0] || hit[0]);
+      return {
+        text: first.text + '\n\nВ вашем вопросе несколько тем: ' + hit.map(h => h.name).join(', ') + '. Разберём по очереди — начал с первой.',
+        cite: first.cite, flag: first.flag, product: first.product, form: first.form, topicId: first.id
+      };
+    }
+    const h = specific[0] || hit[0];
+    return { text: h.text, cite: h.cite, flag: h.flag, product: h.product, form: h.form, topicId: h.id };
+  }
+
+  extract(all) {
+    const out = {};
+    const vin = all.match(/\b[A-HJ-NPR-Z0-9]{17}\b/i);
+    if (vin) out.vin = vin[0].toUpperCase();
+    const plate = all.match(/\b[АВЕКМНОРСТУХA-Z]\s?\d{3}\s?[АВЕКМНОРСТУХA-Z]{2}\s?\d{2,3}\b/i);
+    if (plate) out.plate = plate[0].toUpperCase();
+    const city = all.match(/москв\w*|санкт-петербург\w*|казан\w*|екатеринбург\w*|новосибирск\w*|краснодар\w*|химк\w*/i);
+    if (city) out.city = city[0][0].toUpperCase() + city[0].slice(1);
+    const date = all.match(/\d{1,2}\s*(январ|феврал|март|апрел|ма[йя]|июн|июл|август|сентябр|октябр|ноябр|декабр)\w*|\d{2}\.\d{2}\.\d{4}/i);
+    if (date) out.date = date[0];
+    const money = all.match(/\d[\d\s]{4,}\s*(₽|руб)/i);
+    if (money) out.sum = money[0];
+    const drivers = all.match(/(один|1|дв[ае]|2|три|3)\s*водител/i);
+    if (drivers) out.drivers = drivers[0];
+    const term = all.match(/(год|12 месяц|6 месяц|на срок поездк|\d+\s*дн)/i);
+    if (term) out.term = term[0];
+    const phone = all.match(/\+?7[\s\-()]*\d{3}[\s\-()]*\d{3}[\s\-]*\d{2}[\s\-]*\d{2}/);
+    if (phone) out.phone = phone[0];
+    return out;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const crm = st.mode === 1;
+    const turns = st.turns || [];
+
+    const modes = ['Клиент на сайте', 'Менеджер в CRM'].map((label, i) => ({
+      label,
+      select: () => this.setState({ mode: i }),
+      bg: st.mode === i ? '#14284B' : 'transparent',
+      color: st.mode === i ? '#FBFCFD' : '#5A6B85'
+    }));
+
+    const intro = {
+      who: 'bot',
+      text: crm
+        ? 'Карточка открыта. Опишите запрос клиента своими словами — отвечу по правилам страхования, покажу основание и заполню карточку. Спорные вопросы отдам вам.'
+        : 'Здравствуйте. Напишите своими словами, что нужно застраховать или что случилось. Отвечаю по правилам страхования и нормативным актам РФ, показываю основание под каждым ответом.'
+    };
+
+    const pending = st.busy ? [{ who: 'bot', text: 'Смотрю правила страхования по вашей теме…', pending: true }] : [];
+    const messages = [intro].concat(turns).concat(pending).map(m => {
+      const bot = m.who === 'bot';
+      return {
+        text: m.text,
+        role: bot ? (m.pending ? 'ПОМОЩНИК PINS · ГОТОВИТ ОТВЕТ' : (m.by === 'правила' ? 'ПОМОЩНИК PINS · БАЗА ПРАВИЛ' : 'ПОМОЩНИК PINS')) : '',
+        roleDisplay: bot ? 'block' : 'none',
+        align: bot ? 'flex-start' : 'flex-end',
+        bg: bot ? '#F2F5F8' : '#14284B',
+        color: bot ? '#14284B' : '#FBFCFD',
+        border: bot ? 'rgba(20,40,75,.1)' : '#14284B',
+        radius: bot ? '14px 14px 14px 4px' : '14px 14px 4px 14px',
+        rule: bot ? 'rgba(20,40,75,.12)' : 'rgba(251,252,253,.2)',
+        files: m.files || '',
+        filesDisplay: m.files ? 'block' : 'none',
+        filesColor: bot ? '#0A767A' : '#B9C4D2',
+        cite: m.cite || '',
+        citeDisplay: m.cite ? 'block' : 'none',
+        flag: m.flag || '',
+        flagDisplay: (m.flag && crm) ? 'block' : 'none'
+      };
+    });
+
+    const ask = async (text) => {
+      if (st.busy) return;
+      const short = text.trim().length <= 42;
+      const chosenNow = this.state.edits.product || this.state.product || '';
+      const keysNow = chosenNow ? this.fieldKeys(chosenNow).filter(k => k !== 'status' && k !== 'product') : [];
+      const parsed = keysNow.length ? this.parseRisks(text, keysNow) : {};
+      if (Object.keys(parsed).length) {
+        this.setState(s => {
+          const edits = { ...s.edits };
+          Object.keys(parsed).forEach(k => { if (!edits[k]) edits[k] = parsed[k]; });
+          this.persist(edits, s.turns);
+          return { edits, sync: '', synced: false };
+        });
+      }
+      const guessed = short ? this.guessField(text, keysNow) : '';
+      const await0 = guessed || (keysNow.indexOf(this.state.awaiting) >= 0 ? this.state.awaiting : '');
+      if (await0 && short) {
+        const lab = this.fieldLabels();
+        this.setState(s => {
+          const edits = { ...s.edits, [await0]: text.trim() };
+          const t = (s.turns || []).concat(
+            [{ who: 'user', text }],
+            [{ who: 'bot', text: 'Записал: ' + lab[await0] + ' — ' + text.trim() + '.' + this.nextAskText(edits), cite: 'Данные записаны в карточку заявки. Их видит только менеджер, который её ведёт.', by: 'правила' }]
+          );
+          this.persist(edits, t);
+          return { edits, turns: t, draft: '', awaiting: this.nextEmptyField(edits), sync: '', synced: false, _ruleAsk: true };
+        });
+        return;
+      }
+      const rule = this.answer(text, this.state.topic);
+      this.setState(s => {
+        const t = (s.turns || []).concat([{ who: 'user', text }]);
+        this.persist(s.edits, t);
+        return {
+          turns: t,
+          draft: '',
+          busy: true,
+          product: (rule && rule.product) ? rule.product : s.product,
+          formHref: (rule && rule.form) ? rule.form : s.formHref,
+          handoff: (rule && rule.flag) ? rule.flag : s.handoff,
+          topic: (rule && rule.topicId) ? rule.topicId : s.topic
+        };
+      });
+      if (rule && rule.product) {
+        this.setState(s => {
+          if (s.edits.product) return {};
+          const edits = { ...s.edits, product: rule.product };
+          this.persist(edits, s.turns);
+          return { edits };
+        });
+      }
+      let a = null;
+      try { a = await this.askModel(text); } catch (e) { a = null; }
+      const res = a || rule;
+      this.setState(s => {
+        const modelAsked = this._asking || '';
+        this._asking = '';
+        const target = modelAsked || this.nextEmptyField(s.edits);
+        const alreadyAsks = /\?\s*$/.test((res.text || '').trim());
+        const tail = (!alreadyAsks && target) ? this.nextAskText(s.edits) : '';
+        const t = (s.turns || []).concat([{
+          who: 'bot',
+          text: (res.text || '') + tail,
+          cite: res.cite,
+          flag: res.flag || (rule && rule.flag) || '',
+          by: res.by || 'правила'
+        }]);
+        this.persist(s.edits, t);
+        return { turns: t, busy: false, awaiting: target };
+      });
+    };
+
+    const chips = ['Нужно ОСАГО, полис заканчивается через неделю', 'Залив от соседей: что покрывается', 'Страховка для шенгенской визы', 'Страховщик отказал в выплате']
+      .map((label, i) => ({
+        label,
+        pick: () => ask(label),
+        bg: i === 0 ? '#E7EDF3' : 'transparent',
+        border: 'rgba(20,40,75,.14)',
+        color: '#14284B'
+      }));
+
+    const userText = turns.filter(m => m.who === 'user').map(m => m.text).join(' ');
+    const ex = this.extract(userText);
+    const answered = turns.filter(m => m.who === 'bot').length;
+
+    const auto = {
+      product: st.product || '',
+      city: ex.city || '',
+      vin: ex.vin || '',
+      plate: ex.plate || '',
+      date: ex.date || '',
+      term: ex.term || '',
+      drivers: ex.drivers || '',
+      sum: ex.sum || '',
+      phone: ex.phone || '',
+      status: answered ? (st.handoff ? 'Спорный вопрос — нужен менеджер' : 'Консультация дана, готов к расчёту') : '',
+      address: '', area: '', bank: '', company: '', activity: '', limit: '',
+      cargo: '', route: '', people: '', program: '', country: ex.city || '',
+      sumConstruct: '', sumFinish: '', sumGoods: '', sumEquip: '', sumLiab: '',
+      sumBuilding: '', sumEquipBiz: '', sumStock: '', sumBI: '', sumCargo: '',
+      gas: '', fireAlarm: '', alarm: '', sprinkler: '', rent: ''
+    };
+    const labels = {
+      product: ['Продукт', 'выберите вид страхования'],
+      address: ['Адрес объекта', 'Москва, ул. Расковой, 34'],
+      area: ['Площадь', '64 м²'],
+      bank: ['Банк', 'Сбербанк'],
+      company: ['Организация', 'ООО «Ромашка»'],
+      activity: ['Вид деятельности', 'розничная торговля'],
+      limit: ['Лимит ответственности', '5 000 000 ₽'],
+      cargo: ['Груз и упаковка', 'электроника, паллеты'],
+      route: ['Маршрут', 'Москва — Казань'],
+      people: ['Количество человек', '12'],
+      program: ['Программа', 'поликлиника и стоматология'],
+      country: ['Страна поездки', 'Шенген'],
+      sumConstruct: ['Конструктив, сумма', '4 200 000 ₽'],
+      sumFinish: ['Отделка и инженерия, сумма', '1 100 000 ₽'],
+      sumGoods: ['Домашнее имущество, сумма', '600 000 ₽'],
+      sumEquip: ['Оборудование и техника, сумма', '250 000 ₽'],
+      sumLiab: ['Гражданская ответственность, лимит', '500 000 ₽'],
+      sumBuilding: ['Здания и помещения, сумма', '38 000 000 ₽'],
+      sumEquipBiz: ['Оборудование, сумма', '9 500 000 ₽'],
+      sumStock: ['Товарные запасы, сумма', '14 000 000 ₽'],
+      sumBI: ['Перерыв в деятельности, сумма', '6 000 000 ₽'],
+      sumCargo: ['Стоимость груза, сумма', '3 400 000 ₽'],
+      gas: ['Газ в помещении', 'да / нет'],
+      fireAlarm: ['Пожарная сигнализация', 'да / нет'],
+      alarm: ['Охранная сигнализация', 'да / нет'],
+      sprinkler: ['Спринклерное тушение', 'да / нет'],
+      rent: ['Сдаётся в аренду', 'да / нет'],
+      city: ['Регион использования', 'Москва'],
+      vin: ['VIN', '17 символов'],
+      plate: ['Госномер', 'А 483 ТК 777'],
+      date: ['Дата', '24.08.2026'],
+      term: ['Срок страхования', '12 месяцев'],
+      drivers: ['Водители', 'один водитель'],
+      sum: ['Сумма', '2 480 000 ₽'],
+      phone: ['Телефон', '+7 916 442-18-03'],
+      status: ['Статус', 'заполняется автоматически']
+    };
+    const setField = (k) => (e) => {
+      const val = e.target.value;
+      this.setState(s => {
+        const edits = { ...s.edits, [k]: val };
+        this.persist(edits, s.turns);
+        return { edits, sync: '', synced: false };
+      });
+    };
+    const chosenProduct = st.edits.product !== undefined ? st.edits.product : auto.product;
+    const keyList = this.fieldKeys(chosenProduct);
+    const riskKeys = keyList.filter(k => k.indexOf('sum') === 0);
+    const anyRisk = riskKeys.some(k => st.edits[k]);
+    const fields = keyList.map(k => {
+      const manual = st.edits[k];
+      const isRisk = riskKeys.indexOf(k) >= 0;
+      const zeroRisk = isRisk && anyRisk && !manual;
+      const value = zeroRisk ? '0' : (manual !== undefined ? manual : auto[k]);
+      const on = !!value;
+      const isProduct = k === 'product';
+      return {
+        isProduct,
+        isPlain: !isProduct,
+        options: isProduct ? this.productList().map(x => ({ v: x.v })) : [],
+        label: labels[k][0],
+        ph: labels[k][1],
+        value: value,
+        set: setField(k),
+        bg: on ? '#F2F5F8' : '#FBFCFD',
+        border: on ? 'rgba(10,118,122,.3)' : 'rgba(20,40,75,.09)',
+        from: zeroRisk ? 'риск не заявлен — не страхуется' : (manual !== undefined && manual !== auto[k] ? 'заполнено вручную' : 'из вашего сообщения'),
+        fromColor: zeroRisk ? '#9AA6B8' : (manual !== undefined && manual !== auto[k] ? '#8A5A2B' : '#0A767A'),
+        fromDisplay: on ? 'block' : 'none'
+      };
+    });
+    const filled = fields.filter(f => f.fromDisplay === 'block' && f.from !== 'риск не заявлен — не страхуется').length;
+
+    const stageLabels = ['Запрос', 'Данные и документы', 'Расчёт', 'Согласование', 'Сделка'];
+    const cur = !turns.length ? 0 : (filled < 3 ? 1 : (st.handoff ? 3 : 2));
+    const stages = stageLabels.map((label, i) => ({
+      label,
+      n: '0' + (i + 1),
+      line: i < cur ? '#0A767A' : (i === cur ? '#14284B' : 'rgba(20,40,75,.14)'),
+      color: i <= cur ? '#14284B' : '#9AA6B8',
+      state: i < cur ? 'пройден' : (i === cur ? 'сейчас' : '—')
+    }));
+
+    return {
+      modes, messages, chips, stages, fields,
+      scrollRef: this.scrollRef,
+      subtitle: crm
+        ? 'Помощник отвечает на вопрос менеджера по правилам страхования, показывает основание и заполняет карточку из сказанного клиентом.'
+        : 'Напишите вопрос своими словами: помощник ответит по правилам страхования и нормативным актам РФ и соберёт данные для заявки.',
+      crmBarDisplay: crm ? 'flex' : 'none',
+      dialogRadius: crm ? '0 0 16px 16px' : '16px',
+      dealId: '№ 4821',
+      draft: st.draft,
+      setDraft: (e) => this.setState({ draft: e.target.value }),
+      send: () => { const t = (st.draft || '').trim(); if (t) ask(t); },
+      onKey: (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          const t = (st.draft || '').trim();
+          if (t) ask(t);
+        }
+      },
+      reset: () => {
+        try { localStorage.removeItem('pins-assistant-card'); } catch (e) {}
+        this.setState({ turns: [], draft: '', product: '', formHref: '', handoff: '', topic: '', edits: {}, sync: '', synced: false });
+      },
+      clearFields: () => {
+        const blank = {};
+        this.fieldKeys(chosenProduct).forEach(k => { blank[k] = ''; });
+        this.persist(blank, st.turns);
+        this.setState({ edits: blank, awaiting: 'product', sync: 'Поля очищены. Заполните заново — данные сохраняются в этом браузере.', synced: false });
+      },
+      pushCrm: () => {
+        if (st.synced) return;
+        const data = {};
+        keyList.forEach(k => {
+          const m = st.edits[k];
+          if (riskKeys.indexOf(k) >= 0 && anyRisk && !m) { data[k] = '0'; return; }
+          const v = m !== undefined ? m : auto[k];
+          if (v) data[k] = v;
+        });
+        const n = Object.keys(data).length;
+        if (!n) { this.setState({ sync: 'Заполните хотя бы одно поле — передавать пока нечего.', synced: false }); return; }
+        try {
+          const raw = localStorage.getItem('pins-crm-inbox');
+          const list = raw ? JSON.parse(raw) : [];
+          list.unshift({ at: Date.now(), source: 'помощник', data });
+          localStorage.setItem('pins-crm-inbox', JSON.stringify(list.slice(0, 20)));
+        } catch (e) {}
+        this.setState({ sync: 'Передано в CRM: ' + n + ' полей. Заявка ждёт менеджера в разделе «Заявки».', synced: true, syncHref: 'admin-crm.dc.html?tab=leads' });
+      },
+      syncNote: st.sync,
+      syncLinkDisplay: st.synced ? 'block' : 'none',
+      pushLabel: st.synced ? 'Заявка отправлена' : 'Передать менеджеру в CRM',
+      pushBg: st.synced ? 'transparent' : '#0A767A',
+      pushColor: st.synced ? '#0A767A' : '#FBFCFD',
+      pushBorder: st.synced ? 'rgba(10,118,122,.45)' : '#0A767A',
+      pushCursor: st.synced ? 'default' : 'pointer',
+      syncColor: st.synced ? '#0A767A' : '#8A5A2B',
+      placeholder: st.busy ? 'Готовлю ответ…' : 'Опишите ситуацию или задайте вопрос',
+      sendLabel: st.busy ? 'Думаю…' : 'Отправить',
+      sendBg: st.busy ? '#9AA6B8' : '#0A767A',
+      sendCursor: st.busy ? 'default' : 'pointer',
+      riskHint: (() => {
+        const g = this.groupOf(chosenProduct);
+        if (g === 'realty' || g === 'mortgage') return 'Суммы указываются по каждому риску отдельно: конструктив, отделка с инженерией, домашнее имущество, оборудование и техника, гражданская ответственность перед соседями. Заполните только нужные — страхуется то, где стоит сумма.';
+        if (g === 'biz') return 'Суммы указываются по группам: здания и помещения, оборудование, товарные запасы, отделка, ответственность перед третьими лицами, перерыв в деятельности. По запасам берут максимальный остаток на складе, а не средний.';
+        if (g === 'cargo') return 'По грузу указывают стоимость отправки по инвойсу и, при необходимости, лимит ответственности перевозчика. Тариф зависит от характера груза, упаковки, маршрута и вида транспорта.';
+        return '';
+      })(),
+      riskHintDisplay: ['realty', 'mortgage', 'biz', 'cargo'].indexOf(this.groupOf(chosenProduct)) >= 0 ? 'block' : 'none',
+      cardTitle: crm ? 'Карточка сделки № 4821' : 'Ваша заявка',
+      cardNote: crm
+        ? 'Поля собираются из того, что действительно сказал клиент. Пустые поля означают, что данных пока нет — их нужно запросить.'
+        : 'Заполняется из вашего сообщения. Чего нет в диалоге — того нет и в заявке: помощник не придумывает данные.',
+      filledNote: filled + ' из ' + fields.length + ' полей',
+      stageNote: 'Текущий этап: ' + stageLabels[cur],
+      handoffDisplay: st.handoff ? 'flex' : 'none',
+      handoffText: st.handoff || '',
+      ctaDisplay: (!crm && st.formHref) ? 'flex' : 'none',
+      formHref: st.formHref || 'katalog.dc.html'
+    };
+  }
+}
+</script>
+</body>
+</html>

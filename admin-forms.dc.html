@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F2F5F8;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+</style>
+</helmet>
+<div style="background:#F2F5F8;color:#14284B;min-height:100%;display:grid;grid-template-columns:232px minmax(0,1fr);overflow-x:hidden">
+
+  <aside style="background:#14284B;color:#FBFCFD;padding:20px 16px;display:flex;flex-direction:column;gap:26px;min-height:100vh">
+    <div style="display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;letter-spacing:-.02em;padding:0 6px">
+      <img src="logo-pins.png" alt="PINS" style="height:46px;width:auto;display:block"> · CRM
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <a href="admin-crm.dc.html" style="font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;color:#9AA6B8;display:flex;justify-content:space-between;gap:10px;transition:all .2s ease" style-hover="background:rgba(251,250,247,.08);color:#FBFCFD">Заявки<span style="font-family:'IBM Plex Mono';font-size:11px;color:#5A6B85">10</span></a>
+      <a href="admin-crm.dc.html" style="font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;color:#9AA6B8;transition:all .2s ease" style-hover="background:rgba(251,250,247,.08);color:#FBFCFD">Задачи и план</a>
+      <a href="admin-crm.dc.html" style="font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;color:#9AA6B8;transition:all .2s ease" style-hover="background:rgba(251,250,247,.08);color:#FBFCFD">Клиенты</a>
+      <div style="font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;background:rgba(251,250,247,.1);color:#FBFCFD;display:flex;justify-content:space-between;gap:10px">Формы страховщиков<span style="font-family:'IBM Plex Mono';font-size:11px;color:#0A767A">30</span></div>
+      <a href="admin-crm.dc.html" style="font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;color:#9AA6B8;transition:all .2s ease" style-hover="background:rgba(251,250,247,.08);color:#FBFCFD">Аналитика</a>
+    </div>
+    <div style="margin-top:auto;background:rgba(251,250,247,.06);border-radius:12px;padding:14px">
+      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:8px">ГОТОВНОСТЬ БИБЛИОТЕКИ</div>
+      <div style="font-size:13px;line-height:1.5">{{ readyLine }}</div>
+      <div style="height:5px;background:rgba(251,250,247,.14);border-radius:3px;overflow:hidden;margin-top:10px">
+        <div style="height:100%;width:{{ readyPct }};background:#0FA3A8;border-radius:3px"></div>
+      </div>
+    </div>
+  </aside>
+
+  <main style="min-width:0;padding:0 0 60px">
+    <header style="position:sticky;top:0;z-index:40;background:rgba(244,241,234,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,40,75,.1);padding:10px clamp(18px,2.4vw,30px);min-height:62px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;white-space:nowrap">Формы страховщиков</div>
+      <div style="display:flex;align-items:center;gap:8px;background:#FBFCFD;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:8px 16px;min-width:0;max-width:280px;flex:1 1 140px">
+        <span style="font-size:13px;color:#9AA6B8">⌕</span>
+        <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Компания" style="border:none;outline:none;background:none;font-family:'Manrope';font-size:14px;color:#14284B;min-width:0;flex:1">
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        <div style="font-size:13px;color:#5A6B85;line-height:1.35">{{ counter }}</div>
+        <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:10px 18px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">Загрузить бланк</button>
+      </div>
+    </header>
+
+    <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0">
+
+      <div style="background:#FBFCFD;border:1px solid rgba(15,163,168,.28);border-left:3px solid #0FA3A8;border-radius:14px;padding:18px 20px;margin-bottom:18px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:6px">Макет библиотеки бланков</div>
+        <div style="font-size:13px;color:#4A5B75;line-height:1.55;max-width:840px;text-wrap:pretty">Клиент заполняет одну анкету на сайте — данные хранятся в наших полях. Для выпуска заявления менеджер выбирает страховщика: система подставляет данные в его бланк по настроенному маппингу. Реальные файлы бланков загружаются в библиотеку от компании или её андеррайтера. Пока файл не загружен, заявление формируется по универсальной форме брокера и идёт приложением к запросу.</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:18px">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:18px">
+            <div style="font-family:'IBM Plex Mono';font-size:clamp(19px,2vw,24px);letter-spacing:-.03em;color:{{ k.color }}">{{ k.n }}</div>
+            <div style="font-size:12px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ k.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:14px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ productFilters }}" as="f" hint-placeholder-count="7">
+            <button onClick="{{ f.select }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;background:{{ f.bg }};color:{{ f.color }};transition:all .2s ease">{{ f.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:4px;background:rgba(20,40,75,.05);padding:4px;border-radius:100px;margin-left:auto">
+          <sc-for list="{{ statusFilters }}" as="s" hint-placeholder-count="3">
+            <button onClick="{{ s.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 15px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .2s ease">{{ s.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;overflow-x:auto">
+        <div style="min-width:960px">
+          <div style="display:grid;grid-template-columns:40px 1.5fr 1.9fr 1.05fr 1fr 128px;gap:14px;padding:13px 20px;background:rgba(20,40,75,.04);font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">
+            <div>№</div><div>КОМПАНИЯ</div><div>НАПРАВЛЕНИЯ</div><div>БЛАНК</div><div>МАППИНГ ПОЛЕЙ</div><div></div>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+            <div style="display:grid;grid-template-columns:40px 1.5fr 1.9fr 1.05fr 1fr 128px;gap:14px;padding:14px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);animation:fadeUp .35s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ r.delay }};transition:background .2s ease" style-hover="background:#F2F5F8">
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ r.num }}</div>
+              <div style="min-width:0">
+                <div style="font-size:14px;font-weight:600">{{ r.name }}</div>
+                <div style="font-size:11px;color:#9AA6B8;margin-top:2px">{{ r.note }}</div>
+              </div>
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                <sc-for list="{{ r.lines }}" as="l" hint-placeholder-count="3">
+                  <span style="font-size:11px;font-weight:600;color:#5A6B85;background:rgba(20,40,75,.06);padding:4px 9px;border-radius:100px;white-space:nowrap">{{ l }}</span>
+                </sc-for>
+              </div>
+              <div><span style="font-size:12px;font-weight:600;color:{{ r.blankColor }};background:{{ r.blankBg }};padding:5px 10px;border-radius:100px;white-space:nowrap">{{ r.blank }}</span></div>
+              <div>
+                <div style="height:5px;background:#E7EDF3;border-radius:3px;overflow:hidden;margin-bottom:5px">
+                  <div style="height:100%;width:{{ r.mapPct }};background:{{ r.mapColor }};border-radius:3px"></div>
+                </div>
+                <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0">{{ r.mapLabel }}</div>
+              </div>
+              <button onClick="{{ r.open }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 0;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Настроить</button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top:22px;background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+        <div style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+          <div>
+            <div style="font-size:16px;font-weight:700;margin-bottom:5px">Выпуск заявления по заявке № 4820</div>
+            <div style="font-size:13px;color:#7B8AA0">ООО «Верста Логистик» · Грузы, генеральный договор · анкета заполнена 16 августа</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">ДАННЫЕ ПОДСТАВЛЯЮТСЯ АВТОМАТИЧЕСКИ</div>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">
+          <sc-for list="{{ issuePicks }}" as="p" hint-placeholder-count="6">
+            <button onClick="{{ p.select }}" style="border:1px solid {{ p.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 15px;border-radius:100px;background:{{ p.bg }};color:{{ p.color }};transition:all .2s ease">{{ p.label }}</button>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;align-items:start">
+          <div style="background:#F2F5F8;border-radius:12px;padding:16px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:12px;letter-spacing:.04em">ЧТО ПОПАДЁТ В БЛАНК {{ issue.upper }}</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ issue.map }}" as="m" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1fr 14px 1fr;gap:8px;align-items:center;font-size:12px">
+                  <span style="color:#7B8AA0;min-width:0">{{ m.ours }}</span>
+                  <span style="color:#0A767A">→</span>
+                  <span style="font-weight:600;min-width:0">{{ m.theirs }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#F2F5F8;border-radius:12px;padding:16px">
+              <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ КОМПАНИИ</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ issue.extra }}" as="e" hint-placeholder-count="3">
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:12px">
+                    <span style="color:#3A4A66">{{ e.label }}</span>
+                    <span style="font-weight:600;color:{{ e.color }};white-space:nowrap">{{ e.state }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:{{ issue.warnBg }};border:1px solid {{ issue.warnBorder }};border-radius:12px;padding:14px 16px">
+              <div style="font-size:13px;font-weight:700;margin-bottom:5px">{{ issue.warnTitle }}</div>
+              <div style="font-size:12px;color:#4A5B75;line-height:1.5">{{ issue.warnText }}</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 20px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">Скачать заявление</button>
+              <button onClick="{{ openMail }}" style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 18px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Отправить андеррайтеру</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <sc-if value="{{ mailOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:90;display:flex;align-items:flex-start;justify-content:center;padding:clamp(14px,3vw,44px);overflow-y:auto">
+      <div onClick="{{ closeMail }}" style="position:fixed;inset:0;background:rgba(20,40,75,.4)"></div>
+      <div style="position:relative;width:min(760px,100%);background:#FBFCFD;border-radius:18px;padding:clamp(20px,2.6vw,30px);animation:fadeUp .3s cubic-bezier(.2,.7,.3,1) both;box-shadow:0 40px 90px -40px rgba(20,40,75,.6)">
+
+        <div style="display:flex;justify-content:space-between;gap:14px;align-items:start;margin-bottom:20px">
+          <div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:7px">ОТПРАВКА ЗАПРОСА · ЗАЯВКА № 4820</div>
+            <div style="font-size:20px;font-weight:700;letter-spacing:-.025em;margin-bottom:4px">Письмо в {{ mail.company }}</div>
+            <div style="font-size:13px;color:#5A6B85">ООО «Верста Логистик» · Грузы, генеральный договор</div>
+          </div>
+          <button onClick="{{ closeMail }}" style="border:1px solid rgba(20,40,75,.16);background:none;cursor:pointer;width:32px;height:32px;border-radius:50%;font-size:15px;color:#5A6B85;flex:none;transition:all .2s ease" style-hover="border-color:#14284B;color:#14284B">×</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1px;background:rgba(20,40,75,.12);border:1px solid rgba(20,40,75,.12);border-radius:12px;overflow:hidden;margin-bottom:14px">
+          <div style="display:grid;grid-template-columns:96px 1fr;gap:12px;background:#FFFFFF;padding:12px 15px;align-items:center">
+            <div style="font-size:12px;color:#7B8AA0">Кому</div>
+            <div style="display:flex;align-items:center;gap:9px;min-width:0">
+              <span style="width:24px;height:24px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#5A6B85;flex:none">{{ mail.initial }}</span>
+              <div style="min-width:0">
+                <div style="font-family:'IBM Plex Mono';font-size:13px;font-weight:500;word-break:break-all">{{ mail.to }}</div>
+                <div style="font-size:11px;color:#9AA6B8;margin-top:2px">{{ mail.curator }}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:96px 1fr;gap:12px;background:#FFFFFF;padding:12px 15px;align-items:center">
+            <div style="font-size:12px;color:#7B8AA0">Копия</div>
+            <div style="font-family:'IBM Plex Mono';font-size:13px;color:#3A4A66;word-break:break-all">{{ mail.cc }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:96px 1fr;gap:12px;background:#FFFFFF;padding:12px 15px;align-items:center">
+            <div style="font-size:12px;color:#7B8AA0">Тема</div>
+            <input value="{{ mail.subject }}" onChange="{{ setSubject }}" style="width:100%;border:none;outline:none;background:none;font-family:'Manrope';font-size:14px;font-weight:600;color:#14284B;min-width:0">
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.12);border-radius:12px;padding:16px 18px;margin-bottom:14px">
+          <textarea value="{{ mail.body }}" onChange="{{ setBody }}" style="width:100%;min-height:250px;resize:vertical;border:none;outline:none;background:none;font-family:'Manrope';font-size:13.5px;line-height:1.6;color:#14284B"></textarea>
+        </div>
+
+        <div style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">ВЛОЖЕНИЯ · {{ mail.attachCount }}</div>
+            <button style="border:none;background:none;cursor:pointer;font-family:'Manrope';font-size:12px;font-weight:600;color:#0A767A">Добавить файл</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:7px">
+            <sc-for list="{{ mail.attachments }}" as="a" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:10px;background:{{ a.bg }};border:1px solid {{ a.border }};border-radius:10px;padding:10px 12px">
+                <span style="width:24px;height:24px;border-radius:7px;background:rgba(20,40,75,.06);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:9px;font-weight:600;color:#5A6B85;flex:none">{{ a.ext }}</span>
+                <div style="min-width:0;flex:1">
+                  <div style="font-size:12.5px;font-weight:600;word-break:break-all">{{ a.name }}</div>
+                  <div style="font-size:10.5px;color:{{ a.noteColor }};margin-top:2px">{{ a.note }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:{{ mail.hintBg }};border:1px solid {{ mail.hintBorder }};border-radius:12px;padding:13px 16px;margin-bottom:18px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px">{{ mail.hintTitle }}</div>
+          <div style="font-size:12px;color:#4A5B75;line-height:1.5">{{ mail.hintText }}</div>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button onClick="{{ sendMail }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 24px;border-radius:100px;background:{{ mail.sendBg }};color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">{{ mail.sendLabel }}</button>
+          <button style="border:1px solid rgba(20,40,75,.2);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 18px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Отправить нескольким компаниям</button>
+          <div style="font-size:12px;color:#9AA6B8;margin-left:auto;line-height:1.4">{{ mail.footer }}</div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ hasDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80;display:flex;justify-content:flex-end">
+      <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(20,40,75,.32)"></div>
+      <div style="position:relative;width:min(460px,100%);background:#FBFCFD;height:100%;overflow-y:auto;padding:24px;animation:slideIn .3s cubic-bezier(.2,.7,.3,1) both;box-shadow:-24px 0 60px -30px rgba(20,40,75,.5)">
+        <div style="display:flex;justify-content:space-between;gap:14px;align-items:start;margin-bottom:20px">
+          <div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:7px">{{ detail.code }}</div>
+            <div style="font-size:21px;font-weight:700;letter-spacing:-.025em;margin-bottom:5px">{{ detail.name }}</div>
+            <div style="font-size:13px;color:#5A6B85">{{ detail.note }}</div>
+          </div>
+          <button onClick="{{ closeDetail }}" style="border:1px solid rgba(20,40,75,.16);background:none;cursor:pointer;width:32px;height:32px;border-radius:50%;font-size:15px;color:#5A6B85;flex:none;transition:all .2s ease" style-hover="border-color:#14284B;color:#14284B">×</button>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">БЛАНКИ ПО НАПРАВЛЕНИЯМ</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:20px">
+          <sc-for list="{{ detail.forms }}" as="f" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#F2F5F8;border:1px solid {{ f.border }};border-radius:11px;padding:13px 15px">
+              <div style="min-width:0">
+                <div style="font-size:14px;font-weight:600">{{ f.line }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:3px">{{ f.file }}</div>
+              </div>
+              <div style="font-size:12px;font-weight:600;color:{{ f.color }};white-space:nowrap">{{ f.state }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ЗАГРУЗКА БЛАНКА</div>
+        <div style="border:1.5px dashed rgba(20,40,75,.22);border-radius:12px;padding:22px;text-align:center;margin-bottom:20px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:6px">Перетащите файл или выберите на диске</div>
+          <div style="font-size:12px;color:#7B8AA0;line-height:1.5;margin-bottom:14px">DOC, DOCX, XLSX или PDF. Из файла считываются названия разделов и полей — маппинг предлагается автоматически, вы его подтверждаете.</div>
+          <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:700;padding:11px 20px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:all .25s ease" style-hover="background:#0A767A">Выбрать файл</button>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ОСОБЕННОСТИ КОМПАНИИ</div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:20px">
+          <sc-for list="{{ detail.specs }}" as="s" hint-placeholder-count="3">
+            <div style="display:flex;gap:10px;align-items:baseline;font-size:13px;color:#3A4A66;line-height:1.5"><span style="color:#0A767A;flex:none">·</span>{{ s }}</div>
+          </sc-for>
+        </div>
+
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">КОНТАКТ АНДЕРРАЙТЕРА</div>
+        <div style="background:#F2F5F8;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:11px;margin-bottom:22px">
+          <sc-for list="{{ detail.contacts }}" as="c" hint-placeholder-count="3">
+            <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px">
+              <span style="color:#7B8AA0">{{ c.label }}</span>
+              <span style="font-weight:600;text-align:right">{{ c.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 20px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#14284B">Сохранить настройки</button>
+          <button onClick="{{ closeDetail }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 18px;border-radius:100px;background:none;color:#14284B;transition:all .25s ease" style-hover="border-color:#14284B">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { product: 0, status: 0, query: '', open: null, issue: 0, mail: false, sent: false, subject: null, body: null };
+
+  curators() {
+    return {
+      'СОГАЗ': { email: 'cargo.underwriting@sogaz.ru', person: 'Отдел андеррайтинга грузов, Кузнецов Д. А.' },
+      'Ингосстрах': { email: 'cargo@ingos.ru', person: 'Управление страхования грузов, Белова Т. С.' },
+      'РЕСО-Гарантия': { email: 'corp@reso.ru', person: 'Корпоративный департамент, Ильин М. В.' },
+      'АльфаСтрахование': { email: 'corporate@alfastrah.ru', person: 'Корпоративный блок, Тарасова Е. Н.' },
+      'ВСК': { email: 'corp.under@vsk.ru', person: 'Андеррайтинг юрлиц, Гришин П. О.' },
+      'Ренессанс Страхование': { email: 'business@renins.ru', person: 'Департамент бизнес-страхования, Юсупов А. Р.' },
+      'Согласие': { email: 'cargo@soglasie.ru', person: 'Управление грузов и транспорта, Лаврова И. К.' },
+      'Евроинс': { email: 'cargo@euro-ins.ru', person: 'Отдел грузов, Симонян Г. В.' },
+      'Пари': { email: 'corp@pari.ru', person: 'Андеррайтинг, Демин С. Ю.' }
+    };
+  }
+
+  companies() {
+    const L = { im: 'Имущество', dms: 'ДМС', grG: 'Грузы: генеральный', grR: 'Грузы: разовая', otv: 'Ответственность', park: 'Автопарк', smr: 'СМР', cyber: 'Киберриски' };
+    // blank: 2 — официальный бланк загружен, 1 — форма брокера согласована, 0 — ожидает файл
+    return [
+      { name: 'СОГАЗ', note: 'корпоративный блок, Москва', lines: [L.im, L.dms, L.grG, L.otv, L.park], blank: 2, map: 100 },
+      { name: 'Ингосстрах', note: 'андеррайтинг по грузам — СПб', lines: [L.im, L.grG, L.grR, L.park, L.smr], blank: 2, map: 100 },
+      { name: 'РЕСО-Гарантия', note: 'заявления по формам 2024 года', lines: [L.im, L.dms, L.park, L.otv], blank: 2, map: 96 },
+      { name: 'АльфаСтрахование', note: 'ЭДО, электронные заявления', lines: [L.im, L.dms, L.grG, L.cyber, L.park], blank: 2, map: 100 },
+      { name: 'ВСК', note: 'региональная сеть', lines: [L.im, L.dms, L.park, L.otv], blank: 2, map: 92 },
+      { name: 'Ренессанс Страхование', note: 'онлайн-подача заявлений', lines: [L.im, L.dms, L.grG, L.grR], blank: 2, map: 100 },
+      { name: 'Росгосстрах', note: 'ОСГОП, СРО, имущество', lines: [L.im, L.otv, L.park, L.smr], blank: 2, map: 88 },
+      { name: 'Согласие', note: 'грузы и транспорт', lines: [L.grG, L.grR, L.park, L.im], blank: 2, map: 94 },
+      { name: 'Энергогарант', note: 'промышленные риски', lines: [L.im, L.smr, L.otv], blank: 1, map: 74 },
+      { name: 'Зетта Страхование', note: 'имущество и ответственность', lines: [L.im, L.otv, L.park], blank: 2, map: 90 },
+      { name: 'Абсолют Страхование', note: 'грузы, СМР', lines: [L.grG, L.grR, L.smr, L.im], blank: 1, map: 78 },
+      { name: 'Пари', note: 'ответственность, имущество', lines: [L.im, L.otv, L.grR], blank: 1, map: 70 },
+      { name: 'Гелиос', note: 'транспорт и грузы', lines: [L.grR, L.park, L.im], blank: 1, map: 66 },
+      { name: 'Астро-Волга', note: 'автопарки, ОСГОП', lines: [L.park, L.otv], blank: 1, map: 62 },
+      { name: 'Сбербанк Страхование', note: 'имущество юрлиц, залоги', lines: [L.im, L.smr], blank: 2, map: 86 },
+      { name: 'ВТБ Страхование', note: 'залоговое имущество', lines: [L.im, L.otv], blank: 1, map: 72 },
+      { name: 'Совкомбанк Страхование', note: 'имущество, грузы', lines: [L.im, L.grG], blank: 1, map: 68 },
+      { name: 'Росбанк Страхование', note: 'залоги и лизинг', lines: [L.im, L.park], blank: 0, map: 30 },
+      { name: 'Капитал Лайф', note: 'жизнь и НС сотрудников', lines: [L.dms], blank: 1, map: 58 },
+      { name: 'СОГАЗ-Мед', note: 'ДМС, корпоративные программы', lines: [L.dms], blank: 2, map: 94 },
+      { name: 'Спасские Ворота', note: 'ДМС, НС', lines: [L.dms, L.otv], blank: 1, map: 60 },
+      { name: 'Чулпан', note: 'региональный, Татарстан', lines: [L.im, L.park], blank: 0, map: 26 },
+      { name: 'Югория', note: 'Урал и Сибирь', lines: [L.im, L.park, L.otv], blank: 1, map: 64 },
+      { name: 'Национальная СГ', note: 'имущество, СМР', lines: [L.im, L.smr], blank: 1, map: 56 },
+      { name: 'Страховая бизнес-группа', note: 'ответственность, СРО', lines: [L.otv, L.smr], blank: 0, map: 22 },
+      { name: 'Двадцать первый век', note: 'грузы, имущество', lines: [L.grR, L.im], blank: 0, map: 34 },
+      { name: 'Полис-Гарант', note: 'ответственность перевозчика', lines: [L.grG, L.otv], blank: 1, map: 52 },
+      { name: 'БАСК', note: 'имущество, автопарк', lines: [L.im, L.park], blank: 0, map: 28 },
+      { name: 'Евроинс', note: 'грузы и транспорт', lines: [L.grG, L.grR, L.park], blank: 1, map: 54 },
+      { name: 'Тинькофф Страхование', note: 'цифровая подача, API', lines: [L.im, L.cyber, L.park, L.dms], blank: 2, map: 98 }
+    ];
+  }
+
+  renderVals() {
+    const st = this.state;
+    const all = this.companies();
+
+    const blankMeta = [
+      { label: 'Ожидает файл', color: '#0A767A', bg: 'rgba(15,163,168,.1)' },
+      { label: 'Форма брокера', color: '#7A6A55', bg: 'rgba(122,106,85,.12)' },
+      { label: 'Официальный', color: '#6B7A4F', bg: 'rgba(107,122,79,.14)' }
+    ];
+
+    const withOfficial = all.filter(c => c.blank === 2).length;
+    const waiting = all.filter(c => c.blank === 0).length;
+    const formsTotal = all.reduce((a, c) => a + c.lines.length, 0);
+    const avgMap = Math.round(all.reduce((a, c) => a + c.map, 0) / all.length);
+
+    const kpis = [
+      { n: '30', label: 'страховщиков в библиотеке', color: '#14284B' },
+      { n: withOfficial + ' из 30', label: 'с официальным бланком', color: '#6B7A4F' },
+      { n: formsTotal, label: 'связок компания + направление', color: '#14284B' },
+      { n: waiting, label: 'ждут файл от компании', color: '#0A767A' }
+    ];
+
+    const cats = ['Все направления', 'Имущество', 'ДМС', 'Грузы: генеральный', 'Грузы: разовая', 'Ответственность', 'Автопарк'];
+    const productFilters = cats.map((label, i) => ({
+      label,
+      select: () => this.setState({ product: i }),
+      bg: st.product === i ? '#0A767A' : 'transparent',
+      color: st.product === i ? '#FBFCFD' : '#5A6B85',
+      border: st.product === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+    }));
+
+    const statuses = ['Все', 'Официальные', 'Ожидают'];
+    const statusFilters = statuses.map((label, i) => ({
+      label,
+      select: () => this.setState({ status: i }),
+      bg: st.status === i ? '#14284B' : 'transparent',
+      color: st.status === i ? '#FBFCFD' : '#5A6B85'
+    }));
+
+    let list = all;
+    if (st.product > 0) list = list.filter(c => c.lines.indexOf(cats[st.product]) !== -1);
+    if (st.status === 1) list = list.filter(c => c.blank === 2);
+    if (st.status === 2) list = list.filter(c => c.blank === 0);
+    const q = st.query.trim().toLowerCase();
+    if (q) list = list.filter(c => c.name.toLowerCase().includes(q));
+
+    const rows = list.map((c, i) => ({
+      num: String(all.indexOf(c) + 1).padStart(2, '0'),
+      name: c.name, note: c.note, lines: c.lines,
+      delay: (i * 22) + 'ms',
+      blank: blankMeta[c.blank].label,
+      blankColor: blankMeta[c.blank].color,
+      blankBg: blankMeta[c.blank].bg,
+      mapPct: c.map + '%',
+      mapLabel: c.map + '% полей',
+      mapColor: c.map >= 90 ? '#6B7A4F' : c.map >= 60 ? '#7A6A55' : '#0A767A',
+      open: () => this.setState({ open: c.name })
+    }));
+
+    const issueList = ['Ингосстрах', 'СОГАЗ', 'АльфаСтрахование', 'Согласие', 'Евроинс', 'Пари'];
+    const issuePicks = issueList.map((label, i) => ({
+      label,
+      select: () => this.setState({ issue: i }),
+      bg: st.issue === i ? '#14284B' : 'transparent',
+      color: st.issue === i ? '#FBFCFD' : '#5A6B85',
+      border: st.issue === i ? '#14284B' : 'rgba(20,40,75,.18)'
+    }));
+    const issueName = issueList[st.issue];
+    const issueCo = all.find(c => c.name === issueName) || all[0];
+
+    const mapPairs = [
+      { ours: 'Полное наименование', theirs: 'Страхователь (полное наименование)' },
+      { ours: 'ИНН / КПП', theirs: 'ИНН, КПП, ОГРН' },
+      { ours: 'Плановый оборот за год', theirs: 'Планируемый объём перевозок, руб.' },
+      { ours: 'Виды грузов', theirs: 'Характер и наименование груза' },
+      { ours: 'Условия страхования', theirs: 'Оговорки ICC / условия покрытия' },
+      { ours: 'Лимит по одной перевозке', theirs: 'Лимит ответственности на одно средство' },
+      { ours: 'Убытки за 3 года', theirs: 'Статистика убытков (3 года)' }
+    ];
+
+    const extraByCo = {
+      'Ингосстрах': [
+        { label: 'Схема упаковки и крепления', state: 'заполняется вручную', ok: false },
+        { label: 'Перечень перевозчиков с ОГРН', state: 'подставлено', ok: true },
+        { label: 'Наличие охраны сопровождения', state: 'нет в нашей анкете', ok: false }
+      ],
+      'СОГАЗ': [
+        { label: 'Код ОКВЭД основной деятельности', state: 'подставлено', ok: true },
+        { label: 'Сведения о бенефициарах', state: 'заполняется вручную', ok: false },
+        { label: 'Реестр объектов приложением', state: 'формируется из анкеты', ok: true }
+      ],
+      'АльфаСтрахование': [
+        { label: 'Идентификатор в ЭДО', state: 'подставлено', ok: true },
+        { label: 'Согласие на электронную подпись', state: 'подставлено', ok: true },
+        { label: 'Данные ответственного за риск', state: 'заполняется вручную', ok: false }
+      ],
+      'Согласие': [
+        { label: 'Температурный режим груза', state: 'нет в нашей анкете', ok: false },
+        { label: 'Маршрутные листы', state: 'приложением', ok: true },
+        { label: 'Франшиза по каждому случаю', state: 'подставлено', ok: true }
+      ],
+      'Евроинс': [
+        { label: 'Реквизиты договора с перевозчиком', state: 'заполняется вручную', ok: false },
+        { label: 'Территория покрытия', state: 'подставлено', ok: true },
+        { label: 'Дополнительные оговорки', state: 'заполняется вручную', ok: false }
+      ],
+      'Пари': [
+        { label: 'Анкета по антикоррупционной политике', state: 'заполняется вручную', ok: false },
+        { label: 'Сведения о залоге', state: 'подставлено', ok: true },
+        { label: 'Форма запроса котировки', state: 'ожидает файл', ok: false }
+      ]
+    };
+
+    const extra = (extraByCo[issueName] || extraByCo['СОГАЗ']).map(e => ({
+      label: e.label, state: e.state, color: e.ok ? '#6B7A4F' : '#0A767A'
+    }));
+
+    const official = issueCo.blank === 2;
+    const issue = {
+      upper: issueName.toUpperCase(),
+      map: mapPairs,
+      extra,
+      warnTitle: official ? 'Бланк компании загружен' : 'Официальный бланк не загружен',
+      warnText: official
+        ? 'Заявление выпускается на форме страховщика от ' + (issueCo.map >= 96 ? 'марта 2026' : 'ноября 2025') + ' года. Незаполненные поля выводятся пропусками для дозаполнения при подписании.'
+        : 'Заявление будет выпущено по универсальной форме брокера и уйдёт андеррайтеру приложением к запросу. Как только компания пришлёт бланк, загрузите его в карточке.',
+      warnBg: official ? 'rgba(107,122,79,.1)' : '#F1FAFB',
+      warnBorder: official ? 'rgba(107,122,79,.3)' : 'rgba(15,163,168,.28)'
+    };
+
+    const cur = all.find(c => c.name === st.open);
+    let detail = null;
+    if (cur) {
+      const fileState = (i) => {
+        if (cur.blank === 2) return i === 0 ? 2 : cur.map >= 90 ? 2 : 1;
+        if (cur.blank === 1) return i === 0 ? 1 : 0;
+        return 0;
+      };
+      const stateMeta = [
+        { label: 'ожидает файл', color: '#0A767A', border: 'rgba(15,163,168,.28)', file: 'файл не загружен' },
+        { label: 'форма брокера', color: '#7A6A55', border: 'rgba(122,106,85,.28)', file: 'opora-universal.docx' },
+        { label: 'официальный', color: '#6B7A4F', border: 'rgba(107,122,79,.3)', file: 'zayavlenie-2026.docx' }
+      ];
+      detail = {
+        name: cur.name,
+        note: cur.note + ' · ' + cur.lines.length + ' направлений',
+        code: 'КАРТОЧКА СТРАХОВЩИКА · МАППИНГ ' + cur.map + '%',
+        forms: cur.lines.map((line, i) => {
+          const s = stateMeta[fileState(i)];
+          return { line, file: s.file, state: s.label, color: s.color, border: s.border };
+        }),
+        specs: [
+          'Заявление принимается в электронном виде, скан подписи допускается для запроса котировки.',
+          'Для сумм свыше 100 млн ₽ требуется осмотр объекта представителем страховщика.',
+          'Срок ответа андеррайтера по стандартным рискам — 2 рабочих дня.'
+        ],
+        contacts: [
+          { label: 'Куратор', value: (this.curators()[cur.name] || { person: 'корпоративный андеррайтинг' }).person },
+          { label: 'Почта для заявлений', value: (this.curators()[cur.name] || { email: 'corp@insurer.ru' }).email },
+          { label: 'Срок ответа', value: '2 рабочих дня' }
+        ]
+      };
+    }
+
+    const cu = this.curators()[issueName] || { email: 'corp@insurer.ru', person: 'Корпоративный андеррайтинг' };
+    const subjectDefault = 'Запрос котировки: страхование грузов, генеральный договор — ООО «Верста Логистик» (ИНН 7714823910)';
+    const bodyDefault = [
+      'Здравствуйте!',
+      '',
+      'ООО «ПИНС Брокер» (лицензия Банка России СБ-1247) направляет запрос котировки по страхованию грузов на условиях генерального договора.',
+      '',
+      'Страхователь: ООО «Верста Логистик», ИНН 7714823910 / КПП 771401001.',
+      'Вид страхования: грузы, генеральный договор на 12 месяцев с ежемесячным бордеро.',
+      'Плановый оборот перевозок: 1 240 000 000 ₽ в год, 840 отправок.',
+      'Максимальная стоимость одной отправки: 18 000 000 ₽.',
+      'География: Россия и ЕАЭС, автомобильный и железнодорожный транспорт.',
+      'Условия покрытия: с ответственностью за все риски (ICC A), франшиза безусловная 30 000 ₽.',
+      'Лимит по одной перевозке: 20 000 000 ₽, агрегатный лимит: 120 000 000 ₽.',
+      'Убытки за 3 года: 2 случая, суммарная выплата 640 000 ₽ (справка приложена).',
+      'Желаемая дата начала: 01.09.2026.',
+      '',
+      'В приложении: заявление по вашей форме, уставные документы, реестр маршрутов, договоры с перевозчиками, справка об убытках.',
+      '',
+      'Просим направить условия и тариф. Готовы оперативно ответить на вопросы андеррайтинга.',
+      '',
+      'С уважением,',
+      'Марина Ковалёва, руководитель отдела корпоративного страхования',
+      'ООО «ПИНС Брокер» · +7 495 118-40-22 · m.kovaleva@pins.ru'
+    ].join('\n');
+
+    const attachRaw = [
+      { name: official ? 'Zayavlenie-' + issueName + '-gruzy-general.docx' : 'Zayavlenie-Opora-gruzy-general.docx', note: official ? 'бланк компании, заполнен' : 'универсальная форма брокера', ok: official },
+      { name: 'Ustav-2021.pdf', note: 'от клиента', ok: true },
+      { name: 'Vypiska-EGRUL-17-08-2026.pdf', note: 'от клиента', ok: true },
+      { name: 'Reestr-marshrutov.xlsx', note: 'от клиента', ok: true },
+      { name: 'Dogovory-perevozchiki.pdf', note: 'от клиента', ok: true },
+      { name: 'Spravka-ubytki-3-goda.pdf', note: 'от клиента', ok: true },
+      { name: 'Balans-2025.xlsx', note: 'от клиента', ok: true }
+    ];
+    const attachments = attachRaw.map(a => ({
+      name: a.name,
+      note: a.note,
+      ext: a.name.split('.').pop().toUpperCase(),
+      bg: a.ok ? '#FFFFFF' : '#F1FAFB',
+      border: a.ok ? 'rgba(20,40,75,.12)' : 'rgba(15,163,168,.28)',
+      noteColor: a.ok ? '#9AA6B8' : '#0A767A'
+    }));
+
+    const mail = {
+      company: issueName,
+      to: cu.email,
+      curator: cu.person,
+      initial: issueName.charAt(0),
+      cc: 'm.kovaleva@pins.ru, client@versta-log.ru',
+      subject: st.subject === null ? subjectDefault : st.subject,
+      body: st.body === null ? bodyDefault : st.body,
+      attachments,
+      attachCount: attachments.length + ' файла, 14,2 МБ',
+      hintTitle: official ? 'Заявление на бланке ' + issueName : 'Заявление по универсальной форме',
+      hintText: official
+        ? 'Данные из анкеты клиента подставлены в бланк компании. Поля, которых нет в нашей анкете, помечены в документе как требующие дозаполнения.'
+        : 'Официальный бланк ' + issueName + ' не загружен, поэтому приложена универсальная форма брокера. После получения бланка от андеррайтера загрузите его в карточку компании.',
+      hintBg: official ? 'rgba(107,122,79,.1)' : '#F1FAFB',
+      hintBorder: official ? 'rgba(107,122,79,.3)' : 'rgba(15,163,168,.28)',
+      sendLabel: st.sent ? 'Письмо отправлено ✓' : 'Отправить письмо',
+      sendBg: st.sent ? '#6B7A4F' : '#0A767A',
+      footer: st.sent ? 'Копия сохранена в истории заявки № 4820' : 'Отправка через корпоративную почту, копия попадёт в историю заявки'
+    };
+
+    return {
+      mailOpen: st.mail,
+      openMail: () => this.setState({ mail: true, sent: false }),
+      closeMail: () => this.setState({ mail: false }),
+      sendMail: () => this.setState({ sent: true }),
+      setSubject: (e) => this.setState({ subject: e.target.value }),
+      setBody: (e) => this.setState({ body: e.target.value }),
+      mail,
+      readyLine: withOfficial + ' из 30 компаний с официальным бланком',
+      readyPct: Math.round((withOfficial / 30) * 100) + '%',
+      query: st.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+      counter: rows.length + ' из 30 · маппинг в среднем ' + avgMap + '%',
+      kpis, productFilters, statusFilters, rows,
+      issuePicks, issue,
+      hasDetail: !!detail,
+      detail: detail || {},
+      closeDetail: () => this.setState({ open: null })
+    };
+  }
+}
+</script>
+</body>
+</html>

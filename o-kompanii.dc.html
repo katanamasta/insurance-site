@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(30px,3.6vw,50px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:20px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / О компании
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(26px,4vw,52px);align-items:end;padding-bottom:30px;border-bottom:1px solid rgba(20,40,75,.1)">
+      <h1 style="font-size:clamp(30px,3.8vw,46px);font-weight:500;letter-spacing:-.035em;line-height:1.05;margin:0">Брокер работает<br>на клиента, не на страховую</h1>
+      <p style="font-size:17px;color:#5A6B85;line-height:1.55;margin:0;max-width:500px;text-wrap:pretty">Агент представляет интересы одной компании и продаёт её продукт. Брокер представляет вас: сравнивает рынок, а при убытке спорит со страховщиком на вашей стороне. Комиссию платит компания, поэтому для клиента цена не меняется.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:26px clamp(20px,3vw,36px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:rgba(20,40,75,.12);border:1px solid rgba(20,40,75,.12);border-radius:14px;overflow:hidden">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="5">
+        <div style="background:#FFFFFF;padding:24px 22px">
+          <div style="font-family:'IBM Plex Mono';font-size:clamp(21px,2.3vw,27px);letter-spacing:-.03em">{{ s.n }}</div>
+          <div style="font-size:13px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(26px,4vw,52px)">
+      <div>
+        <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px">Чем брокер отличается от агента</h2>
+        <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:430px;text-wrap:pretty">Разница видна не при покупке полиса, а при убытке — когда нужно, чтобы кто-то отстаивал вашу сумму.</p>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ compare }}" as="c" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,26px);padding:18px 0;border-top:1px solid rgba(20,40,75,.12)">
+            <div>
+              <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:6px">АГЕНТ</div>
+              <div style="font-size:14px;color:#7B8AA0;line-height:1.45;text-wrap:pretty">{{ c.agent }}</div>
+            </div>
+            <div>
+              <div style="font-family:'IBM Plex Mono';font-size:11px;color:#0A767A;margin-bottom:6px">БРОКЕР</div>
+              <div style="font-size:14px;color:#14284B;line-height:1.45;font-weight:500;text-wrap:pretty">{{ c.broker }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 22px">Как мы устроены</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px">
+      <sc-for list="{{ principles }}" as="p" hint-placeholder-count="4">
+        <div style="background:#E7EDF3;border-radius:14px;padding:24px">
+          <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:14px">{{ p.n }}</div>
+          <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px">{{ p.title }}</div>
+          <div style="font-size:14px;color:#4A5B75;line-height:1.5;text-wrap:pretty">{{ p.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:flex;align-items:end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px">
+      <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0">Партнёры-страховщики</h2>
+      <div style="font-size:14px;color:#7B8AA0">Все с действующей лицензией Банка России</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px">
+      <sc-for list="{{ partners }}" as="p" hint-placeholder-count="12">
+        <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:12px;transition:border-color .25s ease" style-hover="border-color:rgba(20,40,75,.25)">
+          <span style="width:32px;height:32px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#5A6B85;flex:none">{{ p.initial }}</span>
+          <div style="min-width:0">
+            <div style="font-size:14px;font-weight:600">{{ p.name }}</div>
+            <div style="font-size:11px;color:#9AA6B8;font-family:'IBM Plex Mono';margin-top:2px">{{ p.license }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap">
+      <button onClick="{{ partnersToggle.click }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:12px 22px;border-radius:100px;background:transparent;color:#14284B;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">{{ partnersToggle.label }}</button>
+      <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ partnersToggle.count }}</div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(48px,5.5vw,80px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(26px,4vw,52px)">
+      <div>
+        <h2 id="legal" style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px;scroll-margin-top:100px">Документы и лицензии</h2>
+        <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0 0 20px;max-width:430px;text-wrap:pretty">Раскрытие информации обновляется по требованиям Банка России. Копии доступны без запроса.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ legal }}" as="l" hint-placeholder-count="4">
+            <a href="dannye.dc.html" style="display:flex;justify-content:space-between;gap:14px;align-items:center;background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:12px;padding:15px 18px;transition:border-color .25s ease" style-hover="border-color:#0A767A">
+              <span style="font-size:14px;font-weight:600">{{ l.name }}</span>
+              <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;white-space:nowrap">{{ l.meta }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#14284B;color:#FBFCFD;border-radius:18px;padding:clamp(24px,3vw,34px)">
+        <div style="font-size:17px;font-weight:700;margin-bottom:18px">Контакты</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <sc-for list="{{ contacts }}" as="c" hint-placeholder-count="4">
+            <div>
+              <div style="font-size:12px;color:#7B8AA0;margin-bottom:4px">{{ c.label }}</div>
+              <div style="font-size:16px;font-weight:600;line-height:1.4">{{ c.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <a href="ubytki.dc.html" style="display:block;text-align:center;font-size:15px;font-weight:700;padding:14px 0;border-radius:100px;background:#0A767A;color:#FBFCFD;margin-top:24px;transition:all .25s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить о страховом случае</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1240px;margin:clamp(48px,6vw,72px) auto 0;padding:0 clamp(20px,3vw,36px) 36px">
+    <div style="display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid rgba(20,40,75,.12);font-size:12px;color:#9AA6B8;flex-wrap:wrap">
+      <div>© 2026 PINS. ООО «ПИНС Брокер», лицензия Банка России СБ-1247.</div>
+      <div style="display:flex;gap:18px"><a href="dannye.dc.html" style="color:inherit">Обработка данных</a><a href="o-kompanii.dc.html#legal" style="color:inherit">Раскрытие информации</a></div>
+    </div>
+  </footer>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { allPartners: false };
+
+  renderVals() {
+    const stats = [
+      { n: '2011', label: 'год начала работы' },
+      { n: '1 100 000', label: 'полисов оформлено' },
+      { n: '640+', label: 'компаний на обслуживании' },
+      { n: '24', label: 'страховщика-партнёра' },
+      { n: '96%', label: 'убытков без суда' }
+    ];
+
+    const compare = [
+      { agent: 'Продаёт продукт одной компании, у которой заключён договор.', broker: 'Запрашивает тарифы у 24 страховщиков и показывает их рядом.' },
+      { agent: 'Получает вознаграждение за продажу конкретного полиса.', broker: 'Заинтересован в том, чтобы вы продлились через год, а значит — в вашей выплате.' },
+      { agent: 'При убытке отправляет вас в отдел урегулирования страховой.', broker: 'Ведёт дело сам: собирает документы, спорит с калькуляцией, подключает юриста.' },
+      { agent: 'Отвечает за оформление полиса.', broker: 'Отвечает за результат по договору — по закону о страховой деятельности.' }
+    ];
+
+    const principles = [
+      { n: '01', title: 'Комиссию платит страховщик', text: 'Цена полиса для вас такая же, как на сайте компании. Мы не берём с клиента платы за подбор и сопровождение.' },
+      { n: '02', title: 'Не продвигаем «своих»', text: 'В расчёте показываем все предложения, включая те, где наше вознаграждение меньше. Порядок — по цене, а не по выгоде брокера.' },
+      { n: '03', title: 'Один менеджер на все полисы', text: 'Не колл-центр: у частного клиента и у компании есть конкретный человек с телефоном и почтой.' },
+      { n: '04', title: 'Юрист входит в обслуживание', text: 'Отказ или занижение суммы — повод для претензии, а при необходимости и суда. Клиент за это не платит.' }
+    ];
+
+    const partnerData = [
+      { name: 'СОГАЗ', license: 'СИ №1208' },
+      { name: 'Ингосстрах', license: 'СИ №0928' },
+      { name: 'АльфаСтрахование', license: 'СИ №2239' },
+      { name: 'РЕСО-Гарантия', license: 'СИ №1209' },
+      { name: 'Росгосстрах', license: 'СИ №0001' },
+      { name: 'ВСК', license: 'СИ №0621' },
+      { name: 'Согласие', license: 'СИ №1307' },
+      { name: 'Ренессанс Страхование', license: 'СИ №1284' },
+      { name: 'СберСтрахование', license: 'СИ №4331' },
+      { name: 'Совкомбанк Страхование', license: 'СИ №1961' },
+      { name: 'Т-Страхование', license: 'СИ №0191' },
+      { name: 'Зетта Страхование', license: 'СИ №1083' },
+      { name: 'МАКС', license: 'СИ №1427' },
+      { name: 'Энергогарант', license: 'СИ №1834' },
+      { name: 'Абсолют Страхование', license: 'СИ №2496' },
+      { name: 'Гелиос', license: 'СИ №0983' },
+      { name: 'Астро-Волга', license: 'СИ №2619' },
+      { name: 'Юнити Страхование', license: 'СИ №3610' },
+      { name: 'Пари', license: 'СИ №0915' },
+      { name: 'Спасские ворота', license: 'СИ №3129' },
+      { name: 'Чулпан', license: 'СИ №0919' },
+      { name: 'БАСК', license: 'СИ №0403' },
+      { name: 'Евроинс', license: 'СИ №3954' },
+      { name: 'Югория', license: 'СИ №3211' }
+    ];
+    const expanded = !!this.state.allPartners;
+    const partners = (expanded ? partnerData : partnerData.slice(0, 12))
+      .map(p => ({ ...p, initial: p.name.charAt(0) }));
+    const partnersToggle = {
+      label: expanded ? 'Свернуть список' : 'Показать все 24 компании',
+      click: () => this.setState(s => ({ allPartners: !s.allPartners })),
+      count: expanded ? '24 из 24' : '12 из 24'
+    };
+
+    const legal = [
+      { name: 'Лицензия брокера СБ-1247', meta: 'PDF · 240 КБ' },
+      { name: 'Выписка из ЕГРЮЛ', meta: 'PDF · 180 КБ' },
+      { name: 'Политика обработки персональных данных', meta: 'PDF · 320 КБ' },
+      { name: 'Правила оказания брокерских услуг', meta: 'PDF · 410 КБ' }
+    ];
+
+    const contacts = [
+      { label: 'Горячая линия, круглосуточно', value: '8 800 550-31-40' },
+      { label: 'Почта', value: 'hello@pins.ru' },
+      { label: 'Офис', value: 'Москва, ул. Расковой, 34, стр. 2' },
+      { label: 'Юридическое лицо', value: 'ООО «ПИНС Брокер», ИНН 7714823910' }
+    ];
+
+    return { stats, compare, principles, partners, partnersToggle, legal, contacts };
+  }
+}
+</script>
+</body>
+</html>

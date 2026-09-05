@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(30px,3.6vw,50px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:20px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / Обработка данных
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(26px,4vw,52px);align-items:end;padding-bottom:30px;border-bottom:1px solid rgba(20,40,75,.1)">
+      <h1 style="font-size:clamp(30px,3.8vw,46px);font-weight:500;letter-spacing:-.035em;line-height:1.05;margin:0">Что происходит<br>с вашими данными</h1>
+      <p style="font-size:17px;color:#5A6B85;line-height:1.55;margin:0;max-width:520px;text-wrap:pretty">Для расчёта и оформления полиса нужны персональные данные, а иногда и документы. Ниже — кто оператор, зачем нужны данные, кому они передаются, сколько хранятся и как их отозвать.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(30px,3.6vw,46px) clamp(20px,3vw,36px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px">
+      <sc-for list="{{ facts }}" as="f" hint-placeholder-count="4">
+        <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:18px 20px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;margin-bottom:8px">{{ f.label }}</div>
+          <div style="font-size:15px;font-weight:700;line-height:1.4;margin-bottom:6px">{{ f.value }}</div>
+          <div style="font-size:13px;color:#5A6B85;line-height:1.5;text-wrap:pretty">{{ f.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(34px,4vw,54px) clamp(20px,3vw,36px) 0">
+    <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Какие данные и для чего</h2>
+    <p style="font-size:15px;color:#5A6B85;line-height:1.55;margin:0 0 20px;max-width:640px">Мы запрашиваем только то, без чего страховщик не выпустит полис или не рассмотрит убыток.</p>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ purposes }}" as="p" hint-placeholder-count="5">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:clamp(12px,2vw,24px);background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:17px 20px;align-items:baseline">
+          <div style="font-size:15px;font-weight:700;line-height:1.35">{{ p.what }}</div>
+          <div style="font-size:13.5px;color:#4A5B75;line-height:1.5;text-wrap:pretty">{{ p.why }}</div>
+          <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;line-height:1.5">{{ p.basis }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(34px,4vw,54px) clamp(20px,3vw,36px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(20px,3vw,40px)">
+      <div>
+        <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px">Кому передаём</h2>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ shared }}" as="s" hint-placeholder-count="4">
+            <div style="border-top:1px solid rgba(20,40,75,.1);padding-top:11px">
+              <div style="font-size:14.5px;font-weight:700;margin-bottom:4px">{{ s.who }}</div>
+              <div style="font-size:13px;color:#5A6B85;line-height:1.5;text-wrap:pretty">{{ s.what }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size:12.5px;color:#9AA6B8;line-height:1.55;margin-top:16px;text-wrap:pretty">Мы не продаём данные и не передаём их для рекламы третьих лиц. Рекламные рассылки уходят только тем, кто отметил согласие на маркетинг, и отключаются одной ссылкой в письме.</div>
+      </div>
+      <div>
+        <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px">Ваши права</h2>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ rights }}" as="r" hint-placeholder-count="5">
+            <div style="border-top:1px solid rgba(20,40,75,.1);padding-top:11px">
+              <div style="font-size:14.5px;font-weight:700;margin-bottom:4px">{{ r.title }}</div>
+              <div style="font-size:13px;color:#5A6B85;line-height:1.5;text-wrap:pretty">{{ r.text }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(34px,4vw,54px) clamp(20px,3vw,36px) 0">
+    <div style="background:#14284B;color:#FBFCFD;border-radius:18px;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(20px,3vw,36px)">
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:10px">ОТЗЫВ СОГЛАСИЯ</div>
+        <div style="font-size:clamp(19px,2vw,25px);font-weight:600;letter-spacing:-.02em;line-height:1.25;margin-bottom:12px">Согласие можно отозвать в любой момент</div>
+        <p style="font-size:14.5px;color:#B9C4D2;line-height:1.55;margin:0 0 18px;text-wrap:pretty">Напишите на privacy@pins.ru с указанием фамилии и телефона, который вы оставляли. Мы прекратим обработку в течение 30 дней и удалим данные, кроме тех, что обязаны хранить по закону — например сведения о заключённых договорах.</p>
+        <div style="display:flex;gap:9px;flex-wrap:wrap">
+          <a href="mailto:privacy@pins.ru" style="font-size:14.5px;font-weight:700;padding:13px 22px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#FBFCFD;color:#14284B">privacy@pins.ru</a>
+          <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;border:1px solid rgba(251,250,247,.24);color:#FBFCFD;transition:border-color .25s ease" style-hover="border-color:#FBFCFD">8 800 550-31-40</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:10px">ДОКУМЕНТЫ</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ docs }}" as="d" hint-placeholder-count="3">
+            <a href="o-kompanii.dc.html#legal" style="display:flex;justify-content:space-between;gap:14px;align-items:center;border:1px solid rgba(251,250,247,.18);border-radius:12px;padding:14px 16px;color:#FBFCFD;transition:border-color .25s ease" style-hover="border-color:#0FA3A8">
+              <span style="font-size:14px;font-weight:600">{{ d.name }}</span>
+              <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;white-space:nowrap">{{ d.meta }}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div style="font-size:12.5px;color:#7B8AA0;line-height:1.55;margin-top:14px;text-wrap:pretty">Оператор: ООО «ПИНС Брокер», ИНН 7714823910, Москва, ул. Расковой, 34, стр. 2. Ответственный за организацию обработки персональных данных — Давлетшин А. Р.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1240px;margin:clamp(48px,6vw,72px) auto 0;padding:0 clamp(20px,3vw,36px) 36px">
+    <div style="display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid rgba(20,40,75,.12);font-size:12px;color:#9AA6B8;flex-wrap:wrap">
+      <div>© 2026 PINS. ООО «ПИНС Брокер», лицензия Банка России СБ-1247.</div>
+      <div style="display:flex;gap:18px"><a href="dannye.dc.html" style="color:inherit">Обработка данных</a><a href="o-kompanii.dc.html#legal" style="color:inherit">Раскрытие информации</a></div>
+    </div>
+  </footer>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      facts: [
+        { label: 'ОПЕРАТОР', value: 'ООО «ПИНС Брокер»', note: 'Действует как страховой брокер по лицензии Банка России СБ-1247.' },
+        { label: 'ОСНОВАНИЕ', value: '152-ФЗ и ваше согласие', note: 'Часть данных обрабатывается для исполнения договора, часть — по отдельному согласию.' },
+        { label: 'СРОК ХРАНЕНИЯ', value: '5 лет после договора', note: 'Дольше — только если этого требует закон или продолжается спор о выплате.' },
+        { label: 'МЕСТО ХРАНЕНИЯ', value: 'Серверы в России', note: 'Первичная запись и хранение выполняются в РФ, как требует ст. 18 152-ФЗ.' }
+      ],
+      purposes: [
+        { what: 'Имя, телефон, почта', why: 'Связаться по расчёту, отправить полис, предупредить об окончании срока.', basis: 'договор и согласие' },
+        { what: 'Паспортные данные', why: 'Страховщик указывает их в полисе — без них договор не выпускается.', basis: 'ст. 940 ГК РФ' },
+        { what: 'Данные автомобиля и права', why: 'Расчёт ОСАГО и КАСКО, проверка КБМ в базе РСА.', basis: 'ФЗ № 40-ФЗ' },
+        { what: 'Сведения об объекте и убытках', why: 'Оценка риска и расчёт тарифа: адрес, площадь, история страховых случаев.', basis: 'правила страхования' },
+        { what: 'Документы по убытку', why: 'Передача страховщику для выплаты и защита ваших интересов при отказе.', basis: 'ваше поручение брокеру' }
+      ],
+      shared: [
+        { who: 'Страховые компании', what: 'Только те, у которых вы просите расчёт, и только в объёме, нужном для оформления полиса.' },
+        { who: 'РСА и АИС страхования', what: 'Проверка КБМ и сведений о прошлых договорах по обязательным видам страхования.' },
+        { who: 'Партнёрский сервис расчёта', what: 'Данные из формы расчёта уходят на его сторону, чтобы получить тарифы. Оплата проходит на стороне страховщика.' },
+        { who: 'Государственные органы', what: 'По запросу, оформленному в порядке, установленном законом.' }
+      ],
+      rights: [
+        { title: 'Узнать, что о вас есть', text: 'По запросу сообщаем состав данных, цели и срок обработки.' },
+        { title: 'Исправить неточности', text: 'Ошибка в фамилии, дате или номере исправляется по вашему обращению.' },
+        { title: 'Отозвать согласие', text: 'Обработка прекращается, кроме случаев, когда закон обязывает хранить сведения о договоре.' },
+        { title: 'Отказаться от рассылок', text: 'Отдельно от полисов: отказ от рекламы не влияет на обслуживание.' },
+        { title: 'Обжаловать', text: 'Жалобу можно направить в Роскомнадзор или в суд.' }
+      ],
+      docs: [
+        { name: 'Политика обработки персональных данных', meta: 'PDF · 320 КБ' },
+        { name: 'Форма согласия на обработку', meta: 'PDF · 90 КБ' },
+        { name: 'Правила оказания брокерских услуг', meta: 'PDF · 410 КБ' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

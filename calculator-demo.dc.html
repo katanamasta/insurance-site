@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFAF7;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#1A1A18;text-decoration:none}
+  a:hover{color:#C2492D}
+  input::placeholder{color:#A9A49C}
+  @keyframes stepIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(320%)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="background:#FBFAF7;color:#1A1A18;min-height:100%;overflow-x:hidden">
+
+  <header style="background:#FBFAF7;border-bottom:1px solid rgba(26,26,24,.08)">
+    <div style="max-width:1100px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:64px;display:flex;align-items:center;gap:24px">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <span style="width:18px;height:18px;border-radius:50%;border:4px solid #C2492D;display:block"></span>Опора
+      </a>
+      <div style="font-size:14px;color:#8A857D;white-space:nowrap">Расчёт ОСАГО · прототип потока</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:16px">
+        <a href="calculator.dc.html" style="font-size:14px;color:#6E6A64;white-space:nowrap">Боевой калькулятор</a>
+        <a href="katalog.dc.html" style="font-size:14px;color:#6E6A64;white-space:nowrap">Продукты</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1100px;margin:0 auto;padding:clamp(26px,3vw,44px) clamp(20px,3vw,36px) 0">
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <sc-for list="{{ progress }}" as="p" hint-placeholder-count="4">
+        <div style="flex:1;height:4px;border-radius:2px;background:{{ p.bg }};transition:background .4s ease"></div>
+      </sc-for>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono';font-size:12px;color:#A9A49C;margin-bottom:clamp(24px,3vw,36px)">
+      <div>{{ stepLabel }}</div>
+      <div>{{ stepCounter }}</div>
+    </div>
+  </div>
+
+  <div style="max-width:1100px;margin:0 auto;padding:0 clamp(20px,3vw,36px) clamp(48px,6vw,80px);display:grid;grid-template-columns:{{ gridCols }};gap:clamp(20px,3vw,40px);align-items:start">
+
+    <div style="background:#FFFFFF;border:1px solid rgba(26,26,24,.12);border-radius:18px;padding:clamp(24px,3vw,36px);animation:stepIn .45s cubic-bezier(.2,.7,.3,1) both">
+
+      <sc-if value="{{ isCar }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 8px">Автомобиль</h1>
+          <p style="font-size:15px;color:#8A857D;margin:0 0 26px">Введите госномер — марку, год и мощность подтянем из базы ГИБДД.</p>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Государственный номер</div>
+              <div style="position:relative;overflow:hidden;border:1px solid rgba(26,26,24,.18);border-radius:12px;background:#FBFAF7;padding:14px 18px">
+                <input value="{{ plate }}" onChange="{{ setPlate }}" placeholder="А123ВС777" style="width:100%;background:none;border:none;outline:none;font-family:'IBM Plex Mono';font-size:20px;letter-spacing:.06em;color:#1A1A18;text-transform:uppercase">
+                <span style="position:absolute;top:0;bottom:0;width:60px;background:linear-gradient(90deg,rgba(194,73,45,0),rgba(194,73,45,.14),rgba(194,73,45,0));animation:scan 2.6s ease-in-out infinite;pointer-events:none"></span>
+              </div>
+            </div>
+            <div style="background:#FBFAF7;border:1px dashed rgba(26,26,24,.18);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:14px">
+              <sc-for list="{{ carFacts }}" as="f" hint-placeholder-count="4">
+                <div>
+                  <div style="font-size:12px;color:#A9A49C;margin-bottom:3px">{{ f.label }}</div>
+                  <div style="font-size:15px;font-weight:600">{{ f.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div>
+              <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Регион регистрации владельца</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ regions }}" as="r" hint-placeholder-count="4">
+                  <button onClick="{{ r.select }}" style="border:1px solid {{ r.border }};cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:10px 16px;border-radius:100px;background:{{ r.bg }};color:{{ r.color }};transition:all .2s ease">{{ r.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDrivers }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 8px">Водители</h1>
+          <p style="font-size:15px;color:#8A857D;margin:0 0 26px">Скидку за безаварийную езду проверим в базе РСА по каждому водителю.</p>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Кто будет за рулём</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ driverModes }}" as="d" hint-placeholder-count="2">
+                  <button onClick="{{ d.select }}" style="border:1px solid {{ d.border }};cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:10px 16px;border-radius:100px;background:{{ d.bg }};color:{{ d.color }};transition:all .2s ease">{{ d.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+              <div>
+                <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Год рождения</div>
+                <input value="{{ birth }}" onChange="{{ setBirth }}" placeholder="1990" style="width:100%;background:#FBFAF7;border:1px solid rgba(26,26,24,.18);border-radius:12px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:16px;color:#1A1A18">
+              </div>
+              <div>
+                <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Год получения прав</div>
+                <input value="{{ license }}" onChange="{{ setLicense }}" placeholder="2012" style="width:100%;background:#FBFAF7;border:1px solid rgba(26,26,24,.18);border-radius:12px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:16px;color:#1A1A18">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Аварии по вашей вине за последние 3 года</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ kbmOpts }}" as="k" hint-placeholder-count="3">
+                  <button onClick="{{ k.select }}" style="border:1px solid {{ k.border }};cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:10px 16px;border-radius:100px;background:{{ k.bg }};color:{{ k.color }};transition:all .2s ease">{{ k.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background:#FFF7F4;border:1px solid rgba(194,73,45,.25);border-radius:12px;padding:14px 16px;font-size:14px;color:#6E6A64;line-height:1.5">
+              Если скидка КБМ обнулилась после замены прав, отметьте это в комментарии — сделаем запрос в РСА и восстановим историю до расчёта.
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTerms }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 8px">Срок и контакты</h1>
+          <p style="font-size:15px;color:#8A857D;margin:0 0 26px">Полис и все документы придут на эту почту, напоминание о продлении — за 14 дней.</p>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Дата начала действия</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <sc-for list="{{ startOpts }}" as="s" hint-placeholder-count="3">
+                  <button onClick="{{ s.select }}" style="border:1px solid {{ s.border }};cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:10px 16px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .2s ease">{{ s.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+              <div>
+                <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Телефон</div>
+                <input value="{{ phone }}" onChange="{{ setPhone }}" placeholder="+7 900 000-00-00" style="width:100%;background:#FBFAF7;border:1px solid rgba(26,26,24,.18);border-radius:12px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:16px;color:#1A1A18">
+              </div>
+              <div>
+                <div style="font-size:13px;color:#6E6A64;margin-bottom:8px">Почта</div>
+                <input value="{{ email }}" onChange="{{ setEmail }}" placeholder="mail@example.ru" style="width:100%;background:#FBFAF7;border:1px solid rgba(26,26,24,.18);border-radius:12px;padding:14px 16px;outline:none;font-family:'Manrope';font-size:16px;color:#1A1A18">
+              </div>
+            </div>
+            <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:#8A857D;line-height:1.5;cursor:pointer">
+              <input type="checkbox" style="margin-top:2px;accent-color:#C2492D;width:16px;height:16px">
+              Согласен на обработку персональных данных для расчёта и оформления полиса. Данные уходят только выбранному страховщику.
+            </label>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isResults }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:40px 0;text-align:center">
+              <div style="width:38px;height:38px;border:3px solid rgba(26,26,24,.12);border-top-color:#C2492D;border-radius:50%;margin:0 auto 20px;animation:spin .9s linear infinite"></div>
+              <div style="font-size:17px;font-weight:600;margin-bottom:6px">Запрашиваем тарифы</div>
+              <div style="font-size:14px;color:#8A857D">{{ loadingNote }}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px">
+                <div>
+                  <h1 style="font-size:clamp(24px,2.8vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 6px">Нашли {{ offerCount }} предложений</h1>
+                  <p style="font-size:14px;color:#8A857D;margin:0">Отличается цена и сервис при убытке. Лимиты по закону у всех одинаковые.</p>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="2">
+                    <button onClick="{{ s.select }}" style="border:1px solid {{ s.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .2s ease">{{ s.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ offers }}" as="o" hint-placeholder-count="5">
+                  <div style="background:{{ o.bg }};border:1px solid {{ o.border }};border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:minmax(150px,1.3fr) minmax(100px,.8fr) 116px;gap:14px;align-items:center;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ o.delay }};transition:border-color .25s ease" style-hover="border-color:#C2492D">
+                    <div style="display:flex;align-items:center;gap:11px;min-width:0">
+                      <span style="width:30px;height:30px;border-radius:50%;background:#EFE9E1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#6E6A64;flex:none">{{ o.initial }}</span>
+                      <div style="min-width:0">
+                        <div style="font-size:15px;font-weight:700">{{ o.name }}</div>
+                        <div style="font-size:12px;color:#A9A49C;margin-top:2px">{{ o.feature }}</div>
+                      </div>
+                    </div>
+                    <div style="font-family:'IBM Plex Mono';font-size:18px;letter-spacing:-.03em;color:{{ o.priceColor }}">{{ o.price }}</div>
+                    <a href="calculator.dc.html" style="text-align:center;border:1px solid {{ o.btnBorder }};font-family:'Manrope';font-size:13px;font-weight:700;padding:11px 0;border-radius:100px;background:{{ o.btnBg }};color:{{ o.btnColor }};transition:all .25s ease" style-hover="background:#1A1A18;color:#FBFAF7;border-color:#1A1A18">Оформить</a>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:30px;padding-top:22px;border-top:1px solid rgba(26,26,24,.1);flex-wrap:wrap">
+        <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ back }}" style="border:1px solid rgba(26,26,24,.2);cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:600;padding:14px 22px;border-radius:100px;background:transparent;color:#1A1A18;transition:all .25s ease" style-hover="border-color:#1A1A18">Назад</button>
+        </sc-if>
+        <sc-if value="{{ canNext }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ next }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:700;padding:14px 26px;border-radius:100px;background:#C2492D;color:#FBFAF7;transition:all .25s ease" style-hover="background:#1A1A18">{{ nextLabel }}</button>
+        </sc-if>
+        <div style="font-size:13px;color:#A9A49C;margin-left:auto">{{ hint }}</div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showSummary }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#EFE9E1;border-radius:18px;padding:26px;position:sticky;top:24px">
+        <div style="font-size:15px;font-weight:700;margin-bottom:16px">Ваш расчёт</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ summary }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px">
+              <span style="color:#8A857D">{{ s.label }}</span>
+              <span style="font-weight:600;text-align:right">{{ s.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(26,26,24,.14)">
+          <div style="font-size:13px;color:#8A857D;margin-bottom:4px">Ориентир</div>
+          <div style="font-family:'IBM Plex Mono';font-size:26px;letter-spacing:-.03em;color:#C2492D">{{ estimate }}</div>
+        </div>
+        <div style="font-size:12px;color:#8A857D;line-height:1.5;margin-top:16px">Прототип потока: цифры считаются по коэффициентам, без запроса к страховщикам. Боевой расчёт — на странице «Расчёт».</div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = {
+    step: 0, region: 0, driverMode: 0, kbm: 0, start: 0, sort: 0,
+    plate: 'А123ВС777', birth: '1990', license: '2012',
+    phone: '', email: '', loading: false, ready: false, note: 0
+  };
+
+  componentWillUnmount() { if (this._nt) clearInterval(this._nt); if (this._lt) clearTimeout(this._lt); }
+
+  goResults() {
+    this.setState({ step: 3, loading: true, ready: false, note: 0 });
+    this._nt = setInterval(() => this.setState(s => ({ note: s.note + 1 })), 700);
+    this._lt = setTimeout(() => {
+      if (this._nt) clearInterval(this._nt);
+      this.setState({ loading: false, ready: true });
+    }, 2400);
+  }
+
+  renderVals() {
+    const st = this.state;
+    const steps = ['Автомобиль', 'Водители', 'Срок и контакты', 'Предложения'];
+
+    const regionsData = [
+      { label: 'Москва', k: 2.0 }, { label: 'Санкт-Петербург', k: 1.8 },
+      { label: 'Казань', k: 1.6 }, { label: 'Другой город', k: 1.1 }
+    ];
+    const kbmData = [{ label: 'Не было', k: 0.63 }, { label: 'Одна', k: 1.0 }, { label: 'Две и больше', k: 1.55 }];
+    const driverData = [{ label: 'Ограниченный список', k: 1.0 }, { label: 'Без ограничений', k: 1.94 }];
+    const startData = [{ label: 'С завтрашнего дня' }, { label: 'Через неделю' }, { label: 'Выбрать дату' }];
+
+    const chip = (arr, key) => arr.map((o, i) => ({
+      label: o.label,
+      select: () => this.setState({ [key]: i }),
+      bg: st[key] === i ? '#1A1A18' : 'transparent',
+      color: st[key] === i ? '#FBFAF7' : '#6E6A64',
+      border: st[key] === i ? '#1A1A18' : 'rgba(26,26,24,.18)'
+    }));
+
+    const exp = Math.max(0, 2026 - (parseInt(st.license, 10) || 2026));
+    const age = Math.max(0, 2026 - (parseInt(st.birth, 10) || 2026));
+    const kvs = age < 22 && exp < 3 ? 1.8 : age < 30 ? 1.2 : exp >= 5 ? 1.0 : 1.15;
+    const km = 1.4;
+    const raw = 4160 * regionsData[st.region].k * km * kvs * kbmData[st.kbm].k * driverData[st.driverMode].k;
+    const val = Math.round(raw / 10) * 10;
+    const estimate = val.toLocaleString('ru-RU') + ' ₽';
+
+    const notes = ['Проверяем госномер в базе ГИБДД', 'Запрашиваем КБМ в базе РСА', 'Собираем тарифы 24 компаний', 'Сортируем предложения'];
+    const loadingNote = notes[Math.min(st.note, notes.length - 1)];
+
+    const offersRaw = [
+      { name: 'Ингосстрах', feature: 'полис в РСА за 4 минуты', mult: 1.0 },
+      { name: 'Согласие', feature: 'скидка за безаварийность 24%', mult: 1.07 },
+      { name: 'Ренессанс Страхование', feature: 'аварийный комиссар бесплатно', mult: 1.11 },
+      { name: 'АльфаСтрахование', feature: 'выплата без справок до 100 000 ₽', mult: 1.15 },
+      { name: 'РЕСО-Гарантия', feature: 'урегулирование в приложении', mult: 1.21 }
+    ];
+    let list = offersRaw.map(o => ({ ...o, num: Math.round(val * o.mult / 10) * 10 }));
+    if (st.sort === 1) list = list.slice().reverse();
+    const offers = list.map((o, i) => ({
+      name: o.name,
+      feature: o.feature,
+      initial: o.name.charAt(0),
+      price: o.num.toLocaleString('ru-RU') + ' ₽',
+      delay: (i * 70) + 'ms',
+      bg: i === 0 ? '#FFF7F4' : '#FFFFFF',
+      border: i === 0 ? 'rgba(194,73,45,.3)' : 'rgba(26,26,24,.1)',
+      priceColor: i === 0 ? '#C2492D' : '#1A1A18',
+      btnBg: i === 0 ? '#C2492D' : 'transparent',
+      btnColor: i === 0 ? '#FBFAF7' : '#1A1A18',
+      btnBorder: i === 0 ? '#C2492D' : 'rgba(26,26,24,.2)'
+    }));
+
+    const sorts = ['Сначала дешёвые', 'Сначала дорогие'].map((label, i) => ({
+      label,
+      select: () => this.setState({ sort: i }),
+      bg: st.sort === i ? '#C2492D' : 'transparent',
+      color: st.sort === i ? '#FBFAF7' : '#6E6A64',
+      border: st.sort === i ? '#C2492D' : 'rgba(26,26,24,.18)'
+    }));
+
+    return {
+      progress: steps.map((_, i) => ({ bg: i <= st.step ? '#C2492D' : 'rgba(26,26,24,.12)' })),
+      stepLabel: steps[st.step].toUpperCase(),
+      stepCounter: 'ШАГ ' + (st.step + 1) + ' ИЗ 4',
+      gridCols: st.step === 3 ? '1fr' : 'minmax(0,1.6fr) minmax(240px,.9fr)',
+      showSummary: st.step !== 3,
+
+      isCar: st.step === 0, isDrivers: st.step === 1, isTerms: st.step === 2, isResults: st.step === 3,
+      loading: st.step === 3 && st.loading, ready: st.step === 3 && st.ready,
+      loadingNote, offers, offerCount: offers.length, sorts,
+
+      plate: st.plate,
+      setPlate: (e) => this.setState({ plate: e.target.value }),
+      birth: st.birth,
+      setBirth: (e) => this.setState({ birth: e.target.value }),
+      license: st.license,
+      setLicense: (e) => this.setState({ license: e.target.value }),
+      phone: st.phone,
+      setPhone: (e) => this.setState({ phone: e.target.value }),
+      email: st.email,
+      setEmail: (e) => this.setState({ email: e.target.value }),
+
+      carFacts: [
+        { label: 'Марка и модель', value: 'Toyota Camry' },
+        { label: 'Год выпуска', value: '2021' },
+        { label: 'Мощность', value: '181 л.с.' },
+        { label: 'VIN', value: '···· 4821' }
+      ],
+      regions: chip(regionsData, 'region'),
+      driverModes: chip(driverData, 'driverMode'),
+      kbmOpts: chip(kbmData, 'kbm'),
+      startOpts: chip(startData, 'start'),
+
+      canBack: st.step > 0,
+      canNext: st.step < 3,
+      nextLabel: st.step === 2 ? 'Показать предложения' : 'Далее',
+      next: () => { st.step === 2 ? this.goResults() : this.setState({ step: st.step + 1 }); },
+      back: () => this.setState({ step: Math.max(0, st.step - 1), ready: false, loading: false }),
+      hint: st.step === 2 ? 'Расчёт ни к чему не обязывает' : st.step === 3 ? 'Цены обновлены сегодня' : 'Данные проверяются в базах ГИБДД и РСА',
+
+      summary: [
+        { label: 'Автомобиль', value: 'Toyota Camry, 2021' },
+        { label: 'Регион', value: regionsData[st.region].label },
+        { label: 'Водители', value: driverData[st.driverMode].label },
+        { label: 'Стаж', value: exp + ' лет' },
+        { label: 'Аварии', value: kbmData[st.kbm].label }
+      ],
+      estimate
+    };
+  }
+}
+</script>
+</body>
+</html>

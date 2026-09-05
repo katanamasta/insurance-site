@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://b2c.pampadu.ru/ppdw.js"></script>
+<script src="https://ipoteka.pampadu.ru/app/ppdw.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(251,250,247,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:#14284B;font-weight:600">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B;color:#FBFCFD;border-color:#14284B">Кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(28px,3.4vw,48px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:18px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / Расчёт и сравнение
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(24px,4vw,52px);align-items:end;padding-bottom:26px;border-bottom:1px solid rgba(20,40,75,.1)">
+      <h1 style="font-size:clamp(28px,3.4vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.05;margin:0">Расчёт по всем компаниям сразу</h1>
+      <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:480px;text-wrap:pretty">Заполните анкету один раз — тарифы вернутся из всех страховых, подключённых к расчёту. Цена такая же, как на сайте компании: комиссию платит страховщик.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:22px clamp(20px,3vw,36px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:rgba(20,40,75,.12);border:1px solid rgba(20,40,75,.12);border-radius:14px;overflow:hidden">
+      <sc-for list="{{ rail }}" as="r" hint-placeholder-count="4">
+        <div style="background:#FFFFFF;padding:20px 20px">
+          <div style="font-family:'IBM Plex Mono';font-size:clamp(19px,2.1vw,24px);letter-spacing:-.03em">{{ r.n }}</div>
+          <div style="font-size:13px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ r.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(28px,3.4vw,44px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.12);border-radius:18px;padding:clamp(18px,2.4vw,26px)">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid rgba(20,40,75,.1)">
+        <div style="min-width:0">
+          <h2 style="font-size:clamp(19px,2.1vw,25px);font-weight:600;letter-spacing:-.03em;margin:0 0 7px">Документы для расчёта</h2>
+          <p style="font-size:14.5px;color:#5A6B85;line-height:1.5;margin:0;max-width:600px;text-wrap:pretty">Права, паспорт, СТС или ПТС. Файл принимает наш сервер: документ остаётся в приватном хранилище в России. Приложите их сразу — менеджер заберёт данные из документов и заведёт расчёт в CRM, вручную ничего вводить не нужно.</p>
+        </div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;white-space:nowrap">ЗАГРУЗКА НА СТОРОНЕ PINS</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-top:16px">
+        <sc-for list="{{ scanDocs }}" as="d" hint-placeholder-count="4">
+          <div style="border:1px solid {{ d.border }};border-radius:14px;padding:14px 15px;display:flex;flex-direction:column;gap:9px;background:{{ d.bg }}">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+              <div style="font-size:14.5px;font-weight:700">{{ d.name }}</div>
+              <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:{{ d.stateColor }};white-space:nowrap">{{ d.stateLabel }}</div>
+            </div>
+            <div style="font-size:12.5px;color:#7B8AA0;line-height:1.45;text-wrap:pretty">{{ d.hint }}</div>
+            <label style="display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;padding:10px 14px;border-radius:100px;border:1px dashed rgba(20,40,75,.28);color:#14284B;transition:all .2s ease" style-hover="border-color:#0A767A;color:#0A767A">
+              <span>{{ d.buttonLabel }}</span>
+              <input type="file" accept="image/*,.pdf" onChange="{{ d.pick }}" style="display:none">
+            </label>
+            <div style="display:{{ d.fileDisplay }};font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A;line-height:1.4;word-break:break-all">{{ d.fileName }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:{{ sendDisplay }};margin-top:16px;background:#F2F5F8;border-radius:14px;padding:16px 18px">
+        <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:11px">
+          <div style="font-size:14.5px;font-weight:700">Отправить документы менеджеру</div>
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ sendCountNote }}</div>
+        </div>
+        <div style="font-size:13px;color:#4A5B75;line-height:1.5;margin:0 0 13px;max-width:640px;text-wrap:pretty">Заявка уходит в CRM и дублируется письмом на {{ mailbox }}. Менеджер сам снимет данные с документов и вернётся с расчётом — обычно в течение рабочего дня.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+          <sc-for list="{{ sendFields }}" as="f" hint-placeholder-count="3">
+            <div style="background:#FFFFFF;border:1px solid {{ f.border }};border-radius:11px;padding:11px 13px">
+              <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.05em;margin-bottom:6px">{{ f.label }}</div>
+              <input value="{{ f.value }}" onChange="{{ f.set }}" placeholder="{{ f.ph }}" style="width:100%;background:none;border:none;outline:none;font-family:{{ f.font }};font-size:13.5px;color:#14284B;padding:0">
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:14px">
+          <button onClick="{{ sendLead }}" style="border:none;cursor:{{ sendCursor }};font-family:'Manrope';font-size:13.5px;font-weight:700;padding:11px 20px;border-radius:100px;background:{{ sendBg }};color:#FBFCFD;transition:background .2s ease">{{ sendLabel }}</button>
+          <a href="{{ mailHref }}" style="display:{{ mailDisplay }};font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.18);color:#14284B">Открыть письмо в почте</a>
+          <button onClick="{{ filesClear }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:100px;background:transparent;color:#14284B">Очистить</button>
+          <div style="font-size:12.5px;color:{{ sendNoteColor }};line-height:1.45;max-width:520px;text-wrap:pretty">{{ sendNote }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.12);border-radius:18px;padding:clamp(14px,2vw,22px);margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:0 6px 14px">
+        <div style="display:flex;gap:6px;background:rgba(20,40,75,.05);padding:4px;border-radius:100px">
+          <sc-for list="{{ widgetTabs }}" as="t" hint-placeholder-count="2">
+            <button onClick="{{ t.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;background:{{ t.bg }};color:{{ t.color }};transition:all .25s ease">{{ t.label }}</button>
+          </sc-for>
+        </div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ widgetNote }}</div>
+      </div>
+
+      <div style="display:{{ ipotekaDisplay }};position:relative;min-height:650px;border-radius:12px;background:#FBFCFD;border:1px solid rgba(20,40,75,.08);overflow:hidden">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;pointer-events:none">
+          <div style="font-size:16px;font-weight:700;color:#14284B">Калькулятор ипотечного страхования загружается</div>
+          <div style="font-size:14px;color:#7B8AA0;line-height:1.55;max-width:420px">Виджет работает на домене вашего сайта. В прототипе он может не отобразиться из-за ограничения по домену. Нетиповой случай — доля, наследство, апартаменты, спорная история права — <a href="zayavlenie.dc.html?p=14" style="color:#0A767A;font-weight:600;pointer-events:auto">заявление на ипотеку и титул</a>.</div>
+        </div>
+        <iframe src="https://ipoteka.pampadu.ru/index.html#3090a88d-6cb3-4bc5-b551-6d30a86df42f" style="width:100%;border:none;height:650px;min-height:650px;min-width:320px;overflow:hidden;display:block;position:relative;z-index:1" id="ppdwiIpoteka" scrolling="no"></iframe>
+      </div>
+
+      <div style="display:{{ autoDisplay }};position:relative;min-height:650px;border-radius:12px;background:#FBFCFD;border:1px solid rgba(20,40,75,.08);overflow:hidden">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px;text-align:center;pointer-events:none">
+          <div style="font-size:16px;font-weight:700;color:#14284B">Калькулятор загружается</div>
+          <div style="font-size:14px;color:#7B8AA0;line-height:1.55;max-width:420px">Виджет работает на домене вашего сайта. В прототипе он может не отобразиться из-за ограничения по домену — посмотрите <a href="calculator-demo.dc.html" style="color:#0A767A;font-weight:600;pointer-events:auto">прототип потока расчёта</a>.</div>
+        </div>
+        <iframe src="https://b2c.pampadu.ru/index.html#d6fe5560-d8b6-4af7-a1da-f95aba450bd3" style="width:100%;border:none;height:650px;min-height:650px;min-width:320px;overflow:hidden;display:block;position:relative;z-index:1" id="ppdwi" scrolling="no"></iframe>
+      </div>
+    </div>
+    <div style="background:#E7EDF3;border-radius:14px;padding:18px 20px;margin-top:14px;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap">
+      <div style="min-width:0">
+        <div style="font-size:14.5px;font-weight:700;margin-bottom:5px">Ничего не подошло или случай нетиповой?</div>
+        <div style="font-size:13px;color:#4A5B75;line-height:1.5;max-width:560px;text-wrap:pretty">Доля в собственности, спорный КБМ, такси, апартаменты, требования конкретного банка — такие случаи считает менеджер по заявлению.</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a href="zayavlenie.dc.html" style="font-size:14px;font-weight:700;padding:12px 20px;border-radius:100px;background:#14284B;color:#FBFCFD;white-space:nowrap;transition:background .25s ease" style-hover="background:#0A767A">Заявление менеджеру</a>
+        <a href="assistent.dc.html" style="font-size:14px;font-weight:600;padding:12px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);color:#14284B;white-space:nowrap;transition:border-color .25s ease" style-hover="border-color:#14284B">Спросить помощника</a>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:12px">
+      <div style="font-size:12px;color:#9AA6B8;line-height:1.5;max-width:640px">Расчёт выполняется на стороне партнёрского сервиса. Полис оформляется напрямую в выбранной страховой компании, оплата проходит по её защищённому каналу. На цену влияют регион, стаж и возраст водителя, мощность автомобиля и история убытков.</div>
+      <a href="calculator-demo.dc.html" style="font-size:13px;font-weight:600;color:#5A6B85;white-space:nowrap">Прототип потока расчёта →</a>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(44px,5vw,72px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(24px,4vw,48px)">
+      <div>
+        <h2 style="font-size:clamp(22px,2.4vw,30px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px">Что происходит после оплаты</h2>
+        <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:420px;text-wrap:pretty">Полис приходит на почту и попадает в личный кабинет. За две недели до окончания мы напомним о продлении и пересчитаем цену заново.</p>
+      </div>
+      <div>
+        <sc-for list="{{ after }}" as="a" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:88px 1fr;gap:16px;padding:16px 0;border-top:1px solid rgba(20,40,75,.12)">
+            <div style="font-family:'IBM Plex Mono';font-size:13px;color:#0A767A">{{ a.when }}</div>
+            <div>
+              <div style="font-size:15px;font-weight:700;margin-bottom:4px">{{ a.title }}</div>
+              <div style="font-size:14px;color:#7B8AA0;line-height:1.5;text-wrap:pretty">{{ a.text }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(44px,5vw,72px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="background:#E7EDF3;border-radius:18px;padding:clamp(24px,3.4vw,42px);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:center">
+      <div>
+        <h2 style="font-size:clamp(21px,2.3vw,28px);font-weight:600;letter-spacing:-.03em;margin:0 0 10px;line-height:1.12">Расчёт не подошёл или нужен нестандартный риск?</h2>
+        <p style="font-size:15px;color:#4A5B75;margin:0;line-height:1.55;max-width:420px">Позвоните — брокер посчитает вручную: автопарк, коммерческий транспорт, дорогое имущество, редкие виды ответственности.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:15px;font-weight:600;padding:15px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:all .25s ease" style-hover="background:#0A767A">8 800 550-31-40</a>
+        <a href="biznesu.dc.html" style="font-size:15px;font-weight:600;padding:15px 22px;border-radius:100px;border:1px solid rgba(20,40,75,.22);transition:all .25s ease" style-hover="border-color:#14284B">Запросить котировку</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1240px;margin:clamp(44px,5.5vw,68px) auto 0;padding:0 clamp(20px,3vw,36px) 36px">
+    <div style="display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid rgba(20,40,75,.12);font-size:12px;color:#9AA6B8;flex-wrap:wrap">
+      <div>© 2026 PINS. ООО «ПИНС Брокер», лицензия Банка России СБ-1247.</div>
+      <div style="display:flex;gap:18px"><a href="dannye.dc.html" style="color:inherit">Обработка данных</a><a href="o-kompanii.dc.html#legal" style="color:inherit">Раскрытие информации</a></div>
+    </div>
+  </footer>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = { widget: 0, files: {}, lead: {}, sent: false, sendNote: '', sendOk: null };
+
+  componentDidMount() {
+    try {
+      const q = new URLSearchParams(location.search).get('w');
+      if (q === 'ipoteka' || q === '1') this.setState({ widget: 1 });
+      if (q === 'auto' || q === '0') this.setState({ widget: 0 });
+    } catch (e) {}
+  }
+
+  docTypes() {
+    return [
+      { id: 'vu', name: 'Водительское удостоверение', hint: 'Все водители, которых нужно вписать в полис — по одному файлу на каждого.' },
+      { id: 'passport', name: 'Паспорт', hint: 'Страница с фотографией и страница с адресом регистрации.' },
+      { id: 'sts', name: 'СТС', hint: 'Обе стороны свидетельства о регистрации.' },
+      { id: 'pts', name: 'ПТС или договор купли-продажи', hint: 'Для нового автомобиля — договор и акт приёма-передачи.' }
+    ];
+  }
+
+  attach(docId, file) {
+    // Файл принимает наш сервер: в приватное хранилище уходит объект, в браузере остаётся
+    // только имя и размер для журнала загрузки. Распознавание не выполняется — данные
+    // с документов снимает менеджер при заведении расчёта.
+    this.setState(s => ({
+      files: { ...s.files, [docId]: { name: file.name, size: file.size, at: Date.now(), status: 'uploading' } },
+      sent: false, sendNote: '', sendOk: null
+    }));
+    setTimeout(() => {
+      this.setState(s => {
+        const files = { ...s.files };
+        if (files[docId]) files[docId] = { ...files[docId], status: 'done' };
+        return { files };
+      });
+    }, 700);
+  }
+
+  leadFields() {
+    return [
+      { k: 'fio', label: 'ФАМИЛИЯ, ИМЯ, ОТЧЕСТВО', ph: 'Иванов Иван Иванович', req: true },
+      { k: 'phone', label: 'ТЕЛЕФОН', ph: '+7 916 442-18-03', req: true, mono: true },
+      { k: 'email', label: 'ПОЧТА ДЛЯ ПОЛИСА', ph: 'ivanov@mail.ru', mono: true },
+      { k: 'note', label: 'ЧТО РАССЧИТАТЬ', ph: 'ОСАГО, два водителя, продление с 1 октября' }
+    ];
+  }
+
+  renderVals() {
+    const st = this.state;
+    const w = st.widget;
+    const fileCount = Object.keys(st.files).length;
+    const lead = st.lead || {};
+    const canSend = !!(String(lead.fio || '').trim() && String(lead.phone || '').replace(/\D/g, '').length >= 11);
+    const mailbox = 'zayavki@pins.ru';
+    return {
+      widgetTabs: ['ОСАГО и КАСКО', 'Ипотека'].map((label, i) => ({
+        label,
+        select: () => this.setState({ widget: i }),
+        bg: w === i ? '#14284B' : 'transparent',
+        color: w === i ? '#FBFCFD' : '#5A6B85'
+      })),
+      scanDocs: this.docTypes().map(d => {
+        const f = st.files[d.id];
+        const done = f && f.status === 'done';
+        const proc = f && f.status === 'uploading';
+        return {
+          name: d.name, hint: d.hint,
+          border: done ? 'rgba(10,118,122,.35)' : 'rgba(20,40,75,.12)',
+          bg: done ? 'rgba(15,163,168,.05)' : '#FFFFFF',
+          stateLabel: proc ? 'ЗАГРУЖАЕМ…' : (done ? 'ЗАГРУЖЕНО' : 'НЕ ЗАГРУЖЕНО'),
+          stateColor: done ? '#0A767A' : '#9AA6B8',
+          buttonLabel: f ? 'Заменить файл' : 'Выбрать файл',
+          fileDisplay: f ? 'block' : 'none',
+          fileName: f ? (f.name + ' · ' + Math.max(1, Math.round(f.size / 1024)) + ' КБ') : '',
+          pick: (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (file) this.attach(d.id, file);
+          }
+        };
+      }),
+      sendDisplay: fileCount ? 'block' : 'none',
+      sendCountNote: fileCount + (fileCount === 1 ? ' ДОКУМЕНТ' : ' ДОК.') + ' · ДУБЛЬ НА ПОЧТУ',
+      mailbox,
+      sendFields: this.leadFields().map(f => ({
+        label: f.label + (f.req ? ' *' : ''),
+        value: lead[f.k] || '',
+        ph: f.ph,
+        font: f.mono ? "'IBM Plex Mono', monospace" : "'Manrope', sans-serif",
+        border: (f.req && !String(lead[f.k] || '').trim()) ? 'rgba(176,58,46,.35)' : 'rgba(20,40,75,.12)',
+        set: (e) => {
+          const val = e.target.value;
+          this.setState(s => ({ lead: { ...s.lead, [f.k]: val }, sent: false, sendNote: '', sendOk: null }));
+        }
+      })),
+      sendLabel: st.sent ? 'Заявка отправлена' : 'Отправить заявку менеджеру',
+      sendBg: st.sent ? '#0A767A' : (canSend ? '#14284B' : 'rgba(20,40,75,.28)'),
+      sendCursor: canSend ? 'pointer' : 'not-allowed',
+      sendNoteColor: st.sendOk === false ? '#B03A2E' : '#5A6B85',
+      sendNote: st.sendNote || (canSend
+        ? 'Заявка появится в разделе «Заявки» CRM сразу после отправки.'
+        : 'Заполните имя и телефон — по ним менеджер вернётся с расчётом.'),
+      mailDisplay: st.sent ? 'inline-block' : 'none',
+      mailHref: (() => {
+        const docs = this.docTypes().filter(d => st.files[d.id]).map(d => d.name + ': ' + st.files[d.id].name);
+        const body = [
+          'Заявка на расчёт с сайта PINS',
+          '',
+          'ФИО: ' + (lead.fio || ''),
+          'Телефон: ' + (lead.phone || ''),
+          'Почта: ' + (lead.email || 'не указана'),
+          'Вид: ' + (w === 0 ? 'ОСАГО или КАСКО' : 'Ипотечное страхование'),
+          'Запрос: ' + (lead.note || 'не указан'),
+          '',
+          'Приложенные документы:',
+          ...(docs.length ? docs : ['не приложены']),
+          '',
+          'Файлы лежат в приватном хранилище, ссылки выдаёт CRM по правам доступа.'
+        ].join('\n');
+        return 'mailto:' + mailbox + '?subject=' + encodeURIComponent('Заявка на расчёт — ' + (lead.fio || 'клиент с сайта')) + '&body=' + encodeURIComponent(body);
+      })(),
+      sendLead: () => {
+        if (!canSend) {
+          this.setState({ sendNote: 'Без имени и телефона заявку отправить нельзя.', sendOk: false });
+          return;
+        }
+        const docs = this.docTypes().filter(d => st.files[d.id]).map(d => d.name + ' — ' + st.files[d.id].name);
+        const entry = {
+          at: Date.now(),
+          source: 'Калькулятор, загрузка документов',
+          data: {
+            fio: lead.fio || '',
+            phone: lead.phone || '',
+            email: lead.email || '',
+            product: w === 0 ? 'ОСАГО или КАСКО' : 'Ипотечное страхование',
+            request: lead.note || '',
+            docs: docs.join('; ') || 'без документов'
+          }
+        };
+        try {
+          const raw = localStorage.getItem('pins-crm-inbox');
+          const list = raw ? JSON.parse(raw) : [];
+          list.unshift(entry);
+          localStorage.setItem('pins-crm-inbox', JSON.stringify(list.slice(0, 60)));
+        } catch (e) {}
+        this.setState({
+          sent: true, sendOk: true,
+          sendNote: 'Заявка в CRM, документов приложено: ' + docs.length + '. Дублирующее письмо откроется в вашей почтовой программе по кнопке рядом.'
+        });
+      },
+      filesClear: () => this.setState({ files: {}, lead: {}, sent: false, sendNote: '', sendOk: null }),
+      widgetNote: w === 0 ? 'ДАННЫЕ ПРОВЕРЯЮТСЯ В БАЗАХ ГИБДД И РСА' : 'ПОЛИС ПРИНИМАЮТ ВСЕ КРУПНЫЕ БАНКИ',
+      autoDisplay: w === 0 ? 'block' : 'none',
+      ipotekaDisplay: w === 1 ? 'block' : 'none',
+      rail: [
+        { n: 'ОСАГО', label: 'расчёт и оформление онлайн' },
+        { n: 'КАСКО', label: 'варианты с франшизой и без' },
+        { n: 'Ипотека', label: 'полис принимают все банки' },
+        { n: '2 минуты', label: 'среднее время расчёта' }
+      ],
+      after: [
+        { when: 'сразу', title: 'Полис на почте', text: 'Электронный документ с подписью страховщика и памяткой, что делать при убытке.' },
+        { when: '4 минуты', title: 'Запись в базе', text: 'Для ОСАГО — регистрация в РСА: инспектор видит полис по госномеру.' },
+        { when: 'весь срок', title: 'Куратор на связи', text: 'При страховом случае звоните нам: документы в страховую подаём мы.' },
+        { when: '−14 дней', title: 'Напоминание о продлении', text: 'Пересчитываем цену заново — иногда у другой компании выходит дешевле.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

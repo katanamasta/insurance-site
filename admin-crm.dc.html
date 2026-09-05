@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#F2F5F8;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder,textarea::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes softPulse{0%,100%{opacity:.4}50%{opacity:1}}
+</style>
+</helmet>
+<sc-if value="{{ needLogin }}" hint-placeholder-val="{{ false }}">
+  <div style="background:#14284B;color:#FBFCFD;min-height:100vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:center;gap:clamp(28px,5vw,64px);padding:clamp(28px,5vw,72px)">
+    <div>
+      <img src="logo-pins.png" alt="PINS" style="height:48px;width:auto;display:block;margin-bottom:26px">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0FA3A8;letter-spacing:.08em;margin-bottom:14px">РАБОЧАЯ СИСТЕМА · ВХОД ДЛЯ СОТРУДНИКОВ</div>
+      <h1 style="font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px;line-height:1.12">Аутентификация сотрудника</h1>
+      <p style="font-size:15px;color:#B9C4D2;line-height:1.6;margin:0 0 26px;max-width:52ch;text-wrap:pretty">Логин, пароль и код подтверждения из приложения. Права в CRM выдаёт администратор: без выданной роли рабочие экраны не открываются даже после успешного входа.</p>
+      <div style="display:flex;align-items:center;gap:14px;padding:22px 0;border-top:1px solid rgba(251,250,247,.14)">
+        <img src="avatar-ceo.png" alt="" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;flex:none">
+        <div>
+          <div style="font-size:14.5px;font-weight:700">Давлетшин Артём</div>
+          <div style="font-size:12px;color:#9AA6B8;margin-top:2px">CEO · Owner · полный доступ</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <sc-for list="{{ loginRules }}" as="r" hint-placeholder-count="4">
+          <div style="display:grid;grid-template-columns:16px 1fr;gap:10px;font-size:13.5px;color:#B9C4D2;line-height:1.5">
+            <span style="color:#0FA3A8">·</span><span>{{ r }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="background:#FBFCFD;color:#14284B;border-radius:18px;padding:clamp(24px,3vw,34px);max-width:440px;width:100%">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:18px">
+        <div style="font-size:17px;font-weight:700">Вход в PINS CRM</div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">ШАГ {{ auth.stepLabel }}</div>
+      </div>
+
+      <div style="display:{{ auth.step1Display }};flex-direction:column;gap:14px">
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Логин</div>
+          <input value="{{ loginValue }}" onChange="{{ setLogin }}" placeholder="a.litvinova" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'IBM Plex Mono';font-size:14.5px;color:#14284B">
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Пароль</div>
+          <input type="password" value="{{ passValue }}" onChange="{{ setPass }}" placeholder="••••••••••••" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:13px 15px;outline:none;font-family:'IBM Plex Mono';font-size:14.5px;color:#14284B">
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:8px">Куда прислать код</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ auth.channels }}" as="c" hint-placeholder-count="2">
+              <button onClick="{{ c.pick }}" style="border:1px solid {{ c.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 15px;border-radius:100px;background:{{ c.bg }};color:{{ c.color }};transition:all .2s ease">{{ c.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <button onClick="{{ auth.requestCode }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:15px;font-weight:700;padding:14px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Продолжить</button>
+        <div style="font-size:11.5px;color:#9AA6B8;line-height:1.5">Если администратор включил для вас код подтверждения, следующим шагом придёт СМС или письмо. Если нет — вход произойдёт сразу.</div>
+        <div style="display:{{ errDisplay }};font-size:13px;color:#B03A2E;line-height:1.45">{{ loginError }}</div>
+        <div style="background:#E7EDF3;border-radius:11px;padding:13px 15px;font-family:'IBM Plex Mono';font-size:12px;color:#4A5B75;line-height:1.65">ДЕМО-ДОСТУПЫ<br>a.litvinova / PINS-Manager-2026 — менеджер<br>e.smirnova / PINS-Buh-2026 — бухгалтерия<br>p.efimov / PINS-Guest-2026 — без роли в CRM</div>
+        <a href="glavnaya-b3.dc.html" style="font-size:13px;font-weight:600;color:#5A6B85">Вернуться на сайт</a>
+      </div>
+
+      <div style="display:{{ auth.step2Display }};flex-direction:column;gap:14px">
+        <div style="background:#E7EDF3;border-radius:11px;padding:14px 16px">
+          <div style="font-size:13.5px;color:#14284B;line-height:1.5">{{ auth.sentTo }}</div>
+          <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A;margin-top:6px">{{ auth.demoCode }}</div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#5A6B85;margin-bottom:7px">Код из {{ auth.channelWord }}</div>
+          <input value="{{ codeValue }}" onChange="{{ setCode }}" placeholder="6 цифр" style="width:100%;background:#F2F5F8;border:1px solid {{ auth.codeBorder }};border-radius:11px;padding:14px 16px;outline:none;font-family:'IBM Plex Mono';font-size:19px;letter-spacing:.32em;color:#14284B">
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+          <div style="font-size:12.5px;color:{{ auth.attemptsColor }}">{{ auth.attemptsNote }}</div>
+          <button onClick="{{ auth.resend }}" style="border:none;background:none;cursor:{{ auth.resendCursor }};font-family:'Manrope';font-size:12.5px;font-weight:600;color:{{ auth.resendColor }};padding:0">{{ auth.resendLabel }}</button>
+        </div>
+        <button onClick="{{ auth.confirm }}" style="border:none;cursor:{{ auth.confirmCursor }};font-family:'Manrope';font-size:15px;font-weight:700;padding:14px 24px;border-radius:100px;background:{{ auth.confirmBg }};color:{{ auth.confirmColor }};transition:background .25s ease">{{ auth.confirmLabel }}</button>
+        <div style="display:{{ errDisplay }};font-size:13px;color:#B03A2E;line-height:1.45">{{ loginError }}</div>
+        <button onClick="{{ auth.backToLogin }}" style="border:none;background:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;color:#5A6B85;padding:0;text-align:left">Изменить логин</button>
+      </div>
+
+      <div style="display:{{ auth.lockedDisplay }};flex-direction:column;gap:12px">
+        <div style="font-size:15px;font-weight:700;color:#B03A2E">Вход заблокирован</div>
+        <div style="font-size:13.5px;color:#4A5B75;line-height:1.55">Пять неверных кодов подряд. Учётная запись заблокирована на 15 минут, владельцу отправлено оповещение. Запись о попытках уже в журнале доступа.</div>
+        <button onClick="{{ auth.reset }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Начать заново</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ noAccess }}" hint-placeholder-val="{{ false }}">
+  <div style="background:#14284B;color:#FBFCFD;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:clamp(24px,5vw,60px)">
+    <div style="max-width:560px">
+      <img src="logo-pins.png" alt="PINS" style="height:48px;width:auto;display:block;margin-bottom:26px">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;color:#8A5A2B;letter-spacing:.08em;margin-bottom:14px">ДОСТУП ЗАКРЫТ</div>
+      <h1 style="font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-.03em;margin:0 0 14px;line-height:1.12">У вашей учётной записи нет роли в CRM</h1>
+      <p style="font-size:15px;color:#B9C4D2;line-height:1.6;margin:0 0 26px;text-wrap:pretty">Регистрация на сайте даёт только личный кабинет клиента. Рабочие данные, карточки сделок и документы открываются лишь сотрудникам с выданной ролью — запросите доступ у администратора.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ doLogout }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:14px 24px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .25s ease" style-hover="background:#FBFCFD;color:#14284B">Войти под другой учётной записью</button>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:14px 22px;border-radius:100px;border:1px solid rgba(251,250,247,.24);color:#FBFCFD;transition:border-color .25s ease" style-hover="border-color:#FBFCFD">Вернуться в личный кабинет</a>
+      </div>
+      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-top:26px;line-height:1.6">ПОПЫТКА ВХОДА ЗАФИКСИРОВАНА В ЖУРНАЛЕ · ЗАПРОС {{ denyId }}</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hasAccess }}" hint-placeholder-val="{{ true }}">
+<div style="background:#F2F5F8;color:#14284B;min-height:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));grid-template-columns:232px minmax(0,1fr);overflow-x:hidden">
+
+  <aside style="background:#14284B;color:#FBFCFD;padding:20px 16px;display:flex;flex-direction:column;gap:26px;min-height:100vh">
+    <div style="display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;letter-spacing:-.02em;padding:0 6px">
+      <img src="logo-pins.png" alt="PINS" style="height:46px;width:auto;display:block"> · CRM
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
+        <button onClick="{{ n.select }}" style="border:none;cursor:pointer;text-align:left;font-family:'Manrope';font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;background:{{ n.bg }};color:{{ n.color }};display:flex;align-items:center;justify-content:space-between;gap:10px;transition:all .2s ease">
+          {{ n.label }}
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:{{ n.badgeColor }}">{{ n.badge }}</span>
+        </button>
+      </sc-for>
+      <a href="blanki.dc.html" style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:600;padding:11px 12px;border-radius:9px;color:#9AA6B8;border:1px solid rgba(251,250,247,.14);transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">
+        Бланки страховщиков
+        <span style="font-family:'IBM Plex Mono';font-size:11px;color:#5A6B85">7</span>
+      </a>
+    </div>
+
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
+      <div style="background:rgba(251,250,247,.06);border-radius:12px;padding:14px">
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:8px">СЕГОДНЯ</div>
+        <div style="font-size:13px;color:#FBFCFD;line-height:1.5">{{ todayLine }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:0 4px">
+        <img src="avatar-ceo.png" alt="" style="display:{{ me.photoDisplay }};width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none">
+        <div style="display:{{ me.initialsDisplay }};width:34px;height:34px;border-radius:50%;background:#0FA3A8;color:#FBFCFD;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none">{{ me.initials }}</div>
+        <div style="min-width:0">
+          <div style="font-size:13px;font-weight:600">{{ me.name }}</div>
+          <div style="font-size:11px;color:#7B8AA0">{{ me.role }}</div>
+        </div>
+      </div>
+      <button onClick="{{ doLogout }}" style="border:1px solid rgba(251,250,247,.14);background:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;text-align:left;transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Выйти из CRM</button>
+      <a href="admin-panel.dc.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;border:1px solid rgba(251,250,247,.14);transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Панель администратора<span style="font-family:'IBM Plex Mono';font-size:12px">→</span></a>
+      <a href="glavnaya-b3.dc.html" style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:600;color:#9AA6B8;padding:11px 12px;border-radius:9px;border:1px solid rgba(251,250,247,.14);transition:all .2s ease" style-hover="color:#FBFCFD;border-color:rgba(251,250,247,.4)">Выйти на сайт<span style="font-family:'IBM Plex Mono';font-size:12px">→</span></a>
+    </div>
+  </aside>
+
+  <main style="min-width:0;padding:0 0 60px">
+
+    <header style="position:sticky;top:0;z-index:40;background:rgba(244,241,234,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,40,75,.1);padding:10px clamp(18px,2.4vw,30px);min-height:62px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;white-space:nowrap">{{ pageTitle }}</div>
+      <div style="display:flex;align-items:center;gap:8px;background:#FBFCFD;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:8px 16px;min-width:0;max-width:320px;flex:1 1 150px">
+        <span style="font-size:13px;color:#9AA6B8">⌕</span>
+        <input value="{{ query }}" onChange="{{ setQuery }}" placeholder="Клиент, телефон, номер заявки" style="border:none;outline:none;background:none;font-family:'Manrope';font-size:14px;color:#14284B;min-width:0;flex:1">
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A6B85;line-height:1.35">
+          <span style="width:6px;height:6px;border-radius:50%;background:#0FA3A8;display:block;animation:softPulse 2.2s ease-in-out infinite"></span>
+          {{ liveLine }}
+        </div>
+        <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:10px 18px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#14284B">Новая заявка</button>
+      </div>
+    </header>
+
+    <sc-if value="{{ isLeads }}" hint-placeholder-val="{{ true }}">
+      <div style="display:{{ inboxDisplay }};padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0">
+        <div style="background:#FBFCFD;border:1px solid rgba(15,163,168,.35);border-radius:16px;padding:18px 20px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px">
+            <div style="font-size:15px;font-weight:700">Входящие заявки с сайта</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A">{{ inboxCount }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ inbox }}" as="i" hint-placeholder-count="2">
+              <div style="border:1px solid {{ i.border }};border-radius:12px;overflow:hidden">
+                <button onClick="{{ i.toggle }}" style="width:100%;text-align:left;border:none;background:none;cursor:pointer;font-family:'Manrope';padding:13px 15px;display:block">
+                  <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap">
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ i.when }} · источник: {{ i.source }}</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:{{ i.readyColor }}">{{ i.readyNote }}</div>
+                  </div>
+                  <div style="font-size:14.5px;font-weight:700;margin:6px 0 5px;color:#14284B">{{ i.title }}</div>
+                  <div style="font-size:13.5px;color:#4A5B75;line-height:1.5;text-wrap:pretty">{{ i.summary }}</div>
+                  <div style="font-size:12.5px;font-weight:700;color:#0A767A;margin-top:8px">{{ i.action }}</div>
+                </button>
+                <div style="display:{{ i.openDisplay }};border-top:1px solid rgba(20,40,75,.1);padding:16px 15px;background:#F2F5F8">
+                  <div style="font-size:14px;font-weight:700;margin-bottom:4px">Вопросник для оформления</div>
+                  <div style="font-size:12.5px;color:#7B8AA0;line-height:1.5;margin-bottom:14px;max-width:70ch">Что уже известно из диалога и что нужно уточнить у клиента до отправки страховщику. Обязательные пункты отмечены.</div>
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <sc-for list="{{ i.sections }}" as="s" hint-placeholder-count="3">
+                      <div>
+                        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;margin-bottom:8px">{{ s.title }}</div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px">
+                          <sc-for list="{{ s.items }}" as="q" hint-placeholder-count="4">
+                            <div style="background:#FBFCFD;border:1px solid {{ q.border }};border-radius:11px;padding:12px 14px">
+                              <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
+                                <div style="font-size:13px;color:#5A6B85;line-height:1.4">{{ q.label }}</div>
+                                <div style="font-family:'IBM Plex Mono';font-size:10px;color:{{ q.tagColor }};white-space:nowrap">{{ q.tag }}</div>
+                              </div>
+                              <input value="{{ q.value }}" onChange="{{ q.set }}" placeholder="{{ q.ph }}" style="width:100%;background:none;border:none;outline:none;font-family:'IBM Plex Mono';font-size:13px;color:{{ q.valueColor }};margin-top:6px;padding:0">
+                            </div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(20,40,75,.1)">
+                    <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px">
+                      <div style="font-size:13.5px;font-weight:700">Статус работы по сделке</div>
+                      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ i.dealNote }}</div>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap">
+                      <sc-for list="{{ i.statuses }}" as="s" hint-placeholder-count="5">
+                        <button onClick="{{ s.pick }}" style="border:1px solid {{ s.border }};cursor:pointer;font-family:'Manrope';font-size:12.5px;font-weight:600;padding:9px 15px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .2s ease">{{ s.label }}</button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;align-items:center">
+                    <button onClick="{{ i.saveDeal }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:700;padding:11px 20px;border-radius:100px;background:{{ i.saveBg }};color:#FBFCFD">{{ i.saveLabel }}</button>
+                    <a href="{{ i.formHref }}" onClick="{{ i.handoff }}" style="font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.18);color:#14284B">{{ i.formLabel }}</a>
+                    <a href="blanki.dc.html" onClick="{{ i.blankHandoff }}" style="display:{{ i.blankDisplay }};font-size:13.5px;font-weight:600;padding:11px 18px;border-radius:100px;border:1px solid rgba(10,118,122,.4);color:#0A767A">Заявление по форме компании</a>
+                    <div style="font-size:12.5px;color:#0A767A;line-height:1.45">{{ i.saveNote }}</div>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="display:{{ dealsDisplay }};padding:clamp(14px,2vw,20px) clamp(18px,2.4vw,30px) 0">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.12);border-radius:16px;padding:18px 20px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:12px">
+            <div style="font-size:15px;font-weight:700">Сделки, созданные из заявок</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#9AA6B8">{{ dealsCount }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ deals }}" as="d" hint-placeholder-count="2">
+              <button onClick="{{ d.open }}" style="text-align:left;cursor:pointer;font-family:'Manrope';background:none;border:1px solid rgba(20,40,75,.1);border-radius:12px;padding:13px 15px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;align-items:baseline;width:100%">
+                <div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">СДЕЛКА {{ d.id }}</div>
+                  <div style="font-size:14px;font-weight:700">{{ d.product }}</div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">СТАТУС</div>
+                  <div style="font-size:13.5px;font-weight:600;color:{{ d.stageColor }}">{{ d.stage }}</div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ЗАПОЛНЕНО</div>
+                  <div style="font-size:13.5px;color:#4A5B75">{{ d.fields }}</div>
+                </div>
+                <div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ОБНОВЛЕНО</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:12.5px;color:#4A5B75">{{ d.when }}</div>
+                  <div style="font-size:12px;font-weight:700;color:#0A767A;margin-top:6px">Открыть вопросник →</div>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+          <div style="display:{{ logDisplay }};margin-top:16px;padding-top:14px;border-top:1px solid rgba(20,40,75,.1)">
+            <div style="font-size:13.5px;font-weight:700;margin-bottom:10px">История изменений</div>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ dealLog }}" as="l" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;font-size:12.5px;color:#4A5B75;align-items:baseline">
+                  <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#9AA6B8">{{ l.when }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A">№ {{ l.dealId }}</div>
+                  <div style="font-weight:600;color:#14284B">{{ l.action }}</div>
+                  <div style="line-height:1.45">{{ l.detail }}</div>
+                  <div style="color:#9AA6B8">{{ l.who }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:20px">
+          <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+            <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:18px">
+              <div style="font-family:'IBM Plex Mono';font-size:clamp(19px,2vw,24px);letter-spacing:-.03em;color:{{ k.color }}">{{ k.n }}</div>
+              <div style="font-size:12px;color:#7B8AA0;margin-top:6px;line-height:1.4">{{ k.label }}</div>
+              <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:8px">{{ k.delta }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+          <div style="display:flex;gap:4px;background:rgba(20,40,75,.05);padding:4px;border-radius:100px">
+            <sc-for list="{{ viewTabs }}" as="v" hint-placeholder-count="2">
+              <button onClick="{{ v.select }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 16px;border-radius:100px;background:{{ v.bg }};color:{{ v.color }};transition:all .2s ease">{{ v.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ productFilters }}" as="f" hint-placeholder-count="6">
+              <button onClick="{{ f.select }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:8px 14px;border-radius:100px;background:{{ f.bg }};color:{{ f.color }};transition:all .2s ease">{{ f.label }}</button>
+            </sc-for>
+          </div>
+          <div style="margin-left:auto;font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ leadCount }}</div>
+        </div>
+
+        <sc-if value="{{ isKanban }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat({{ stageCount }},minmax(230px,1fr));gap:10px;overflow-x:auto;padding-bottom:10px">
+            <sc-for list="{{ board }}" as="col" hint-placeholder-count="5">
+              <div style="background:rgba(20,40,75,.04);border-radius:14px;padding:12px;min-width:230px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 6px 12px">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <span style="width:7px;height:7px;border-radius:50%;background:{{ col.dot }};display:block"></span>
+                    <span style="font-size:13px;font-weight:700">{{ col.title }}</span>
+                  </div>
+                  <span style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ col.count }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="3">
+                    <div onClick="{{ c.open }}" style="background:#FBFCFD;border:1px solid {{ c.border }};border-left:3px solid {{ c.accent }};border-radius:11px;padding:13px;cursor:pointer;animation:fadeUp .4s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ c.delay }};transition:transform .2s ease,border-color .2s ease" style-hover="transform:translateY(-2px);border-color:#0A767A">
+                      <div style="display:flex;justify-content:space-between;gap:8px;align-items:start;margin-bottom:7px">
+                        <div style="font-size:14px;font-weight:700;letter-spacing:-.01em;min-width:0">{{ c.client }}</div>
+                        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;white-space:nowrap">{{ c.id }}</div>
+                      </div>
+                      <div style="font-size:12px;color:#5A6B85;margin-bottom:9px;line-height:1.4">{{ c.product }} · {{ c.object }}</div>
+                      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+                        <div style="font-family:'IBM Plex Mono';font-size:13px;color:#14284B">{{ c.premium }}</div>
+                        <div style="font-size:11px;font-weight:600;color:{{ c.dueColor }};white-space:nowrap">{{ c.due }}</div>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:9px;padding-top:9px;border-top:1px solid rgba(20,40,75,.08)">
+                        <div style="font-size:11px;color:#7B8AA0">{{ c.manager }}</div>
+                        <div style="font-family:'IBM Plex Mono';font-size:10px;color:#9AA6B8">{{ c.source }}</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isTable }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;overflow-x:auto">
+            <div style="min-width:940px">
+              <div style="display:grid;grid-template-columns:96px 1.4fr 1.3fr 1fr 1fr 1fr 110px;gap:14px;padding:13px 20px;background:rgba(20,40,75,.04);font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">
+                <div>ЗАЯВКА</div><div>КЛИЕНТ</div><div>ПРОДУКТ</div><div>ПРЕМИЯ</div><div>ЭТАП</div><div>МЕНЕДЖЕР</div><div>КОНТАКТ</div>
+              </div>
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+                <div onClick="{{ r.open }}" style="display:grid;grid-template-columns:96px 1.4fr 1.3fr 1fr 1fr 1fr 110px;gap:14px;padding:15px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);cursor:pointer;transition:background .2s ease" style-hover="background:#F2F5F8">
+                  <div style="font-family:'IBM Plex Mono';font-size:12px;color:#7B8AA0">{{ r.id }}</div>
+                  <div style="min-width:0">
+                    <div style="font-size:14px;font-weight:600">{{ r.client }}</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:2px">{{ r.phone }}</div>
+                  </div>
+                  <div style="min-width:0">
+                    <div style="font-size:13px;font-weight:600">{{ r.product }}</div>
+                    <div style="font-size:11px;color:#9AA6B8;margin-top:2px">{{ r.object }}</div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:14px">{{ r.premium }}</div>
+                  <div><span style="font-size:12px;font-weight:600;color:{{ r.stageColor }};background:{{ r.stageBg }};padding:5px 10px;border-radius:100px;white-space:nowrap">{{ r.stage }}</span></div>
+                  <div style="font-size:13px;color:#5A6B85">{{ r.manager }}</div>
+                  <div style="font-size:12px;font-weight:600;color:{{ r.dueColor }}">{{ r.due }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTasks }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;align-items:start">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px">
+            <div style="font-size:16px;font-weight:700">Контакты на сегодня</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ taskDate }}</div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+            <sc-for list="{{ taskFilters }}" as="f" hint-placeholder-count="3">
+              <button onClick="{{ f.select }}" style="border:1px solid {{ f.border }};cursor:pointer;font-family:'Manrope';font-size:12px;font-weight:600;padding:7px 13px;border-radius:100px;background:{{ f.bg }};color:{{ f.color }};transition:all .2s ease">{{ f.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="6">
+              <div style="display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:start;background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:11px;padding:13px;animation:fadeUp .4s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ t.delay }}">
+                <button onClick="{{ t.toggle }}" style="width:20px;height:20px;border-radius:50%;border:1.5px solid {{ t.checkBorder }};background:{{ t.checkBg }};color:#FBFCFD;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;flex:none;transition:all .2s ease">{{ t.check }}</button>
+                <div style="min-width:0">
+                  <div style="font-size:14px;font-weight:600;text-decoration:{{ t.strike }};margin-bottom:4px">{{ t.title }}</div>
+                  <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ t.note }}</div>
+                  <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                    <span style="font-family:'IBM Plex Mono';font-size:10px;color:#9AA6B8">{{ t.lead }}</span>
+                    <span style="font-size:11px;font-weight:600;color:{{ t.kindColor }}">{{ t.kind }}</span>
+                  </div>
+                </div>
+                <div style="font-family:'IBM Plex Mono';font-size:12px;color:{{ t.timeColor }};white-space:nowrap">{{ t.time }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(20,40,75,.1)">
+            <input value="{{ newTask }}" onChange="{{ setNewTask }}" placeholder="Что сделать и по какой заявке" style="flex:1;min-width:0;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:11px 16px;outline:none;font-family:'Manrope';font-size:13px;color:#14284B">
+            <button onClick="{{ addTask }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:700;padding:11px 18px;border-radius:100px;background:#14284B;color:#FBFCFD;white-space:nowrap;transition:all .25s ease" style-hover="background:#0A767A">Добавить</button>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:6px">План на неделю</div>
+            <div style="font-size:13px;color:#7B8AA0;margin-bottom:16px">Пролонгации и повторные касания расставлены автоматически по дате окончания полиса.</div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px">
+              <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
+                <div style="background:{{ d.bg }};border:1px solid {{ d.border }};border-radius:10px;padding:10px 8px;text-align:center">
+                  <div style="font-family:'IBM Plex Mono';font-size:10px;color:#9AA6B8">{{ d.dow }}</div>
+                  <div style="font-size:15px;font-weight:700;margin:4px 0;color:{{ d.numColor }}">{{ d.num }}</div>
+                  <div style="display:flex;flex-direction:column;gap:3px;align-items:center">
+                    <sc-for list="{{ d.dots }}" as="dot" hint-placeholder-count="2">
+                      <span style="width:100%;height:3px;border-radius:2px;background:{{ dot }};display:block"></span>
+                    </sc-for>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:10px;color:#7B8AA0;margin-top:7px">{{ d.count }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:14px">Пролонгации в течение 30 дней</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ renewals }}" as="r" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 0;border-top:1px solid rgba(20,40,75,.09)">
+                  <div style="min-width:0">
+                    <div style="font-size:14px;font-weight:600">{{ r.client }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;margin-top:2px">{{ r.product }} · {{ r.insurer }}</div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:13px;color:#14284B;white-space:nowrap">{{ r.premium }}</div>
+                  <div style="font-size:12px;font-weight:600;color:{{ r.color }};white-space:nowrap">{{ r.left }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isClients }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:14px;overflow-x:auto">
+          <div style="min-width:900px">
+            <div style="display:grid;grid-template-columns:1.5fr 1fr .8fr 1fr 1fr 1fr;gap:14px;padding:13px 20px;background:rgba(20,40,75,.04);font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">
+              <div>КЛИЕНТ</div><div>ТИП</div><div>ПОЛИСОВ</div><div>ПРЕМИЯ ЗА ГОД</div><div>ПОСЛЕДНИЙ КОНТАКТ</div><div>МЕНЕДЖЕР</div>
+            </div>
+            <sc-for list="{{ clients }}" as="c" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:1.5fr 1fr .8fr 1fr 1fr 1fr;gap:14px;padding:15px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);transition:background .2s ease" style-hover="background:#F2F5F8">
+                <div style="display:flex;align-items:center;gap:11px;min-width:0">
+                  <span style="width:30px;height:30px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5A6B85;flex:none">{{ c.initial }}</span>
+                  <div style="min-width:0">
+                    <div style="font-size:14px;font-weight:600">{{ c.name }}</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:2px">{{ c.phone }}</div>
+                  </div>
+                </div>
+                <div><span style="font-size:12px;font-weight:600;color:{{ c.typeColor }};background:{{ c.typeBg }};padding:5px 10px;border-radius:100px;white-space:nowrap">{{ c.type }}</span></div>
+                <div style="font-family:'IBM Plex Mono';font-size:14px">{{ c.policies }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:14px">{{ c.premium }}</div>
+                <div style="font-size:13px;color:#5A6B85">{{ c.lastTouch }}</div>
+                <div style="font-size:13px;color:#5A6B85">{{ c.manager }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAnalytics }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:15px">
+            <div style="font-size:16px;font-weight:700">Работа в системе прямо сейчас</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:rgba(251,252,253,.55)">{{ liveStamp }}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+            <sc-for list="{{ liveKpi }}" as="k" hint-placeholder-count="4">
+              <div>
+                <div style="font-family:'IBM Plex Mono';font-size:clamp(22px,2.4vw,29px);letter-spacing:-.03em;color:{{ k.color }}">{{ k.n }}</div>
+                <div style="font-size:12.5px;color:rgba(251,252,253,.7);line-height:1.4;margin-top:5px">{{ k.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:12.5px;color:rgba(251,252,253,.6);line-height:1.5;margin-top:14px;max-width:660px;text-wrap:pretty">{{ liveNote }}</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:4px">Стадии по фактическим сделкам</div>
+            <div style="font-size:12.5px;color:#7B8AA0;line-height:1.45;margin-bottom:14px">{{ liveFunnelNote }}</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ liveFunnel }}" as="f" hint-placeholder-count="6">
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px">
+                    <span style="font-size:13px;font-weight:600;color:{{ f.labelColor }}">{{ f.label }}</span>
+                    <span style="font-family:'IBM Plex Mono';font-size:13px;color:#5A6B85">{{ f.n }}</span>
+                  </div>
+                  <div style="height:8px;background:#E7EDF3;border-radius:4px;overflow:hidden">
+                    <div style="height:100%;width:{{ f.w }};background:{{ f.color }};border-radius:4px"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:4px">Виды страхования в работе</div>
+            <div style="font-size:12.5px;color:#7B8AA0;line-height:1.45;margin-bottom:8px">Считается по заявкам помощника, калькулятора и заявлений.</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ liveKinds }}" as="s" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1fr 60px;gap:12px;align-items:center;padding:11px 0;border-top:1px solid rgba(20,40,75,.09)">
+                  <div style="font-size:13px;font-weight:600;min-width:0">{{ s.label }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:13px;color:#5A6B85;text-align:right">{{ s.n }}</div>
+                </div>
+              </sc-for>
+              <div style="display:{{ liveKindsEmptyDisplay }};font-size:13px;color:#9AA6B8;line-height:1.5;padding:12px 0">Заявок пока нет. Оставьте заявку через помощника или калькулятор — она появится здесь.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+          <div style="font-size:16px;font-weight:700;margin-bottom:4px">Пролонгации: полисы к продлению</div>
+          <div style="font-size:12.5px;color:#7B8AA0;line-height:1.45;margin-bottom:14px">Обзвон начинается за 45 дней до конца срока: у клиента остаётся время сравнить условия, а у нас — запросить тарифы.</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px">
+            <sc-for list="{{ renewalBuckets }}" as="r" hint-placeholder-count="4">
+              <div style="border:1px solid {{ r.border }};border-radius:13px;padding:14px 15px;background:{{ r.bg }}">
+                <div style="font-family:'IBM Plex Mono';font-size:22px;letter-spacing:-.02em;color:{{ r.color }}">{{ r.n }}</div>
+                <div style="font-size:12.5px;color:#4A5B75;line-height:1.4;margin-top:6px">{{ r.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:16px">Воронка за август</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="5">
+                <div>
+                  <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:6px">
+                    <span style="font-size:13px;font-weight:600">{{ f.label }}</span>
+                    <span style="font-family:'IBM Plex Mono';font-size:13px;color:#5A6B85">{{ f.n }} · {{ f.pct }}</span>
+                  </div>
+                  <div style="height:8px;background:#E7EDF3;border-radius:4px;overflow:hidden">
+                    <div style="height:100%;width:{{ f.w }};background:{{ f.color }};border-radius:4px"></div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:16px;font-weight:700;margin-bottom:16px">Источники заявок</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ sources }}" as="s" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:1fr 70px 60px;gap:12px;align-items:center;padding:11px 0;border-top:1px solid rgba(20,40,75,.09)">
+                  <div style="font-size:13px;font-weight:600">{{ s.label }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:13px;color:#5A6B85">{{ s.n }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:13px;color:{{ s.convColor }};text-align:right">{{ s.conv }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+          <div style="font-size:16px;font-weight:700;margin-bottom:16px">Менеджеры</div>
+          <div style="overflow-x:auto">
+            <div style="min-width:760px">
+              <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:14px;padding-bottom:10px;font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">
+                <div>МЕНЕДЖЕР</div><div>ЗАЯВОК</div><div>ОФОРМЛЕНО</div><div>КОНВЕРСИЯ</div><div>ПРЕМИЯ</div>
+              </div>
+              <sc-for list="{{ managers }}" as="m" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:14px;padding:13px 0;align-items:center;border-top:1px solid rgba(20,40,75,.09)">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:28px;height:28px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#5A6B85;flex:none">{{ m.initial }}</span>
+                    <span style="font-size:14px;font-weight:600">{{ m.name }}</span>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:14px">{{ m.leads }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:14px">{{ m.won }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:14px;color:{{ m.convColor }}">{{ m.conv }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:14px">{{ m.premium }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+    <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:12px;align-items:start">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:22px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:4px">Личные данные</div>
+          <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:20px">Эти данные видят коллеги во внутренней переписке. Клиентам показываются только имя, должность и рабочие контакты.</div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+            <img src="avatar-ceo.png" alt="" style="display:{{ profile.avatarDisplay }};width:76px;height:76px;border-radius:50%;object-fit:cover;flex:none">
+            <div style="display:{{ profile.initialsDisplay }};width:76px;height:76px;border-radius:50%;background:#0FA3A8;color:#FBFCFD;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex:none">{{ profile.initials }}</div>
+            <div style="min-width:0">
+              <div style="font-size:13px;color:#5A6B85;line-height:1.5">Аватарка</div>
+              <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#9AA6B8;margin-top:3px">JPG или PNG, до 5 МБ, квадрат</div>
+              <button style="margin-top:9px;border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 16px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Загрузить фото</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            <div style="grid-column:span 2">
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">ФИО</div>
+              <input value="{{ profile.fio }}" onChange="{{ profile.setFio }}" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+            </div>
+            <div style="grid-column:span 2">
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">Должность</div>
+              <input value="{{ profile.post }}" onChange="{{ profile.setPost }}" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+            </div>
+            <div>
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">Телефон</div>
+              <input value="{{ profile.phone }}" onChange="{{ profile.setPhone }}" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'IBM Plex Mono';font-size:14px;color:#14284B">
+            </div>
+            <div>
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">Рабочая почта</div>
+              <input value="{{ profile.email }}" onChange="{{ profile.setEmail }}" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'IBM Plex Mono';font-size:14px;color:#14284B">
+            </div>
+            <div>
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">Телеграм</div>
+              <input value="{{ profile.tg }}" onChange="{{ profile.setTg }}" placeholder="@username" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'IBM Plex Mono';font-size:14px;color:#14284B">
+            </div>
+            <div>
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">WhatsApp</div>
+              <input value="{{ profile.wa }}" onChange="{{ profile.setWa }}" placeholder="+7 …" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'IBM Plex Mono';font-size:14px;color:#14284B">
+            </div>
+            <div style="grid-column:span 2">
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">Хобби и увлечения</div>
+              <input value="{{ profile.hobby }}" onChange="{{ profile.setHobby }}" placeholder="Например: бег, шахматы, документальное кино" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+            </div>
+            <div style="grid-column:span 2">
+              <div style="font-size:12.5px;color:#5A6B85;margin-bottom:6px">О себе для коллег</div>
+              <textarea value="{{ profile.about }}" onChange="{{ profile.setAbout }}" style="width:100%;min-height:96px;resize:vertical;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:14px;color:#14284B"></textarea>
+            </div>
+          </div>
+          <button onClick="{{ profile.save }}" style="margin-top:18px;border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Сохранить</button>
+          <div style="display:{{ profile.savedDisplay }};font-size:13px;color:#0A767A;line-height:1.5;margin-top:12px">{{ profile.saved }}</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:14px">УЧЁТНАЯ ЗАПИСЬ</div>
+            <div style="font-size:15px;font-weight:700">{{ profile.fio }}</div>
+            <div style="font-size:13px;color:#B9C4D2;margin-top:4px">{{ profile.post }}</div>
+            <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-top:12px">логин {{ profile.login }} · роль {{ profile.role }}</div>
+            <div style="font-size:12.5px;color:#B9C4D2;line-height:1.55;margin-top:14px">Роль и доступ к документам меняет только владелец в панели администратора. Личные данные вы правите сами.</div>
+          </div>
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:15px;font-weight:700;margin-bottom:16px">Вход и безопасность</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ profile.security }}" as="s" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:baseline;padding-bottom:12px;border-bottom:1px solid rgba(20,40,75,.07)">
+                  <div>
+                    <div style="font-size:14px;font-weight:600">{{ s.title }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ s.note }}</div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;text-align:right">{{ s.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMail }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:352px minmax(0,1fr);gap:12px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:0 4px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">ПЕРЕПИСКА</div>
+            <div style="font-size:11.5px;color:#9AA6B8">{{ post.count }}</div>
+          </div>
+          <button onClick="{{ post.newLetter }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 20px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Новое письмо</button>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ post.list }}" as="m" hint-placeholder-count="5">
+              <button onClick="{{ m.select }}" style="text-align:left;cursor:pointer;font-family:'Manrope';background:{{ m.bg }};border:1px solid {{ m.border }};border-radius:12px;padding:13px 15px;display:flex;flex-direction:column;gap:4px;transition:all .2s ease">
+                <span style="display:flex;justify-content:space-between;gap:9px;align-items:center;width:100%">
+                  <span style="display:flex;align-items:center;gap:8px;min-width:0">
+                    <span style="font-size:13.5px;font-weight:700;color:{{ m.withColor }}">{{ m.with }}</span>
+                    <span style="display:{{ m.badgeDisplay }};align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 6px;border-radius:100px;background:#B03A2E;color:#FFFFFF;font-family:'IBM Plex Mono';font-size:11px;flex:none">{{ m.badge }}</span>
+                  </span>
+                  <span style="font-family:'IBM Plex Mono';font-size:10.5px;color:{{ m.metaColor }};white-space:nowrap">{{ m.time }}</span>
+                </span>
+                <span style="display:{{ m.badgeTextDisplay }};font-size:11.5px;font-weight:700;color:#B03A2E">{{ m.badgeText }}</span>
+                <span style="display:block;font-size:13px;color:{{ m.subjColor }};line-height:1.35">{{ m.subj }}</span>
+                <span style="display:block;font-size:11.5px;color:{{ m.metaColor }};line-height:1.4">{{ m.preview }}</span>
+                <span style="display:block;font-family:'IBM Plex Mono';font-size:10.5px;color:{{ m.metaColor }}">{{ m.total }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;min-width:0;overflow:hidden">
+          <div style="display:{{ post.readDisplay }};flex-direction:column">
+            <div style="padding:20px 22px 16px;border-bottom:1px solid rgba(20,40,75,.1)">
+              <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;text-wrap:pretty">{{ post.thread.subj }}</div>
+              <div style="display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:baseline">
+                <div style="font-size:13px;color:#4A5B75">{{ post.thread.with }} · {{ post.thread.role }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:11.5px;color:#9AA6B8">{{ post.thread.total }} · {{ post.thread.deal }}</div>
+              </div>
+            </div>
+            <div style="height:clamp(300px,44vh,470px);overflow-y:auto;padding:18px 22px;display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ post.thread.msgs }}" as="m" hint-placeholder-count="4">
+                <div style="display:flex;justify-content:{{ m.align }}">
+                  <div style="max-width:78%;background:{{ m.bg }};color:{{ m.color }};border:1px solid {{ m.border }};border-radius:{{ m.radius }};padding:13px 16px">
+                    <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:{{ m.metaColor }};margin-bottom:6px">{{ m.author }} · {{ m.time }}</div>
+                    <div style="font-size:14px;line-height:1.6;white-space:pre-line;text-wrap:pretty">{{ m.text }}</div>
+                    <div style="display:{{ m.attachDisplay }};font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A;margin-top:9px;padding-top:9px;border-top:1px solid {{ m.rule }}">{{ m.attach }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border-top:1px solid rgba(20,40,75,.1);padding:14px 22px 18px">
+              <div style="display:flex;gap:8px;align-items:center;background:#F2F5F8;border:1px solid rgba(20,40,75,.12);border-radius:100px;padding:5px 5px 5px 18px">
+                <input value="{{ post.draft }}" onChange="{{ post.setDraft }}" placeholder="Ответить в этой же ветке" style="flex:1;min-width:0;background:none;border:none;outline:none;font-family:'Manrope';font-size:14px;color:#14284B">
+                <button onClick="{{ post.send }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:700;padding:11px 20px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#14284B">Отправить</button>
+              </div>
+              <div style="font-size:11.5px;color:#9AA6B8;margin-top:9px">Пока тема не меняется, письма собираются в одну ветку. Ветка с новым сообщением поднимается наверх списка.</div>
+            </div>
+          </div>
+
+          <div style="display:{{ post.composeDisplay }};flex-direction:column;padding:20px 22px;gap:12px">
+            <div style="font-size:15px;font-weight:700">Письмо сотруднику</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <sc-for list="{{ post.recipients }}" as="r" hint-placeholder-count="4">
+                <button onClick="{{ r.pick }}" style="border:1px solid {{ r.border }};cursor:pointer;font-family:'Manrope';font-size:12.5px;font-weight:600;padding:8px 13px;border-radius:100px;background:{{ r.bg }};color:{{ r.color }};transition:all .2s ease">{{ r.label }}</button>
+              </sc-for>
+            </div>
+            <input value="{{ post.cSubj }}" onChange="{{ post.setSubj }}" placeholder="Тема письма — совпадение с существующей темой добавит письмо в ту же ветку" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 15px;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+            <textarea value="{{ post.cBody }}" onChange="{{ post.setBody }}" placeholder="Текст письма. Документы прикрепляются ссылкой из карточки сделки — файлы не пересылаются вложением." style="width:100%;min-height:170px;resize:vertical;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:13px 15px;outline:none;font-family:'Manrope';font-size:14px;color:#14284B"></textarea>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <button onClick="{{ post.send2 }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Отправить</button>
+              <button onClick="{{ post.cancel }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Отмена</button>
+            </div>
+          </div>
+          <div style="display:{{ post.doneDisplay }};padding:0 22px 20px;font-size:13px;color:#0A767A;line-height:1.5">{{ post.done }}</div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTeam }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:grid;grid-template-columns:300px minmax(0,1fr);gap:12px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em;padding:0 4px 4px">КОМАНДА · 4 СОТРУДНИКА</div>
+          <sc-for list="{{ team }}" as="t" hint-placeholder-count="4">
+            <button onClick="{{ t.select }}" style="text-align:left;cursor:pointer;font-family:'Manrope';background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:13px;padding:14px 15px;display:flex;gap:11px;align-items:start;transition:all .2s ease">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ t.dot }};flex:none;margin-top:6px"></span>
+              <span style="min-width:0;flex:1">
+                <span style="display:flex;justify-content:space-between;gap:8px;align-items:center">
+                  <span style="font-size:14px;font-weight:700;color:{{ t.nameColor }}">{{ t.name }}</span>
+                  <span style="display:{{ t.unreadDisplay }};align-items:center;justify-content:center;min-width:19px;height:19px;border-radius:100px;background:#0A767A;color:#FBFCFD;font-family:'IBM Plex Mono';font-size:11px;flex:none">{{ t.unread }}</span>
+                </span>
+                <span style="display:block;font-size:11.5px;color:{{ t.roleColor }};margin-top:2px">{{ t.role }}</span>
+                <span style="display:block;font-size:12px;color:{{ t.lastColor }};margin-top:6px;line-height:1.4">{{ t.last }}</span>
+                <span style="display:block;font-family:'IBM Plex Mono';font-size:10.5px;color:{{ t.lastColor }};margin-top:5px">{{ t.online }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden;min-width:0">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:center;padding:16px 20px;border-bottom:1px solid rgba(20,40,75,.1);flex-wrap:wrap">
+            <div>
+              <div style="font-size:15px;font-weight:700">{{ chat.peer }}</div>
+              <div style="font-size:12px;color:#7B8AA0;margin-top:2px">{{ chat.role }} · {{ chat.online }}</div>
+            </div>
+            <button onClick="{{ chat.openMail }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 16px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Написать письмо</button>
+          </div>
+
+          <div style="display:{{ chat.chatDisplay }};flex-direction:column">
+            <div style="height:clamp(300px,42vh,440px);overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ chat.msgs }}" as="m" hint-placeholder-count="3">
+                <div style="display:flex;justify-content:{{ m.align }}">
+                  <div style="max-width:76%;background:{{ m.bg }};color:{{ m.color }};border:1px solid {{ m.border }};border-radius:{{ m.radius }};padding:12px 15px">
+                    <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:{{ m.timeColor }};margin-bottom:6px">{{ m.author }} · {{ m.time }}</div>
+                    <div style="font-size:14px;line-height:1.55">{{ m.text }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border-top:1px solid rgba(20,40,75,.1);padding:14px 20px 18px">
+              <div style="display:flex;gap:8px;align-items:center;background:#F2F5F8;border:1px solid rgba(20,40,75,.12);border-radius:100px;padding:5px 5px 5px 18px">
+                <input value="{{ chat.draft }}" onChange="{{ chat.setDraft }}" placeholder="Сообщение коллеге" style="flex:1;min-width:0;background:none;border:none;outline:none;font-family:'Manrope';font-size:14px;color:#14284B">
+                <button onClick="{{ chat.send }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:700;padding:11px 20px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#14284B">Отправить</button>
+              </div>
+              <div style="font-size:11.5px;color:#9AA6B8;margin-top:9px">Переписка внутри CRM: видна только участникам и владельцу, хранится вместе со сделкой.</div>
+            </div>
+          </div>
+
+          <div style="display:{{ chat.mailDisplay }};flex-direction:column;padding:18px 20px 20px;gap:12px">
+            <div style="font-size:13px;color:#7B8AA0">Кому: <span style="font-weight:600;color:#14284B">{{ mail.to }}</span></div>
+            <input value="{{ mail.subject }}" onChange="{{ mail.setSubject }}" placeholder="Тема письма" style="width:100%;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:12px 15px;outline:none;font-family:'Manrope';font-size:14.5px;color:#14284B">
+            <textarea value="{{ mail.body }}" onChange="{{ mail.setBody }}" placeholder="Текст письма. Вложения из карточки сделки прикрепляются ссылкой на 15 минут — файлы не уходят почтой." style="width:100%;min-height:150px;resize:vertical;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:13px 15px;outline:none;font-family:'Manrope';font-size:14px;color:#14284B"></textarea>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <button onClick="{{ mail.send }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Отправить письмо</button>
+              <button onClick="{{ mail.cancel }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:transparent;color:#14284B;transition:all .2s ease" style-hover="border-color:#14284B">Вернуться в чат</button>
+            </div>
+            <div style="display:{{ mail.doneDisplay }};font-size:13px;color:#0A767A;line-height:1.5">{{ mail.done }}</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSecurity }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(18px,2.4vw,28px) clamp(18px,2.4vw,30px) 0;display:flex;flex-direction:column;gap:12px">
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:5px">
+            <div style="font-size:16px;font-weight:700">Закрытый архив завершённых сделок</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:{{ archiveAccessColor }}">{{ archiveAccess }}</div>
+          </div>
+          <div style="font-size:12.5px;color:#7B8AA0;line-height:1.5;margin-bottom:14px;max-width:680px;text-wrap:pretty">Сделка со статусом «Сделка совершена» попадает сюда автоматически. Записи доступны владельцу и администратору; менеджер видит только свои сделки до закрытия. Сами документы остаются в приватном хранилище, здесь хранится опись и номер сделки.</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <sc-for list="{{ archive }}" as="a" hint-placeholder-count="3">
+              <div style="border:1px solid rgba(20,40,75,.1);border-radius:13px;padding:14px 16px">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;align-items:baseline">
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">СДЕЛКА {{ a.no }}</div>
+                    <div style="font-size:14px;font-weight:700;line-height:1.35">{{ a.client }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ПРОДУКТ</div>
+                    <div style="font-size:13px;line-height:1.4">{{ a.product }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">СТРАХОВАЯ СУММА</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:13px">{{ a.insured }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ПРЕМИЯ</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:13px;color:{{ a.premiumColor }}">{{ a.premium }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ЗАКРЫЛ</div>
+                    <div style="font-size:13px;line-height:1.4">{{ a.manager }}</div>
+                  </div>
+                  <div>
+                    <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:5px">ДАТА</div>
+                    <div style="font-family:'IBM Plex Mono';font-size:13px">{{ a.when }}</div>
+                  </div>
+                </div>
+                <div style="margin-top:11px;padding-top:11px;border-top:1px solid rgba(20,40,75,.09)">
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:6px">ОПИСЬ ДОКУМЕНТОВ · {{ a.docsCount }}</div>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{ a.docs }}" as="d" hint-placeholder-count="2">
+                      <div style="font-size:12px;color:#4A5B75;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:5px 12px">{{ d.name }}</div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="display:{{ archiveEmptyDisplay }};font-size:13px;color:#9AA6B8;line-height:1.5">Архив пуст: ни одна сделка ещё не закрыта. Переведите сделку в статус «Сделка совершена» в карточке заявки.</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;align-items:start">
+          <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:20px">
+            <div style="font-size:15px;font-weight:700;margin-bottom:4px">Документы клиентов</div>
+            <div style="font-size:13px;color:#7B8AA0;line-height:1.5;margin-bottom:16px">Хранятся отдельно от CRM: в базе только метаданные и ссылка на объект.</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ secChecks }}" as="c" hint-placeholder-count="6">
+                <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:baseline;padding-bottom:11px;border-bottom:1px solid rgba(20,40,75,.07)">
+                  <div>
+                    <div style="font-size:14px;font-weight:600">{{ c.n }}</div>
+                    <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ c.note }}</div>
+                  </div>
+                  <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;text-align:right;white-space:nowrap">{{ c.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:12px">AI PRIVACY GATE</div>
+            <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:14px">
+              <div style="font-size:15px;font-weight:700">Доступ AI к оригиналам</div>
+              <button onClick="{{ aiGate.toggle }}" style="border:none;cursor:pointer;width:44px;height:26px;border-radius:100px;background:{{ aiGate.bg }};position:relative;flex:none;transition:background .25s ease">
+                <span style="position:absolute;top:3px;left:{{ aiGate.left }};width:20px;height:20px;border-radius:50%;background:#FBFCFD;transition:left .25s cubic-bezier(.2,.7,.3,1);display:block"></span>
+              </button>
+            </div>
+            <div style="font-family:'IBM Plex Mono';font-size:12px;color:{{ aiGate.statusColor }};margin-bottom:10px">{{ aiGate.status }}</div>
+            <div style="font-size:13px;color:#B9C4D2;line-height:1.55;text-wrap:pretty">{{ aiGate.text }}</div>
+          </div>
+        </div>
+
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow-x:auto">
+          <div style="min-width:760px">
+            <div style="display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1fr 1.1fr;gap:14px;padding:16px 20px;font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em">
+              <div>РОЛЬ</div><div>ЛЮДИ</div><div>ЗОНА ВИДИМОСТИ</div><div>ВХОД</div><div>ДОКУМЕНТЫ</div>
+            </div>
+            <sc-for list="{{ roles }}" as="r" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:1.1fr .7fr 1.5fr 1fr 1.1fr;gap:14px;padding:14px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);font-size:13px">
+                <div style="display:flex;gap:9px;align-items:center;font-weight:600"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.color }};flex:none"></span>{{ r.role }}</div>
+                <div style="font-family:'IBM Plex Mono';font-size:12px;color:#7B8AA0">{{ r.people }}</div>
+                <div style="color:#4A5B75;line-height:1.45">{{ r.scope }}</div>
+                <div style="color:#7B8AA0">{{ r.mfa }}</div>
+                <div style="color:#4A5B75;line-height:1.45">{{ r.docs }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="background:#FBFCFD;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;gap:16px;align-items:baseline;padding:18px 20px 14px;flex-wrap:wrap">
+            <div style="font-size:15px;font-weight:700">Журнал доступа</div>
+            <div style="font-size:12px;color:#9AA6B8">Каждый просмотр, скачивание и экспорт фиксируется. Записи журнала нельзя изменить из интерфейса.</div>
+          </div>
+          <sc-for list="{{ auditLog }}" as="l" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:110px 1.2fr .9fr 1.4fr 1.1fr;gap:14px;padding:13px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08);font-size:13px">
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8">{{ l.time }}</div>
+              <div style="font-weight:600">{{ l.actor }}</div>
+              <div style="color:#7B8AA0">{{ l.action }}</div>
+              <div style="color:#4A5B75">{{ l.obj }}</div>
+              <div style="font-family:'IBM Plex Mono';font-size:12px;color:{{ l.resColor }}">{{ l.res }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{ hasDetail }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:80;display:flex;justify-content:flex-end">
+      <div onClick="{{ closeDetail }}" style="position:absolute;inset:0;background:rgba(20,40,75,.32)"></div>
+      <div style="position:relative;width:min(480px,100%);background:#FBFCFD;height:100%;overflow-y:auto;padding:24px;animation:slideIn .3s cubic-bezier(.2,.7,.3,1) both;box-shadow:-24px 0 60px -30px rgba(20,40,75,.5)">
+        <div style="display:flex;justify-content:space-between;gap:14px;align-items:start;margin-bottom:20px">
+          <div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-bottom:7px">{{ detail.id }} · {{ detail.created }}</div>
+            <div style="font-size:22px;font-weight:700;letter-spacing:-.025em;margin-bottom:5px">{{ detail.client }}</div>
+            <div style="font-size:14px;color:#5A6B85">{{ detail.product }} · {{ detail.object }}</div>
+          </div>
+          <button onClick="{{ closeDetail }}" style="border:1px solid rgba(20,40,75,.16);background:none;cursor:pointer;width:32px;height:32px;border-radius:50%;font-size:15px;color:#5A6B85;flex:none;transition:all .2s ease" style-hover="border-color:#14284B;color:#14284B">×</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+          <sc-for list="{{ detail.facts }}" as="f" hint-placeholder-count="4">
+            <div style="background:#F2F5F8;border-radius:11px;padding:14px">
+              <div style="font-size:11px;color:#9AA6B8;margin-bottom:4px">{{ f.label }}</div>
+              <div style="font-size:14px;font-weight:600">{{ f.value }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ЭТАП СДЕЛКИ</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <sc-for list="{{ detail.stages }}" as="s" hint-placeholder-count="5">
+              <button onClick="{{ s.select }}" style="border:1px solid {{ s.border }};cursor:pointer;font-family:'Manrope';font-size:12px;font-weight:600;padding:8px 13px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .2s ease">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">АНКЕТА КЛИЕНТА</div>
+          <div style="background:#F2F5F8;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+            <sc-for list="{{ detail.form }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;justify-content:space-between;gap:14px;font-size:13px">
+                <span style="color:#7B8AA0">{{ f.label }}</span>
+                <span style="font-weight:600;text-align:right">{{ f.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ПРЕДЛОЖЕНИЯ СТРАХОВЩИКОВ</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <sc-for list="{{ detail.quotes }}" as="q" hint-placeholder-count="3">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;background:{{ q.bg }};border:1px solid {{ q.border }};border-radius:11px;padding:13px 15px">
+                <div style="min-width:0">
+                  <div style="font-size:14px;font-weight:600">{{ q.name }}</div>
+                  <div style="font-size:11px;color:#9AA6B8;margin-top:2px">{{ q.note }}</div>
+                </div>
+                <div style="font-family:'IBM Plex Mono';font-size:15px;color:{{ q.priceColor }};white-space:nowrap">{{ q.price }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">ИСТОРИЯ КОНТАКТОВ</div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ detail.timeline }}" as="t" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:74px 1fr;gap:12px;padding:11px 0;border-top:1px solid rgba(20,40,75,.09)">
+                <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8">{{ t.when }}</div>
+                <div>
+                  <div style="font-size:13px;font-weight:600;margin-bottom:3px">{{ t.title }}</div>
+                  <div style="font-size:12px;color:#7B8AA0;line-height:1.45">{{ t.text }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-bottom:18px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;margin-bottom:10px;letter-spacing:.04em">СЛЕДУЮЩИЙ КОНТАКТ</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">
+            <sc-for list="{{ detail.nextOpts }}" as="n" hint-placeholder-count="4">
+              <button onClick="{{ n.select }}" style="border:1px solid {{ n.border }};cursor:pointer;font-family:'Manrope';font-size:12px;font-weight:600;padding:8px 13px;border-radius:100px;background:{{ n.bg }};color:{{ n.color }};transition:all .2s ease">{{ n.label }}</button>
+            </sc-for>
+          </div>
+          <textarea value="{{ comment }}" onChange="{{ setComment }}" placeholder="Комментарий по звонку: о чём договорились" style="width:100%;min-height:78px;resize:vertical;background:#F2F5F8;border:1px solid rgba(20,40,75,.14);border-radius:11px;padding:13px 15px;outline:none;font-family:'Manrope';font-size:13px;color:#14284B"></textarea>
+        </div>
+
+        <div style="margin-bottom:18px;background:#F2F5F8;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:16px">
+          <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px">
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:#7B8AA0;letter-spacing:.04em">ЗАКРЫТИЕ СДЕЛКИ</div>
+            <div style="font-family:'IBM Plex Mono';font-size:11px;color:{{ close.color }}">{{ close.status }}</div>
+          </div>
+          <div style="font-size:13px;color:#4A5B75;line-height:1.5;margin-bottom:14px;max-width:60ch">{{ close.hint }}</div>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+            <sc-for list="{{ close.docs }}" as="d" hint-placeholder-count="4">
+              <button onClick="{{ d.attach }}" style="text-align:left;cursor:pointer;font-family:'Manrope';background:{{ d.bg }};border:1.5px dashed {{ d.border }};border-radius:11px;padding:12px 14px;display:flex;align-items:center;gap:11px;transition:all .2s ease" style-hover="border-color:#0A767A">
+                <span style="width:24px;height:24px;border-radius:7px;background:rgba(20,40,75,.06);display:flex;align-items:center;justify-content:center;font-size:12px;color:{{ d.color }};flex:none">{{ d.icon }}</span>
+                <span style="min-width:0;flex:1">
+                  <span style="display:block;font-size:13px;font-weight:600;color:#14284B">{{ d.label }}</span>
+                  <span style="display:block;font-family:'IBM Plex Mono';font-size:11px;color:{{ d.color }};margin-top:2px">{{ d.state }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+          <button onClick="{{ close.commit }}" style="border:none;cursor:{{ close.cursor }};font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:{{ close.btnBg }};color:{{ close.btnColor }};transition:all .25s ease">{{ close.btnLabel }}</button>
+          <div style="display:{{ close.doneDisplay }};margin-top:12px;font-size:13px;color:#4A5B75;line-height:1.5">Сделка отмечена как совершённая. Данные и документы ушли в закрытый архив владельца — карточка стала только для чтения, документы доступны Owner в панели администратора.</div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:13px 22px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:all .25s ease" style-hover="background:#14284B">Сохранить и поставить задачу</button>
+          <button style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:600;padding:13px 20px;border-radius:100px;background:none;color:#14284B;transition:all .25s ease" style-hover="border-color:#14284B">Отправить расчёт клиенту</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    inbox: [], openLead: null, leadEdits: {}, leadStage: {}, leadSaved: {}, dealLog: [], dealsList: [], profileEdits: {}, profileSaved: '',
+    authed: false, login: '', pass: '', code: '', loginError: '', who: null, archive: [],
+    authStep: 1, channel: 0, pendingAcc: null, sentCode: '', tries: 0, locked: false, cooldown: 0,
+    access: true,
+    peer: 0, msg: '', sent: {}, mailMode: false, mailSubject: '', mailBody: '', mailDone: '',
+    thread: '', threadMsgs: {}, tsOrder: {}, tsCounter: 0, readT: {}, reply: '', compose: false, cTo: 'Литвинова Анна', cSubj: '', cBody: '', cDone: '',
+    closeDocs: {},
+    closed: {},
+    sec: { aiOriginals: false },
+    tab: 0, view: 0, product: 0, query: '', open: null,
+    stage: {}, next: {}, taskFilter: 0, done: { 2: true }, extra: [], newTask: '', comment: '', tf: 0
+  };
+
+  leads() {
+    return [
+      { id: '№ 4821', client: 'Соколов Алексей', phone: '+7 916 442-18-03', product: 'ОСАГО', object: 'Toyota Camry 2021', premium: '12 100 ₽', stage: 0, manager: 'Игорь Дементьев', source: 'виджет ОСАГО', due: 'сегодня 15:30', urgent: true, cat: 'ОСАГО', created: '17 августа, 09:12' },
+      { id: '№ 4820', client: 'ООО «Верста Логистик»', phone: '+7 495 118-40-22', product: 'Грузы + автопарк', object: '14 машин, генеральный договор', premium: '486 000 ₽', stage: 2, manager: 'Марина Ковалёва', source: 'заявка юрлица', due: 'завтра 11:00', cat: 'Бизнес', created: '16 августа, 17:40' },
+      { id: '№ 4819', client: 'Гурьева Наталья', phone: '+7 903 771-90-14', product: 'Ипотека и титул', object: 'Квартира, 8,4 млн ₽', premium: '5 240 ₽', stage: 1, manager: 'Игорь Дементьев', source: 'виджет ипотеки', due: 'сегодня 18:00', urgent: true, cat: 'Ипотека', created: '16 августа, 14:05' },
+      { id: '№ 4818', client: 'Рахимов Тимур', phone: '+7 927 330-55-81', product: 'КАСКО', object: 'Kia Sportage 2023', premium: '61 700 ₽', stage: 3, manager: 'Ольга Панина', source: 'виджет КАСКО', due: 'ждём оплату', cat: 'КАСКО', created: '15 августа, 12:31' },
+      { id: '№ 4817', client: 'ИП Ковалёв С. А.', phone: '+7 962 118-77-40', product: 'Имущество', object: 'Склад 640 м², Химки', premium: '128 400 ₽', stage: 1, manager: 'Марина Ковалёва', source: 'звонок', due: '19 августа', cat: 'Бизнес', created: '15 августа, 10:02' },
+      { id: '№ 4816', client: 'Демидова Вера', phone: '+7 915 662-31-09', product: 'ВЗР', object: 'Турция, 14 дней, 2 чел.', premium: '2 940 ₽', stage: 4, manager: 'Ольга Панина', source: 'виджет ВЗР', due: 'полис выдан', cat: 'ВЗР', created: '14 августа, 19:18' },
+      { id: '№ 4815', client: 'Лапин Георгий', phone: '+7 985 204-16-73', product: 'ОСАГО', object: 'Lada Vesta 2019', premium: '7 340 ₽', stage: 4, manager: 'Игорь Дементьев', source: 'виджет ОСАГО', due: 'полис выдан', cat: 'ОСАГО', created: '14 августа, 11:47' },
+      { id: '№ 4814', client: 'ООО «Тёплый Дом»', phone: '+7 499 330-18-95', product: 'СМР и ответственность', object: 'ЖК «Северный», 2 корпуса', premium: '742 000 ₽', stage: 2, manager: 'Марина Ковалёва', source: 'тендер', due: '20 августа', cat: 'Бизнес', created: '13 августа, 16:22' },
+      { id: '№ 4813', client: 'Ефимов Павел', phone: '+7 926 771-04-58', product: 'ДМС', object: 'Семейная программа, 3 чел.', premium: '58 700 ₽', stage: 0, manager: 'Ольга Панина', source: 'форма на сайте', due: 'сегодня 16:45', urgent: true, cat: 'ДМС', created: '17 августа, 08:34' },
+      { id: '№ 4812', client: 'Шарипова Айгуль', phone: '+7 919 448-62-17', product: 'Квартира', object: 'Отделка и имущество, 2,4 млн ₽', premium: '3 180 ₽', stage: 3, manager: 'Игорь Дементьев', source: 'виджет имущества', due: 'ждём документы', cat: 'Имущество', created: '12 августа, 13:09' }
+    ].map(l => ({ ...l, stage: this.state.stage[l.id] !== undefined ? this.state.stage[l.id] : l.stage }));
+  }
+
+  componentDidMount() {
+    try {
+      const v = localStorage.getItem('pins-crm-access');
+      if (v === 'off') this.setState({ access: false });
+      const qt = new URLSearchParams(location.search).get('tab');
+      if (qt === 'leads') this.setState({ tab: 0 });
+      const rawDeals = localStorage.getItem('pins-crm-deals');
+      if (rawDeals) {
+        const parsed = JSON.parse(rawDeals);
+        let inboxAts = [];
+        try { inboxAts = (JSON.parse(localStorage.getItem('pins-crm-inbox') || '[]')).map(x => x.at); } catch (e) {}
+        const migrated = parsed.map(d => {
+          if (d.leadAt) return d;
+          const match = inboxAts.filter(at => String(at).slice(-4) === String(d.id))[0];
+          const leadAt = match || d.at;
+          return { ...d, leadAt, id: this.dealNo(leadAt) };
+        });
+        const uniq = migrated.filter((d, i, arr) => arr.findIndex(y => y.leadAt === d.leadAt) === i);
+        localStorage.setItem('pins-crm-deals', JSON.stringify(uniq));
+        this.setState({ dealsList: uniq });
+      }
+      const rawLog = localStorage.getItem('pins-crm-deal-log');
+      if (rawLog) this.setState({ dealLog: JSON.parse(rawLog) });
+      ['pins-crm-lead-edits:leadEdits', 'pins-crm-lead-stage:leadStage', 'pins-crm-lead-saved:leadSaved', 'pins-crm-archive:archive'].forEach(pair => {
+        const parts = pair.split(':');
+        const raw2 = localStorage.getItem(parts[0]);
+        if (raw2) this.setState({ [parts[1]]: JSON.parse(raw2) });
+      });
+      const inbox = localStorage.getItem('pins-crm-inbox');
+      if (inbox) {
+        const list = JSON.parse(inbox);
+        if (Array.isArray(list) && list.length) this.setState({ inbox: list });
+      }
+      const raw = localStorage.getItem('pins-crm-user');
+      if (raw) {
+        const u = JSON.parse(raw);
+        if (u && u.login) this.setState({ authed: true, who: u });
+      }
+    } catch (e) {}
+  }
+
+  startCooldown() {
+    clearInterval(this._cdTimer);
+    this._cdTimer = setInterval(() => {
+      this.setState(s => {
+        const n = (s.cooldown || 0) - 1;
+        if (n <= 0) { clearInterval(this._cdTimer); return { cooldown: 0 }; }
+        return { cooldown: n };
+      });
+    }, 1000);
+  }
+
+  componentWillUnmount() { clearInterval(this._cdTimer); }
+
+  // Закрытие сделки: запись уходит в закрытый архив владельца, а полис появляется
+  // в личном кабинете клиента. Документы остаются в приватном хранилище — в архив
+  // и в кабинет попадают только их описи и идентификаторы.
+  closeDeal(leadAt, base, edits) {
+    const data = { ...(base || {}), ...(edits || {}) };
+    const no = this.dealNo(leadAt);
+    const now = Date.now();
+    const year = 365 * 86400000;
+    const fmt = (t) => new Date(t).toLocaleDateString('ru-RU');
+    const product = data.product || 'Заявка с сайта';
+    const named = data.company || data.owner || data.fio || data.name || '';
+    // Заявки помощника приходят без имени: подпись собираем из того, что есть.
+    const client = named || [data.phone, data.address].filter(Boolean).join(' · ') || 'Клиент без имени';
+    // Премия и страховая сумма — разные величины: премию вводит менеджер после расчёта.
+    const premium = [data.premium, data.premiumCalc].map(x => x && String(x)).filter(x => x && /\d/.test(x))[0] || '';
+    const insured = ['sumInsured', 'sum', 'sumConstruct', 'sumBuilding', 'sumFinish', 'sumEquip', 'sumGoods', 'limit']
+      .map(k => data[k]).filter(x => x && /\d/.test(String(x)))
+      .map(x => String(x))[0] || '';
+    const docs = Object.keys(data).filter(k => /^doc|file/i.test(k) && data[k]).map(k => String(data[k]));
+
+    try {
+      // Повторное закрытие обновляет запись, а не плодит копии одного номера.
+      const arch = JSON.parse(localStorage.getItem('pins-crm-archive') || '[]').filter(r => r.no !== no);
+      arch.unshift({
+        no, at: now, client, product, premium, insured,
+        manager: (this.state.who && (this.state.who.name || this.state.who.login)) || 'Менеджер',
+        docs: docs.length ? docs : ['Опись документов формируется из карточки клиента'],
+        access: 'Владелец и администратор',
+        data
+      });
+      const trimmed = arch.slice(0, 80);
+      localStorage.setItem('pins-crm-archive', JSON.stringify(trimmed));
+      this.setState({ archive: trimmed });
+    } catch (e) {}
+
+    try {
+      const prev = JSON.parse(localStorage.getItem('pins-client-policies') || '[]');
+      const old = prev.filter(p => p.no === no)[0];
+      const pol = prev.filter(p => p.no !== no);
+      pol.unshift({
+        no, dealNo: no, client, type: product, premium, insured,
+        // Объект страхования для кабинета клиента: адрес или предмет, не подпись сделки.
+        object: data.address || data.objAddr || data.plate || data.vin || data.cargo || product,
+        from: old ? old.from : fmt(now),
+        to: old ? old.to : fmt(now + year),
+        insurer: data.insurer || 'Определяется при оформлении',
+        status: 'Действует',
+        source: 'Сделка закрыта менеджером'
+      });
+      localStorage.setItem('pins-client-policies', JSON.stringify(pol.slice(0, 40)));
+    } catch (e) {}
+
+    this.logDeal(no, 'Сделка закрыта', 'Документы в закрытый архив, полис в личный кабинет клиента');
+  }
+
+  dealNo(leadAt) {
+    let map = {};
+    try { map = JSON.parse(localStorage.getItem('pins-crm-deal-nos') || '{}'); } catch (e) {}
+    if (!map[leadAt]) {
+      const next = Object.keys(map).length + 4821;
+      map[leadAt] = 'PINS-' + next;
+      try { localStorage.setItem('pins-crm-deal-nos', JSON.stringify(map)); } catch (e) {}
+    }
+    return map[leadAt];
+  }
+
+  logDeal(dealId, action, detail) {
+    this.setState(s => {
+      const entry = { at: Date.now(), dealId, action, detail, who: (s.who && s.who.name) || 'Менеджер' };
+      const dealLog = [entry].concat(s.dealLog || []).slice(0, 200);
+      try { localStorage.setItem('pins-crm-deal-log', JSON.stringify(dealLog)); } catch (e) {}
+      return { dealLog };
+    });
+  }
+
+  // Аналитика считается по тому, что реально накопилось в системе,
+  // а не по демонстрационным цифрам ниже.
+  liveStats() {
+    const st = this.state;
+    const inbox = Array.isArray(st.inbox) ? st.inbox : [];
+    const deals = Array.isArray(st.dealsList) ? st.dealsList : [];
+    const stages = ['Новая', 'Собираем данные', 'Запрос в страховые', 'Расчёт клиенту', 'Согласование', 'Сделка совершена'];
+    const stageOf = (d) => st.leadStage[d.leadAt] || d.stage || 'Новая';
+    const counts = {};
+    stages.forEach(s => { counts[s] = 0; });
+    deals.forEach(d => { const s = stageOf(d); if (counts[s] !== undefined) counts[s]++; });
+    const won = counts['Сделка совершена'];
+    const maxCount = Math.max(1, ...stages.map(s => counts[s]));
+
+    const day = 86400000;
+    const now = Date.now();
+    const newToday = inbox.filter(x => x.at && now - x.at < day).length;
+    const untouched = inbox.filter(x => !deals.some(d => d.leadAt === x.at)).length;
+    const conv = inbox.length ? Math.round(won / inbox.length * 100) : 0;
+
+    const kindOf = (x) => {
+      const p = String((x.data && (x.data.product || x.data.request)) || '').toLowerCase();
+      if (/осаго/.test(p)) return 'ОСАГО';
+      if (/каско/.test(p)) return 'КАСКО';
+      if (/ипотек|титул/.test(p)) return 'Ипотека и титул';
+      if (/квартир|дом|дач|имуществ|склад|здани/.test(p)) return 'Имущество';
+      if (/груз|перевоз/.test(p)) return 'Грузы';
+      if (/ответственност|сро/.test(p)) return 'Ответственность';
+      if (/дмс|сотрудник|несчастн|нс/.test(p)) return 'Персонал: ДМС и НС';
+      if (/взр|поездк|границ/.test(p)) return 'Поездки';
+      return 'Прочее и уточняется';
+    };
+    const kinds = {};
+    inbox.forEach(x => { const k = kindOf(x); kinds[k] = (kinds[k] || 0) + 1; });
+    const kindRows = Object.keys(kinds).sort((a, b) => kinds[b] - kinds[a]).map(k => ({ label: k, n: kinds[k] }));
+
+    return {
+      archive: (st.archive || []).map(a => ({
+        no: a.no,
+        client: a.client,
+        product: a.product,
+        premium: a.premium ? String(a.premium) : 'вводит менеджер',
+        premiumColor: a.premium ? '#14284B' : '#9AA6B8',
+        insured: a.insured ? String(a.insured) : 'не указана',
+        manager: a.manager,
+        when: new Date(a.at).toLocaleDateString('ru-RU'),
+        docsCount: (a.docs || []).length ? (a.docs.length + ' поз.') : 'формируется',
+        docs: (a.docs || []).map(d => ({ name: d }))
+      })),
+      archiveEmptyDisplay: (st.archive || []).length ? 'none' : 'block',
+      archiveAccess: (st.who && /владел|ceo|owner|admin/i.test(String(st.who.role || st.who.login || ''))) ? 'ДОСТУП ВЛАДЕЛЬЦА' : 'ДОСТУП ПО РОЛИ',
+      archiveAccessColor: (st.who && /владел|ceo|owner|admin/i.test(String(st.who.role || st.who.login || ''))) ? '#0A767A' : '#9AA6B8',
+      liveStamp: 'ОБНОВЛЕНО ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+      liveKpi: [
+        { n: String(inbox.length), label: 'заявок в системе', color: '#FBFCFD' },
+        { n: String(newToday), label: 'пришло за сутки', color: newToday ? '#7FE3E6' : 'rgba(251,252,253,.5)' },
+        { n: String(untouched), label: 'без карточки сделки', color: untouched ? '#FFB4A8' : 'rgba(251,252,253,.5)' },
+        { n: conv + '%', label: 'доведено до сделки', color: '#7FE3E6' }
+      ],
+      liveNote: untouched
+        ? 'Заявок без карточки: ' + untouched + '. Пока по заявке не создана сделка, она не видна в отчётах и не попадает в план менеджера.'
+        : 'По каждой заявке создана карточка сделки — потерянных обращений нет.',
+      liveFunnelNote: deals.length
+        ? 'Сделок в системе: ' + deals.length + '. Стадия меняется в карточке заявки.'
+        : 'Сделок пока нет: создайте карточку из заявки, чтобы увидеть распределение по стадиям.',
+      liveFunnel: stages.map(s => ({
+        label: s,
+        n: counts[s],
+        w: Math.round(counts[s] / maxCount * 100) + '%',
+        color: s === 'Сделка совершена' ? '#0A767A' : '#14284B',
+        labelColor: counts[s] ? '#14284B' : '#9AA6B8'
+      })),
+      liveKinds: kindRows,
+      liveKindsEmptyDisplay: kindRows.length ? 'none' : 'block',
+      renewalBuckets: [
+        { n: '2', label: 'истекают в этом месяце', color: '#B03A2E', border: 'rgba(176,58,46,.3)', bg: 'rgba(176,58,46,.05)' },
+        { n: '5', label: 'в течение 45 дней', color: '#0A767A', border: 'rgba(15,163,168,.3)', bg: 'rgba(15,163,168,.05)' },
+        { n: '11', label: 'до конца квартала', color: '#14284B', border: 'rgba(20,40,75,.14)', bg: '#FFFFFF' },
+        { n: '3', label: 'просрочены, полис не продлён', color: '#B03A2E', border: 'rgba(176,58,46,.3)', bg: 'rgba(176,58,46,.05)' }
+      ]
+    };
+  }
+
+  renderVals() {
+    const st = this.state;
+    const stageNames = ['Новая', 'В работе', 'Расчёт отправлен', 'Ожидает оплату', 'Оформлен'];
+    const stageDots = ['#0A767A', '#8A5A2B', '#7A6A55', '#5A6B85', '#6B7A4F'];
+
+    const roles = [
+      { role: 'Owner / Admin', people: '2 чел.', scope: 'Все сделки, документы, права, аудит', mfa: 'MFA обязателен', docs: 'Просмотр и скачивание', color: '#8A5A2B' },
+      { role: 'Менеджер', people: '9 чел.', scope: 'Только назначенные клиенты и сделки', mfa: 'MFA обязателен', docs: 'Просмотр своих клиентов', color: '#0A767A' },
+      { role: 'Бухгалтерия', people: '2 чел.', scope: 'Счета, акты, платежи', mfa: 'MFA обязателен', docs: 'Только платёжные документы', color: '#5A6B85' },
+      { role: 'Поддержка', people: '4 чел.', scope: 'Обращения и статусы', mfa: 'MFA обязателен', docs: 'Без доступа к оригиналам', color: '#7A6A55' },
+      { role: 'AI-сервис', people: 'служебный', scope: 'Точечный доступ по подтверждённой операции', mfa: 'ключ в secret store', docs: 'Только извлечённые поля', color: '#6B7A4F' }
+    ];
+
+    const auditLog = [
+      { time: '18.08 14:22', actor: 'Литвинова А. · Менеджер', action: 'Скачивание', obj: 'ПТС · Верста Логистик · v2', res: 'разрешено', resColor: '#0A767A' },
+      { time: '18.08 14:09', actor: 'AI-сервис', action: 'Запрос оригинала', obj: 'Паспорт · Соколов А. И.', res: 'отклонено privacy gate', resColor: '#8A5A2B' },
+      { time: '18.08 13:47', actor: 'Гордеев М. · Поддержка', action: 'Просмотр', obj: 'Полис ОСАГО · Лапин Г.', res: 'отказано по роли', resColor: '#8A5A2B' },
+      { time: '18.08 12:31', actor: 'Смирнова Е. · Бухгалтерия', action: 'Экспорт', obj: 'Счёт № 4817 · v1', res: 'разрешено', resColor: '#0A767A' },
+      { time: '18.08 11:58', actor: 'Литвинова А. · Менеджер', action: 'Загрузка', obj: 'Выписка ЕГРН · Гурьева Н.', res: 'проверено, чисто', resColor: '#0A767A' },
+      { time: '18.08 10:14', actor: 'внешний адрес', action: 'Вход', obj: 'admin@pins.ru', res: 'заблокировано, 5 попыток', resColor: '#8A5A2B' }
+    ];
+
+    const secChecks = [
+      { n: 'Хранилище', v: 'Приватное, РФ', note: 'Требование к разработке: файлы вне web-root, имена — UUID' },
+      { n: 'Ссылки на скачивание', v: '15 минут', note: 'Подписанные, одноразовые' },
+      { n: 'Шифрование', v: 'TLS + at rest', note: 'Ключи в secret store, отдельно от файлов' },
+      { n: 'Проверка загрузок', v: 'Сигнатура + антивирус', note: 'Требование к разработке: подозрительное — в карантин' },
+      { n: 'Версии документов', v: 'Не перезаписываются', note: 'valid_from / valid_to для пролонгаций' },
+      { n: 'Резервные копии', v: 'Ежедневно, отдельные ключи', note: 'Восстановление проверено 12.08' }
+    ];
+
+    const gateOn = st.sec.aiOriginals;
+    const aiGate = {
+      on: gateOn,
+      toggle: () => this.setState(s => ({ sec: { ...s.sec, aiOriginals: !s.sec.aiOriginals } })),
+      bg: gateOn ? '#8A5A2B' : '#0A767A',
+      left: gateOn ? '21px' : '3px',
+      status: gateOn ? 'Доступ открыт — требуется решение юриста' : 'Оригиналы не уходят в AI',
+      statusColor: gateOn ? '#8A5A2B' : '#0A767A',
+      text: gateOn
+        ? 'Оригиналы паспортов, прав, ПТС и медицинских документов станут доступны модели. Так делать нельзя без правовой проверки передачи ПДн.'
+        : 'Модель получает только извлечённые поля: серия и номер, срок действия, VIN. Паспорта, права, ПТС/СТС, реквизиты и медицинские документы остаются в приватном хранилище.'
+    };
+
+    const peers = [
+      { name: 'Литвинова Анна', role: 'Менеджер · автострахование', online: 'в сети', unread: 2, last: 'Скинь сравнение по автопарку Версты, у меня клиент на линии' },
+      { name: 'Рахимов Тимур', role: 'Менеджер · имущество и СМР', online: 'в сети', unread: 0, last: 'Осмотр склада перенесли на 19 августа, утро' },
+      { name: 'Смирнова Елена', role: 'Бухгалтерия', online: '15 минут назад', unread: 1, last: 'По счёту 4817 оплата пришла, можно закрывать' },
+      { name: 'Гордеев Максим', role: 'Поддержка · убытки', online: 'вчера, 19:40', unread: 0, last: 'Клиент по заливу дослал акт УК' }
+    ];
+    const teamUnread = peers.reduce((n, p) => n + p.unread, 0);
+    const peerIdx = Math.min(st.peer, peers.length - 1);
+    const curPeer = peers[peerIdx];
+
+    const chatThreads = {
+      0: [
+        { me: false, text: 'Скинь сравнение по автопарку Версты, у меня клиент на линии', time: '14:02' },
+        { me: true, text: 'Сравнение готово, три страховщика. Разница по КАСКО с франшизой — 118 тысяч за парк', time: '14:05' },
+        { me: false, text: 'Франшиза 30 тысяч их устроит. Отправь на подпись и поставь задачу на оплату', time: '14:07' }
+      ],
+      1: [
+        { me: false, text: 'Осмотр склада перенесли на 19 августа, утро', time: '11:20' },
+        { me: true, text: 'Ок, эксперта предупредил. Реестр имущества у клиента запросил', time: '11:26' }
+      ],
+      2: [
+        { me: false, text: 'По счёту 4817 оплата пришла, можно закрывать', time: '12:31' },
+        { me: true, text: 'Спасибо, подгружаю документы в карточку и отмечаю сделку совершённой', time: '12:44' }
+      ],
+      3: [
+        { me: false, text: 'Клиент по заливу дослал акт УК', time: 'вчера' },
+        { me: true, text: 'Принял, отправляю страховщику вместе с фотографиями', time: 'вчера' }
+      ]
+    };
+    const extra = st.sent[peerIdx] || [];
+    const chatMsgs = (chatThreads[peerIdx] || []).concat(extra).map(m => ({
+      text: m.text, time: m.time,
+      author: m.me ? 'Марина Ковалёва (вы)' : peers[peerIdx].name,
+      align: m.me ? 'flex-end' : 'flex-start',
+      bg: m.me ? '#14284B' : '#F2F5F8',
+      color: m.me ? '#FBFCFD' : '#14284B',
+      border: m.me ? '#14284B' : 'rgba(20,40,75,.1)',
+      radius: m.me ? '13px 13px 4px 13px' : '13px 13px 13px 4px',
+      timeColor: m.me ? '#9AA6B8' : '#9AA6B8'
+    }));
+
+    const team = peers.map((p, i) => {
+      const on = peerIdx === i;
+      const live = p.online === 'в сети';
+      return {
+        name: p.name, role: p.role, online: p.online, last: p.last,
+        select: () => this.setState({ peer: i, mailMode: false, mailDone: '' }),
+        bg: on ? '#14284B' : '#FBFCFD',
+        border: on ? '#14284B' : 'rgba(20,40,75,.1)',
+        nameColor: on ? '#FBFCFD' : '#14284B',
+        roleColor: on ? '#9AA6B8' : '#7B8AA0',
+        lastColor: on ? '#B9C4D2' : '#9AA6B8',
+        dot: live ? '#0FA3A8' : 'rgba(20,40,75,.2)',
+        unread: p.unread ? String(p.unread) : '',
+        unreadDisplay: p.unread ? 'flex' : 'none'
+      };
+    });
+
+    const chat = {
+      peer: curPeer.name, role: curPeer.role, online: curPeer.online,
+      msgs: chatMsgs,
+      draft: st.msg,
+      setDraft: (e) => this.setState({ msg: e.target.value }),
+      send: () => {
+        const t = st.msg.trim();
+        if (!t) return;
+        const d = new Date();
+        const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        this.setState(s => ({
+          sent: { ...s.sent, [peerIdx]: (s.sent[peerIdx] || []).concat([{ me: true, text: t, time }]) },
+          msg: ''
+        }));
+      },
+      openMail: () => this.setState({ mailMode: true, mailDone: '' }),
+      chatDisplay: st.mailMode ? 'none' : 'flex',
+      mailDisplay: st.mailMode ? 'flex' : 'none'
+    };
+
+    const mail = {
+      to: curPeer.name,
+      subject: st.mailSubject,
+      body: st.mailBody,
+      setSubject: (e) => this.setState({ mailSubject: e.target.value }),
+      setBody: (e) => this.setState({ mailBody: e.target.value }),
+      send: () => {
+        if (!st.mailSubject.trim()) { this.setState({ mailDone: 'Укажите тему письма.' }); return; }
+        this.setState({ mailDone: 'Письмо отправлено ' + curPeer.name + ' — копия во внутренней переписке по сделке.', mailSubject: '', mailBody: '' });
+      },
+      cancel: () => this.setState({ mailMode: false, mailDone: '' }),
+      done: st.mailDone,
+      doneDisplay: st.mailDone ? 'block' : 'none'
+    };
+
+    const threadBase = [
+      { key: 't1', with: 'Литвинова Анна', role: 'Менеджер · автострахование', subj: 'Верста Логистик: сравнение по автопарку', deal: '№ 4817', ts: 5, unread: 2,
+        msgs: [
+          { me: false, text: 'Собрала три предложения по парку из 14 машин. Ингосстрах — 486 000 ₽ с франшизой 30 000 ₽, РЕСО — 512 000 ₽ без франшизы, Согласие — 498 000 ₽, но ремонт только на своих СТО.', time: '18.08, 14:05', attach: 'Sravnenie-avtopark.pdf · 240 КБ' },
+          { me: true, text: 'Скидку 4% подтверждаю, рассрочку на два платежа согласовала со страховщиком.', time: '18.08, 14:22', attach: '' },
+          { me: false, text: 'Клиент склоняется к Ингосстраху. Отправляю на подпись, поставь задачу на оплату до 20 августа.', time: '18.08, 14:41', attach: '' },
+          { me: false, text: 'И ещё: им нужна справка для банка по залогу двух машин.', time: '18.08, 14:44', attach: '' }
+        ] },
+      { key: 't2', with: 'Смирнова Елена', role: 'Бухгалтерия', subj: 'Оплата по счёту 4817', deal: '№ 4817', ts: 4, unread: 1,
+        msgs: [
+          { me: false, text: 'Оплата прошла в 12:14, сумма полная. Можно подгружать документы в карточку и закрывать сделку.', time: '18.08, 12:31', attach: 'Platezhnoe-poruchenie-4817.pdf · 96 КБ' },
+          { me: true, text: 'Спасибо. Акт услуг подготовь сегодня, подпишем по ЭДО.', time: '18.08, 12:50', attach: '' },
+          { me: false, text: 'Акт готов, отправила в ЭДО. Жду подпись клиента.', time: '18.08, 13:08', attach: '' }
+        ] },
+      { key: 't3', with: 'Рахимов Тимур', role: 'Менеджер · имущество и СМР', subj: 'ИП Ковалёв: осмотр склада', deal: '№ 4812', ts: 3, unread: 0,
+        msgs: [
+          { me: false, text: 'Эксперт приедет 19 августа к 10:00. Клиент просит присутствовать бухгалтера — будут вопросы по балансовой стоимости оборудования.', time: '18.08, 11:20', attach: '' },
+          { me: true, text: 'Договорился, Елена подключится. Реестр имущества пришли, как получишь.', time: '18.08, 11:34', attach: '' }
+        ] },
+      { key: 't4', with: 'Гордеев Максим', role: 'Поддержка · убытки', subj: 'Залив у Шариповой: акт УК', deal: '№ 4808', ts: 2, unread: 0,
+        msgs: [
+          { me: false, text: 'Клиент дослал акт управляющей компании и фотографии. Комплект полный, отправляю страховщику.', time: '17.08, 19:40', attach: 'Akt-UK-i-foto.zip · 3,4 МБ' },
+          { me: true, text: 'Принял. Срок решения — 10 рабочих дней, поставь напоминание.', time: '17.08, 20:02', attach: '' }
+        ] },
+      { key: 't5', with: 'Марина Ковалёва', role: 'Owner', subj: 'Правило закрытия сделок с юрлицами', deal: '', ts: 1, unread: 0,
+        msgs: [
+          { me: false, text: 'Напоминаю: сделка с юридическим лицом закрывается только после загрузки полного комплекта — полис и договор, счёт с подтверждением оплаты, подписанное заявление, акт услуг.\n\nПосле отметки «Сделка совершена» карточка уходит в закрытый архив, документы остаются доступны мне.', time: '17.08, 09:15', attach: '' }
+        ] }
+    ];
+
+    const plural = (n) => n + ' ' + (n % 10 === 1 && n % 100 !== 11 ? 'новое сообщение' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 'новых сообщения' : 'новых сообщений'));
+
+    const threads = threadBase.map(t => {
+      const added = st.threadMsgs[t.key] || [];
+      const msgs = t.msgs.concat(added);
+      const lastTs = added.length ? 1000 + (st.tsOrder[t.key] || 0) : t.ts;
+      const unread = st.readT[t.key] ? 0 : t.unread;
+      return { ...t, msgs, lastTs, unread, last: msgs[msgs.length - 1] };
+    }).sort((x, y) => y.lastTs - x.lastTs);
+
+    const unreadMail = threads.reduce((n, t) => n + t.unread, 0);
+    const curKey = st.thread || threads[0].key;
+    const curThread = threads.find(t => t.key === curKey) || threads[0];
+
+    const post = {
+      count: threads.length + ' диалогов · ' + (unreadMail ? plural(unreadMail) : 'всё прочитано'),
+      list: threads.map(t => {
+        const on = curThread.key === t.key && !st.compose;
+        return {
+          with: t.with, subj: t.subj, time: t.last.time,
+          preview: t.last.text.split('\n')[0].slice(0, 76) + '…',
+          total: t.msgs.length + ' в ветке',
+          select: () => this.setState(s => ({ thread: t.key, compose: false, readT: { ...s.readT, [t.key]: true } })),
+          bg: on ? '#14284B' : '#FBFCFD',
+          border: on ? '#14284B' : (t.unread ? 'rgba(176,58,46,.35)' : 'rgba(20,40,75,.1)'),
+          withColor: on ? '#FBFCFD' : '#14284B',
+          subjColor: on ? '#B9C4D2' : '#4A5B75',
+          metaColor: '#9AA6B8',
+          badge: t.unread ? String(t.unread) : '',
+          badgeDisplay: t.unread ? 'flex' : 'none',
+          badgeText: t.unread ? plural(t.unread) : '',
+          badgeTextDisplay: t.unread ? 'block' : 'none'
+        };
+      }),
+      thread: {
+        with: curThread.with, role: curThread.role, subj: curThread.subj,
+        total: curThread.msgs.length + ' сообщений в ветке',
+        deal: curThread.deal ? 'сделка ' + curThread.deal : 'без привязки к сделке',
+        msgs: curThread.msgs.map(m => ({
+          text: m.text, time: m.time,
+          author: m.me ? 'Вы' : curThread.with,
+          align: m.me ? 'flex-end' : 'flex-start',
+          bg: m.me ? '#14284B' : '#F2F5F8',
+          color: m.me ? '#FBFCFD' : '#14284B',
+          border: m.me ? '#14284B' : 'rgba(20,40,75,.1)',
+          radius: m.me ? '13px 13px 4px 13px' : '13px 13px 13px 4px',
+          metaColor: m.me ? '#9AA6B8' : '#9AA6B8',
+          rule: m.me ? 'rgba(251,252,253,.2)' : 'rgba(20,40,75,.12)',
+          attach: m.attach || '',
+          attachDisplay: m.attach ? 'block' : 'none'
+        }))
+      },
+      draft: st.reply,
+      setDraft: (e) => this.setState({ reply: e.target.value }),
+      send: () => {
+        const t = st.reply.trim();
+        if (!t) return;
+        const d = new Date();
+        const time = String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + ', ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        this.setState(s => ({
+          threadMsgs: { ...s.threadMsgs, [curThread.key]: (s.threadMsgs[curThread.key] || []).concat([{ me: true, text: t, time, attach: '' }]) },
+          tsOrder: { ...s.tsOrder, [curThread.key]: (s.tsCounter || 0) + 1 },
+          tsCounter: (s.tsCounter || 0) + 1,
+          reply: '', readT: { ...s.readT, [curThread.key]: true }
+        }));
+      },
+      newLetter: () => this.setState({ compose: true, cTo: 'Литвинова Анна', cSubj: '', cBody: '', cDone: '' }),
+      readDisplay: st.compose ? 'none' : 'flex',
+      composeDisplay: st.compose ? 'flex' : 'none',
+      cSubj: st.cSubj, cBody: st.cBody,
+      recipients: ['Литвинова Анна', 'Рахимов Тимур', 'Смирнова Елена', 'Гордеев Максим'].map(label => {
+        const on = st.cTo === label;
+        return {
+          label,
+          pick: () => this.setState({ cTo: label }),
+          bg: on ? '#14284B' : 'transparent',
+          border: on ? '#14284B' : 'rgba(20,40,75,.14)',
+          color: on ? '#FBFCFD' : '#5A6B85'
+        };
+      }),
+      setSubj: (e) => this.setState({ cSubj: e.target.value }),
+      setBody: (e) => this.setState({ cBody: e.target.value }),
+      send2: () => {
+        if (!st.cSubj.trim()) { this.setState({ cDone: 'Укажите тему письма.' }); return; }
+        const same = threads.find(t => t.with === st.cTo && t.subj.replace(/^Re:\s*/i, '').toLowerCase() === st.cSubj.replace(/^Re:\s*/i, '').toLowerCase());
+        const d = new Date();
+        const time = String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0') + ', ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+        if (same) {
+          this.setState(s => ({
+            threadMsgs: { ...s.threadMsgs, [same.key]: (s.threadMsgs[same.key] || []).concat([{ me: true, text: s.cBody || '—', time, attach: '' }]) },
+            tsOrder: { ...s.tsOrder, [same.key]: (s.tsCounter || 0) + 1 },
+            tsCounter: (s.tsCounter || 0) + 1,
+            thread: same.key, compose: false, cSubj: '', cBody: '',
+            cDone: 'Сообщение добавлено в существующую ветку «' + same.subj + '» — тема не изменилась.'
+          }));
+        } else {
+          this.setState({ compose: false, cSubj: '', cBody: '', cDone: 'Новая тема создаст отдельную ветку с ' + st.cTo + '. В прототипе показаны существующие ветки.' });
+        }
+      },
+      cancel: () => this.setState({ compose: false, cDone: '' }),
+      done: st.cDone,
+      doneDisplay: st.cDone ? 'block' : 'none'
+    };
+
+    const navData = [
+      { label: 'Заявки', badge: '10' },
+      { label: 'Задачи и план', badge: '6' },
+      { label: 'Клиенты', badge: '8' },
+      { label: 'Аналитика', badge: '' },
+      { label: 'Доступ и аудит', badge: '' },
+      { label: 'Команда и чат', badge: teamUnread ? String(teamUnread) : '' },
+      { label: 'Внутренняя почта', badge: unreadMail ? String(unreadMail) : '' },
+      { label: 'Мой профиль', badge: '' }
+    ];
+    const nav = navData.map((n, i) => ({
+      ...n,
+      select: () => this.setState({ tab: i, open: null }),
+      bg: st.tab === i ? 'rgba(251,250,247,.1)' : 'transparent',
+      color: st.tab === i ? '#FBFCFD' : '#9AA6B8',
+      badgeColor: st.tab === i ? '#0A767A' : '#5A6B85'
+    }));
+
+    const kpis = [
+      { n: '10', label: 'заявок в работе', color: '#14284B', delta: '+3 за сутки' },
+      { n: '3', label: 'ждут первого звонка', color: '#0A767A', delta: 'старшая — 42 мин' },
+      { n: '1,51 млн ₽', label: 'премия в воронке', color: '#14284B', delta: '+18% к июлю' },
+      { n: '34%', label: 'конверсия в полис', color: '#6B7A4F', delta: '+4 п.п.' },
+      { n: '11 мин', label: 'среднее время ответа', color: '#14284B', delta: 'цель — 15 мин' }
+    ];
+
+    const viewTabs = ['Канбан', 'Таблица'].map((label, i) => ({
+      label,
+      select: () => this.setState({ view: i }),
+      bg: st.view === i ? '#14284B' : 'transparent',
+      color: st.view === i ? '#FBFCFD' : '#5A6B85'
+    }));
+
+    const cats = ['Все', 'ОСАГО', 'КАСКО', 'Ипотека', 'Имущество', 'Бизнес'];
+    const productFilters = cats.map((label, i) => ({
+      label,
+      select: () => this.setState({ product: i }),
+      bg: st.product === i ? '#0A767A' : 'transparent',
+      color: st.product === i ? '#FBFCFD' : '#5A6B85',
+      border: st.product === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+    }));
+    const activeCat = cats[st.product];
+
+    const q = st.query.trim().toLowerCase();
+    let list = this.leads().filter(l => activeCat === 'Все' || l.cat === activeCat);
+    if (q) list = list.filter(l => (l.client + l.phone + l.id + l.product).toLowerCase().includes(q));
+
+    const board = stageNames.map((title, si) => {
+      const cards = list.filter(l => l.stage === si);
+      return {
+        title, dot: stageDots[si], count: cards.length,
+        cards: cards.map((c, i) => ({
+          ...c,
+          delay: (i * 50) + 'ms',
+          accent: stageDots[si],
+          border: c.urgent ? 'rgba(15,163,168,.35)' : 'rgba(20,40,75,.1)',
+          dueColor: c.urgent ? '#0A767A' : '#7B8AA0',
+          open: () => this.setState({ open: c.id })
+        }))
+      };
+    });
+
+    const rows = list.map(r => ({
+      ...r,
+      stage: stageNames[r.stage],
+      stageColor: r.stage === 4 ? '#6B7A4F' : r.stage === 0 ? '#0A767A' : '#5A6B85',
+      stageBg: r.stage === 4 ? 'rgba(107,122,79,.12)' : r.stage === 0 ? 'rgba(15,163,168,.1)' : 'rgba(20,40,75,.06)',
+      dueColor: r.urgent ? '#0A767A' : '#7B8AA0',
+      open: () => this.setState({ open: r.id })
+    }));
+
+    const baseTasks = [
+      { title: 'Позвонить Соколову А. — ОСАГО', note: 'Просил перезвонить после 15:00, интересует рассрочка', lead: '№ 4821', kind: 'Звонок', time: '15:30', overdue: false },
+      { title: 'Отправить сравнение по автопарку', note: 'Верста Логистик: 14 машин, нужна таблица по трём страховщикам', lead: '№ 4820', kind: 'Письмо', time: '11:00', overdue: false },
+      { title: 'Согласовать осмотр склада', note: 'ИП Ковалёв: назначить эксперта на утро 19 августа', lead: '№ 4817', kind: 'Встреча', time: '12:00', overdue: false },
+      { title: 'Забрать документы по титулу', note: 'Гурьева Н.: выписка ЕГРН и договор долевого участия', lead: '№ 4819', kind: 'Документы', time: '18:00', overdue: false },
+      { title: 'Напомнить об оплате КАСКО', note: 'Рахимов Т.: счёт выставлен вчера, срок брони — до 18 августа', lead: '№ 4818', kind: 'Звонок', time: '09:40', overdue: true },
+      { title: 'Пролонгация: Лапин Г.', note: 'Полис ОСАГО заканчивается 24 августа, пересчитать заново', lead: '№ 4815', kind: 'Звонок', time: '14:15', overdue: false }
+    ];
+    const allTasks = baseTasks.concat(st.extra.map(t => ({ title: t, note: 'Добавлено вручную', lead: '—', kind: 'Задача', time: '—', overdue: false })));
+
+    const taskFilters = ['Все', 'Просроченные', 'Звонки'].map((label, i) => ({
+      label,
+      select: () => this.setState({ tf: i }),
+      bg: st.tf === i ? '#0A767A' : 'transparent',
+      color: st.tf === i ? '#FBFCFD' : '#5A6B85',
+      border: st.tf === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+    }));
+
+    let taskList = allTasks.map((t, i) => ({ ...t, idx: i }));
+    if (st.tf === 1) taskList = taskList.filter(t => t.overdue);
+    if (st.tf === 2) taskList = taskList.filter(t => t.kind === 'Звонок');
+
+    const kindColors = { 'Звонок': '#0A767A', 'Письмо': '#7A6A55', 'Встреча': '#8A5A2B', 'Документы': '#5A6B85', 'Задача': '#5A6B85' };
+    const tasks = taskList.map((t, i) => {
+      const done = !!st.done[t.idx];
+      return {
+        ...t,
+        delay: (i * 45) + 'ms',
+        toggle: () => this.setState(s => ({ done: { ...s.done, [t.idx]: !s.done[t.idx] } })),
+        check: done ? '✓' : '',
+        checkBg: done ? '#6B7A4F' : 'transparent',
+        checkBorder: done ? '#6B7A4F' : 'rgba(20,40,75,.28)',
+        strike: done ? 'line-through' : 'none',
+        bg: t.overdue && !done ? '#F1FAFB' : '#F2F5F8',
+        border: t.overdue && !done ? 'rgba(15,163,168,.28)' : 'rgba(20,40,75,.1)',
+        timeColor: t.overdue && !done ? '#0A767A' : '#7B8AA0',
+        kindColor: kindColors[t.kind] || '#5A6B85'
+      };
+    });
+
+    const week = [
+      { dow: 'ПН', num: '17', count: '6 дел', dots: ['#0A767A', '#7A6A55'], today: true },
+      { dow: 'ВТ', num: '18', count: '4 дела', dots: ['#8A5A2B'] },
+      { dow: 'СР', num: '19', count: '7 дел', dots: ['#0A767A', '#5A6B85'] },
+      { dow: 'ЧТ', num: '20', count: '3 дела', dots: ['#7A6A55'] },
+      { dow: 'ПТ', num: '21', count: '5 дел', dots: ['#0A767A'] },
+      { dow: 'СБ', num: '22', count: '1 дело', dots: [] },
+      { dow: 'ВС', num: '23', count: '—', dots: [] }
+    ].map(d => ({
+      ...d,
+      bg: d.today ? '#14284B' : '#F2F5F8',
+      border: d.today ? '#14284B' : 'rgba(20,40,75,.1)',
+      numColor: d.today ? '#FBFCFD' : '#14284B'
+    }));
+
+    const defaultProfiles = {
+      'a.davletshin': { fio: 'Давлетшин Артём Рустемович', post: 'CEO, основатель PINS', phone: '+7 903 118-40-26', email: 'a.davletshin@pins.ru', tg: '@a_davletshin', wa: '+7 903 118-40-26', hobby: 'Горные лыжи, шахматы, история архитектуры', about: 'Отвечаю за стратегию и отношения со страховщиками. Спорные вопросы по выплатам веду лично.', avatar: 'avatar-ceo.png' },
+      'a.litvinova': { fio: 'Литвинова Анна Сергеевна', post: 'Менеджер · автострахование и автопарки', phone: '+7 916 204-71-38', email: 'a.litvinova@pins.ru', tg: '@litvinova_pins', wa: '+7 916 204-71-38', hobby: 'Бег, кулинария, документальное кино', about: 'Веду корпоративные автопарки от 5 машин и сложные случаи по КБМ.', avatar: '' },
+      'e.smirnova': { fio: 'Смирнова Елена Владимировна', post: 'Бухгалтерия', phone: '+7 926 553-19-02', email: 'e.smirnova@pins.ru', tg: '@smirnova_buh', wa: '', hobby: 'Садоводство, акварель', about: 'Счета, акты, сверки и электронный документооборот со страховщиками.', avatar: '' }
+    };
+    const accounts = {
+      'a.litvinova': { pass: 'PINS-Manager-2026', name: 'Литвинова Анна', role: 'Менеджер', crm: true, phone: '+7 916 •••-71-38', email: 'a.litvinova@pins.ru' },
+      'e.smirnova': { pass: 'PINS-Buh-2026', name: 'Смирнова Елена', role: 'Бухгалтерия', crm: true, phone: '+7 926 •••-19-02', email: 'e.smirnova@pins.ru' },
+      'p.efimov': { pass: 'PINS-Guest-2026', name: 'Ефимов Павел', role: 'Без доступа', crm: false, phone: '+7 903 •••-55-14', email: 'p.efimov@pins.ru' },
+      'a.davletshin': { pass: 'PINS-Admin-2026', name: 'Давлетшин Артём', role: 'Owner / Admin', crm: true, phone: '+7 903 •••-40-26', email: 'a.davletshin@pins.ru' }
+    };
+    const chanNames = ['СМС на телефон', 'Письмо на почту'];
+    const acc = st.pendingAcc ? accounts[st.pendingAcc] : null;
+    const left = 5 - st.tries;
+    const codeOk = /^\d{6}$/.test(st.code.trim());
+
+    const authBlock = {
+      stepLabel: st.locked ? '— ЗАБЛОКИРОВАНО' : (st.authStep === 1 ? '1 ИЗ 2' : '2 ИЗ 2'),
+      step1Display: (!st.locked && st.authStep === 1) ? 'flex' : 'none',
+      step2Display: (!st.locked && st.authStep === 2) ? 'flex' : 'none',
+      lockedDisplay: st.locked ? 'flex' : 'none',
+      channels: chanNames.map((label, i) => {
+        const on = st.channel === i;
+        return {
+          label,
+          pick: () => this.setState({ channel: i }),
+          bg: on ? '#14284B' : 'transparent',
+          border: on ? '#14284B' : 'rgba(20,40,75,.16)',
+          color: on ? '#FBFCFD' : '#5A6B85'
+        };
+      }),
+      channelWord: st.channel === 0 ? 'СМС' : 'письма',
+      sentTo: acc ? ('Код отправлен ' + (st.channel === 0 ? ('на номер ' + acc.phone) : ('на адрес ' + acc.email)) + '. Действует 5 минут.') : '',
+      demoCode: st.sentCode ? ('в прототипе код показан здесь: ' + st.sentCode) : '',
+      codeBorder: st.loginError && st.authStep === 2 ? 'rgba(176,58,46,.55)' : 'rgba(20,40,75,.16)',
+      attemptsNote: left >= 5 ? 'Осталось 5 попыток' : ('Осталось попыток: ' + left),
+      attemptsColor: left <= 2 ? '#B03A2E' : '#9AA6B8',
+      resendLabel: st.cooldown > 0 ? ('Отправить повторно через ' + st.cooldown + ' с') : 'Отправить код повторно',
+      resendColor: st.cooldown > 0 ? '#9AA6B8' : '#0A767A',
+      resendCursor: st.cooldown > 0 ? 'default' : 'pointer',
+      confirmLabel: 'Подтвердить и войти',
+      confirmBg: codeOk ? '#14284B' : '#E7EDF3',
+      confirmColor: codeOk ? '#FBFCFD' : '#9AA6B8',
+      confirmCursor: codeOk ? 'pointer' : 'default',
+      requestCode: () => {
+        const key = st.login.trim().toLowerCase();
+        const a2 = accounts[key];
+        if (!a2 || a2.pass !== st.pass) { this.setState({ loginError: 'Неверный логин или пароль.' }); return; }
+        let mfaOn = true;
+        try {
+          const raw = localStorage.getItem('pins-mfa-map');
+          if (raw) { const m = JSON.parse(raw); if (m[key] !== undefined) mfaOn = !!m[key]; }
+        } catch (e) {}
+        if (!mfaOn) {
+          const w0 = { login: key, name: a2.name, role: a2.role, crm: a2.crm };
+          try { localStorage.setItem('pins-crm-user', JSON.stringify(w0)); } catch (e) {}
+          this.setState({ authed: true, who: w0, loginError: '', pass: '', code: '' });
+          return;
+        }
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        this.setState({ authStep: 2, pendingAcc: key, sentCode: code, code: '', tries: 0, loginError: '', cooldown: 60 });
+        this.startCooldown();
+      },
+      resend: () => {
+        if (st.cooldown > 0) return;
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        this.setState({ sentCode: code, code: '', loginError: '', cooldown: 60 });
+        this.startCooldown();
+      },
+      confirm: () => {
+        if (!codeOk) { this.setState({ loginError: 'Введите шесть цифр кода.' }); return; }
+        if (st.code.trim() !== st.sentCode) {
+          const t = st.tries + 1;
+          if (t >= 5) { this.setState({ locked: true, tries: t, loginError: '' }); return; }
+          this.setState({ tries: t, loginError: 'Код не совпадает. Осталось попыток: ' + (5 - t), code: '' });
+          return;
+        }
+        const w = { login: st.pendingAcc, name: acc.name, role: acc.role, crm: acc.crm };
+        try { localStorage.setItem('pins-crm-user', JSON.stringify(w)); } catch (e) {}
+        this.setState({ authed: true, who: w, loginError: '', pass: '', code: '', sentCode: '', authStep: 1 });
+      },
+      backToLogin: () => this.setState({ authStep: 1, code: '', sentCode: '', loginError: '', tries: 0 }),
+      reset: () => this.setState({ locked: false, authStep: 1, login: '', pass: '', code: '', sentCode: '', tries: 0, loginError: '', pendingAcc: null })
+    };
+
+    const who = st.who;
+    const hasRole = !!(who && who.crm);
+    const meLine = who ? { name: who.name, role: who.role } : { name: 'Не авторизован', role: '' };
+
+    const pKey = (who && who.login) || 'a.litvinova';
+    const pBase = defaultProfiles[pKey] || { fio: (who && who.name) || '', post: (who && who.role) || '', phone: '', email: pKey + '@pins.ru', tg: '', wa: '', hobby: '', about: '', avatar: '' };
+    const pf = { ...pBase, ...(st.profileEdits[pKey] || {}) };
+    const setP = (k) => (e) => this.setState(s => ({ profileEdits: { ...s.profileEdits, [pKey]: { ...(s.profileEdits[pKey] || {}), [k]: e.target.value } } }));
+    const initials = (pf.fio || 'PINS').split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('');
+    const profile = {
+      fio: pf.fio, post: pf.post, phone: pf.phone, email: pf.email, tg: pf.tg, wa: pf.wa, hobby: pf.hobby, about: pf.about,
+      setFio: setP('fio'), setPost: setP('post'), setPhone: setP('phone'), setEmail: setP('email'),
+      setTg: setP('tg'), setWa: setP('wa'), setHobby: setP('hobby'), setAbout: setP('about'),
+      avatar: pf.avatar,
+      avatarDisplay: pf.avatar ? 'block' : 'none',
+      initialsDisplay: pf.avatar ? 'none' : 'flex',
+      initials,
+      role: (who && who.role) || '—',
+      login: pKey,
+      save: () => this.setState({ profileSaved: 'Изменения сохранены. Коллеги увидят их в разделе «Команда и чат».' }),
+      saved: st.profileSaved,
+      savedDisplay: st.profileSaved ? 'block' : 'none',
+      security: [
+        { title: 'Подтверждение входа', value: 'приложение-аутентификатор', note: 'Код запрашивается при каждом входе' },
+        { title: 'Активные сеансы', value: '2 устройства', note: 'Рабочий ноутбук и телефон' },
+        { title: 'Доступ к документам', value: (who && who.role) || '—', note: 'Определяется ролью, менять может только владелец' }
+      ]
+    };
+
+    const openId = st.open || '—';
+    const closeList = [
+      { k: 'polis', label: 'Подписанный полис и договор', file: 'Polis-i-dogovor.pdf' },
+      { k: 'invoice', label: 'Счёт и подтверждение оплаты', file: 'Schet-oplata.pdf' },
+      { k: 'anketa', label: 'Заявление с подписью и печатью', file: 'Zayavlenie-podpisano.pdf' },
+      { k: 'akt', label: 'Акт оказанных брокерских услуг', file: 'Akt-uslug.pdf' }
+    ];
+    const attachedCount = closeList.filter(d => st.closeDocs[openId + d.k]).length;
+    const isClosed = !!st.closed[openId];
+    const ready = attachedCount === closeList.length;
+    const closeBlock = {
+      status: isClosed ? 'В АРХИВЕ ВЛАДЕЛЬЦА' : attachedCount + ' из ' + closeList.length + ' документов',
+      color: isClosed ? '#0A767A' : (ready ? '#0A767A' : '#8A5A2B'),
+      hint: isClosed
+        ? 'Карточка закрыта. Изменения возможны только через владельца — в журнале останется запись о любом обращении к документам.'
+        : 'Сделка закрывается только с полным комплектом: менеджер подгружает документы в карточку, после этого сделка помечается совершённой и уходит в закрытый архив владельца.',
+      docs: closeList.map(d => {
+        const on = !!st.closeDocs[openId + d.k];
+        return {
+          label: on ? d.file : d.label,
+          state: on ? 'загружен · PDF · в архив' : 'прикрепить файл',
+          attach: () => this.setState(s => ({ closeDocs: { ...s.closeDocs, [openId + d.k]: !s.closeDocs[openId + d.k] } })),
+          bg: on ? 'rgba(10,118,122,.07)' : '#FBFCFD',
+          border: on ? 'rgba(10,118,122,.4)' : 'rgba(20,40,75,.2)',
+          color: on ? '#0A767A' : '#7B8AA0',
+          icon: on ? '✓' : '+'
+        };
+      }),
+      commit: () => { if (ready && !isClosed) this.setState(s => ({ closed: { ...s.closed, [openId]: true } })); },
+      btnLabel: isClosed ? 'Сделка совершена — архив' : (ready ? 'Сделка совершена' : 'Подгрузите документы'),
+      btnBg: isClosed ? '#E7EDF3' : (ready ? '#14284B' : '#E7EDF3'),
+      btnColor: isClosed ? '#5A6B85' : (ready ? '#FBFCFD' : '#9AA6B8'),
+      cursor: ready && !isClosed ? 'pointer' : 'default',
+      doneDisplay: isClosed ? 'block' : 'none'
+    };
+
+    const renewals = [
+      { client: 'Соколов Алексей', product: 'ОСАГО', insurer: 'Ингосстрах', premium: '12 100 ₽', left: '7 дней', urgent: true },
+      { client: 'Гурьева Наталья', product: 'Ипотека', insurer: 'АльфаСтрахование', premium: '5 240 ₽', left: '21 день' },
+      { client: 'ООО «Верста Логистик»', product: 'Автопарк', insurer: 'Ренессанс Страхование', premium: '486 000 ₽', left: '24 дня' },
+      { client: 'Ефимов Павел', product: 'ДМС', insurer: 'Согласие', premium: '58 700 ₽', left: '26 дней' },
+      { client: 'Шарипова Айгуль', product: 'Квартира', insurer: 'РЕСО-Гарантия', premium: '3 180 ₽', left: '29 дней' }
+    ].map(r => ({ ...r, color: r.urgent ? '#0A767A' : '#7B8AA0' }));
+
+    const clients = [
+      { name: 'Соколов Алексей', phone: '+7 916 442-18-03', type: 'Физлицо', policies: '6', premium: '184 300 ₽', lastTouch: 'сегодня', manager: 'Игорь Дементьев' },
+      { name: 'ООО «Верста Логистик»', phone: '+7 495 118-40-22', type: 'Юрлицо', policies: '19', premium: '1 240 000 ₽', lastTouch: 'вчера', manager: 'Марина Ковалёва' },
+      { name: 'ООО «Тёплый Дом»', phone: '+7 499 330-18-95', type: 'Юрлицо', policies: '8', premium: '742 000 ₽', lastTouch: '4 дня назад', manager: 'Марина Ковалёва' },
+      { name: 'ИП Ковалёв С. А.', phone: '+7 962 118-77-40', type: 'Юрлицо', policies: '3', premium: '128 400 ₽', lastTouch: '2 дня назад', manager: 'Марина Ковалёва' },
+      { name: 'Гурьева Наталья', phone: '+7 903 771-90-14', type: 'Физлицо', policies: '2', premium: '9 400 ₽', lastTouch: 'сегодня', manager: 'Игорь Дементьев' },
+      { name: 'Рахимов Тимур', phone: '+7 927 330-55-81', type: 'Физлицо', policies: '3', premium: '74 100 ₽', lastTouch: 'вчера', manager: 'Ольга Панина' },
+      { name: 'Ефимов Павел', phone: '+7 926 771-04-58', type: 'Физлицо', policies: '4', premium: '96 200 ₽', lastTouch: 'сегодня', manager: 'Ольга Панина' },
+      { name: 'Демидова Вера', phone: '+7 915 662-31-09', type: 'Физлицо', policies: '1', premium: '2 940 ₽', lastTouch: '3 дня назад', manager: 'Ольга Панина' }
+    ].map(c => ({
+      ...c,
+      initial: c.name.replace(/[«»ООО ИП]/g, '').trim().charAt(0),
+      typeColor: c.type === 'Юрлицо' ? '#7A6A55' : '#5A6B85',
+      typeBg: c.type === 'Юрлицо' ? 'rgba(122,106,85,.12)' : 'rgba(20,40,75,.06)'
+    }));
+
+    const funnelRaw = [
+      { label: 'Заявки с сайта', n: 428 },
+      { label: 'Дозвонились', n: 361 },
+      { label: 'Расчёт отправлен', n: 249 },
+      { label: 'Счёт выставлен', n: 178 },
+      { label: 'Полис оформлен', n: 146 }
+    ];
+    const funnel = funnelRaw.map((f, i) => ({
+      ...f,
+      w: Math.round((f.n / funnelRaw[0].n) * 100) + '%',
+      pct: Math.round((f.n / funnelRaw[0].n) * 100) + '%',
+      color: i === funnelRaw.length - 1 ? '#6B7A4F' : '#0A767A'
+    }));
+
+    const sources = [
+      { label: 'Виджет ОСАГО', n: '186', conv: '41%', good: true },
+      { label: 'Виджет ипотеки', n: '74', conv: '38%', good: true },
+      { label: 'Виджет КАСКО', n: '61', conv: '29%' },
+      { label: 'Форма юрлиц', n: '52', conv: '46%', good: true },
+      { label: 'Звонки и рекомендации', n: '55', conv: '22%' }
+    ].map(s => ({ ...s, convColor: s.good ? '#6B7A4F' : '#7B8AA0' }));
+
+    const managers = [
+      { name: 'Игорь Дементьев', leads: '164', won: '61', conv: '37%', premium: '412 000 ₽', good: true },
+      { name: 'Марина Ковалёва', leads: '98', won: '38', conv: '39%', premium: '2 118 000 ₽', good: true },
+      { name: 'Ольга Панина', leads: '121', won: '35', conv: '29%', premium: '286 000 ₽' },
+      { name: 'Артём Носов', leads: '45', won: '12', conv: '27%', premium: '94 000 ₽' }
+    ].map(m => ({ ...m, initial: m.name.charAt(0), convColor: m.good ? '#6B7A4F' : '#7B8AA0' }));
+
+    const cur = this.leads().find(l => l.id === st.open);
+    let detail = null;
+    if (cur) {
+      const stages = stageNames.map((label, i) => ({
+        label,
+        select: () => this.setState(s => ({ stage: { ...s.stage, [cur.id]: i } })),
+        bg: cur.stage === i ? '#14284B' : 'transparent',
+        color: cur.stage === i ? '#FBFCFD' : '#5A6B85',
+        border: cur.stage === i ? '#14284B' : 'rgba(20,40,75,.18)'
+      }));
+      const nextChosen = st.next[cur.id] !== undefined ? st.next[cur.id] : 0;
+      const nextOpts = ['Через час', 'Завтра утром', 'Через 3 дня', 'Выбрать дату'].map((label, i) => ({
+        label,
+        select: () => this.setState(s => ({ next: { ...s.next, [cur.id]: i } })),
+        bg: nextChosen === i ? '#0A767A' : 'transparent',
+        color: nextChosen === i ? '#FBFCFD' : '#5A6B85',
+        border: nextChosen === i ? '#0A767A' : 'rgba(20,40,75,.18)'
+      }));
+      detail = {
+        ...cur,
+        facts: [
+          { label: 'Премия', value: cur.premium },
+          { label: 'Менеджер', value: cur.manager },
+          { label: 'Источник', value: cur.source },
+          { label: 'Следующий контакт', value: cur.due }
+        ],
+        stages, nextOpts,
+        form: [
+          { label: 'Телефон', value: cur.phone },
+          { label: 'Объект', value: cur.object },
+          { label: 'Регион', value: 'Москва' },
+          { label: 'Срок полиса', value: '12 месяцев' },
+          { label: 'Согласие на обработку', value: 'получено' },
+          { label: 'Заявка создана', value: cur.created }
+        ],
+        quotes: [
+          { name: 'Ингосстрах', note: 'полис в РСА за 4 минуты', price: cur.premium, best: true },
+          { name: 'Согласие', note: 'скидка за безаварийность 24%', price: '12 950 ₽' },
+          { name: 'Ренессанс Страхование', note: 'аварийный комиссар бесплатно', price: '13 440 ₽' }
+        ].map(qq => ({
+          ...qq,
+          bg: qq.best ? '#F1FAFB' : '#F2F5F8',
+          border: qq.best ? 'rgba(15,163,168,.28)' : 'rgba(20,40,75,.1)',
+          priceColor: qq.best ? '#0A767A' : '#14284B'
+        })),
+        timeline: [
+          { when: 'сегодня', title: 'Анкета заполнена на сайте', text: 'Клиент прошёл расчёт в виджете и оставил телефон.' },
+          { when: '09:14', title: 'Автоназначение менеджера', text: 'Заявка ушла ' + cur.manager + ' по правилу распределения.' },
+          { when: '09:26', title: 'Первый звонок, 2 мин', text: 'Уточнили данные водителей, попросил перезвонить после обеда.' },
+          { when: '10:02', title: 'Расчёт отправлен в WhatsApp', text: 'Три предложения с пометками об отличиях условий.' }
+        ],
+        closeDetail: () => this.setState({ open: null })
+      };
+    }
+
+    return {
+      needLogin: !st.authed,
+      hasAccess: st.authed && st.access && hasRole,
+      noAccess: st.authed && (!st.access || !hasRole),
+      denyId: '№ AC-4821',
+      loginValue: st.login, passValue: st.pass, codeValue: st.code,
+      setLogin: (e) => this.setState({ login: e.target.value }),
+      setPass: (e) => this.setState({ pass: e.target.value }),
+      setCode: (e) => this.setState({ code: e.target.value }),
+      loginError: st.loginError,
+      errDisplay: st.loginError ? 'block' : 'none',
+      loginRules: [
+        'Пароль в рабочей системе хранится только хешем и не передаётся в открытом виде',
+        'Код приходит СМС или письмом, действует 5 минут и работает один раз',
+        'После пяти неудачных попыток вход блокируется и уходит оповещение владельцу',
+        'Роль проверяется на сервере при каждом запросе, а не один раз при входе'
+      ],
+      auth: authBlock,
+      doLoginLegacy: () => {
+        const accounts = {
+          'a.litvinova': { pass: 'PINS-Manager-2026', name: 'Литвинова Анна', role: 'Менеджер', crm: true },
+          'e.smirnova': { pass: 'PINS-Buh-2026', name: 'Смирнова Елена', role: 'Бухгалтерия', crm: true },
+          'p.efimov': { pass: 'PINS-Guest-2026', name: 'Ефимов Павел', role: 'Без доступа', crm: false },
+          'a.davletshin': { pass: 'PINS-Admin-2026', name: 'Давлетшин Артём', role: 'Owner / Admin', crm: true }
+        };
+        const key = st.login.trim().toLowerCase();
+        const acc = accounts[key];
+        if (!acc || acc.pass !== st.pass) { this.setState({ loginError: 'Неверный логин или пароль.' }); return; }
+        if (!/^\d{6}$/.test(st.code.trim())) { this.setState({ loginError: 'Введите шесть цифр кода подтверждения.' }); return; }
+        const who = { login: key, name: acc.name, role: acc.role, crm: acc.crm };
+        try { localStorage.setItem('pins-crm-user', JSON.stringify(who)); } catch (e) {}
+        this.setState({ authed: true, who, loginError: '', pass: '', code: '' });
+      },
+      doLogout: () => {
+        try { localStorage.removeItem('pins-crm-user'); } catch (e) {}
+        this.setState({ authed: false, who: null, login: '', pass: '', code: '', loginError: '' });
+      },
+      me: {
+        ...meLine,
+        photoDisplay: pf.avatar ? 'block' : 'none',
+        initialsDisplay: pf.avatar ? 'none' : 'flex',
+        initials: initials
+      },
+      close: closeBlock,
+      inboxDisplay: (st.inbox && st.inbox.length) ? 'block' : 'none',
+      inboxCount: (st.inbox || []).length + ' новых',
+      inbox: (st.inbox || []).map(x => {
+        const d = new Date(x.at);
+        const p = (n) => String(n).padStart(2, '0');
+        const lab = {
+          product: 'Продукт', city: 'Регион', vin: 'VIN', plate: 'Госномер', drivers: 'Водители',
+          date: 'Дата', term: 'Срок', phone: 'Телефон', address: 'Адрес', area: 'Площадь',
+          bank: 'Банк', company: 'Организация', activity: 'Деятельность', limit: 'Лимит',
+          cargo: 'Груз', route: 'Маршрут', people: 'Человек', program: 'Программа', country: 'Страна',
+          sum: 'Сумма', sumConstruct: 'Конструктив', sumFinish: 'Отделка', sumGoods: 'Домашнее имущество',
+          sumEquip: 'Оборудование', sumLiab: 'Ответственность', sumBuilding: 'Здания',
+          sumEquipBiz: 'Оборудование', sumStock: 'Запасы', sumBI: 'Перерыв', sumCargo: 'Стоимость груза',
+          status: 'Статус', fio: 'ФИО', owner: 'Руководитель', inn: 'ИНН', email: 'Почта',
+          request: 'Запрос', docs: 'Документы'
+        };
+        const dd = x.data || {};
+        const group = (() => {
+          const p = (dd.product || '').toLowerCase();
+          if (/осаго|каско|зелён|автопарк/.test(p)) return 'auto';
+          if (/ипотек|титул/.test(p)) return 'mortgage';
+          if (/квартир|дом|дач/.test(p)) return 'realty';
+          if (/предприят|перерыв|смр|строительн/.test(p)) return 'biz';
+          if (/груз|перевоз/.test(p)) return 'cargo';
+          if (/ответственност/.test(p)) return 'liability';
+          if (/дмс|несчастн|сотрудник/.test(p)) return 'health';
+          if (/взр|поездк|границ/.test(p)) return 'travel';
+          return 'other';
+        })();
+        const need = {
+          auto: [
+            ['Объект и период', [['product', 'Вид страхования', 1], ['plate', 'Госномер', 1], ['vin', 'VIN', 1], ['city', 'Регион использования', 1], ['date', 'Дата начала', 1], ['term', 'Срок', 1]]],
+            ['Водители', [['drivers', 'Число водителей', 1], ['driversAge', 'Возраст и стаж каждого', 1], ['kbm', 'КБМ и справка об убытках', 0]]],
+            ['Документы', [['docPassport', 'Паспорт собственника', 1], ['docSts', 'СТС или ПТС', 1], ['docLicense', 'Права всех водителей', 1], ['docDiag', 'Диагностическая карта', 0]]]
+          ],
+          realty: [
+            ['Объект', [['product', 'Вид страхования', 1], ['address', 'Адрес', 1], ['area', 'Площадь', 1], ['buildYear', 'Год постройки и материал стен', 1], ['floor', 'Этаж и этажность', 0]]],
+            ['Суммы по рискам', [['sumConstruct', 'Конструктив', 1], ['sumFinish', 'Отделка и инженерия', 1], ['sumGoods', 'Домашнее имущество', 0], ['sumEquip', 'Оборудование и техника', 0], ['sumLiab', 'Гражданская ответственность', 0]]],
+            ['Оценка риска', [['gas', 'Газ в помещении', 1], ['fireAlarm', 'Пожарная сигнализация', 1], ['alarm', 'Охранная сигнализация', 1], ['rent', 'Сдаётся в аренду', 1], ['claims', 'Убытки за 3 года', 1], ['repair', 'Незавершённый ремонт', 0]]],
+            ['Документы и данные', [['docTitle', 'Документ о праве', 1], ['photos', 'Фотографии помещения', 1], ['phone', 'Телефон', 1], ['owner', 'ФИО собственника', 1]]]
+          ],
+          mortgage: [
+            ['Кредит', [['bank', 'Банк', 1], ['loanSum', 'Остаток задолженности', 1], ['loanNo', 'Номер кредитного договора', 1], ['reqs', 'Требования банка к покрытию', 1]]],
+            ['Объект', [['address', 'Адрес', 1], ['sumConstruct', 'Конструктив', 1], ['sumFinish', 'Отделка', 0], ['gas', 'Газ в помещении', 1], ['fireAlarm', 'Пожарная сигнализация', 0]]],
+            ['Заёмщик', [['owner', 'ФИО и дата рождения', 1], ['health', 'Медицинская анкета', 1], ['phone', 'Телефон', 1]]],
+            ['Документы', [['docEgrn', 'Выписка ЕГРН', 1], ['docReport', 'Отчёт об оценке', 1], ['docLoan', 'Кредитный договор', 1]]]
+          ],
+          biz: [
+            ['Организация', [['company', 'Организация и ИНН', 1], ['activity', 'Вид деятельности', 1], ['address', 'Адрес площадки', 1], ['ownership', 'Собственность или аренда', 1]]],
+            ['Суммы по группам', [['sumBuilding', 'Здания и помещения', 1], ['sumEquipBiz', 'Оборудование', 1], ['sumStock', 'Товарные запасы, максимум', 1], ['sumFinish', 'Отделка', 0], ['sumLiab', 'Ответственность', 0], ['sumBI', 'Перерыв в деятельности', 0]]],
+            ['Оценка риска', [['fireAlarm', 'Пожарная сигнализация', 1], ['sprinkler', 'Спринклерное тушение', 1], ['alarm', 'Охрана', 1], ['storage', 'Вид хранения и высота складирования', 1], ['claims', 'Убытки за 3 года', 1]]],
+            ['Документы', [['docCard', 'Карточка организации', 1], ['docList', 'Ведомость имущества', 1], ['docPlan', 'План помещений', 0], ['phone', 'Контакт для расчёта', 1]]]
+          ],
+          cargo: [
+            ['Груз', [['cargo', 'Характер груза и упаковка', 1], ['sumCargo', 'Стоимость по инвойсу', 1], ['route', 'Маршрут', 1], ['transport', 'Вид транспорта и перевозчик', 1]]],
+            ['Условия', [['single', 'Разовая или генеральный полис', 1], ['reload', 'Перегрузки и склады по маршруту', 0], ['franchise', 'Франшиза', 0]]],
+            ['Документы', [['docInvoice', 'Инвойс или спецификация', 1], ['docTtn', 'Транспортные документы', 1], ['phone', 'Телефон', 1]]]
+          ],
+          liability: [
+            ['Деятельность', [['company', 'Организация и ИНН', 1], ['activity', 'Вид деятельности', 1], ['places', 'Площадки и посещаемость', 1]]],
+            ['Покрытие', [['limit', 'Требуемый лимит', 1], ['basis', 'Основание требования: договор, СРО, закон', 1], ['franchise', 'Франшиза', 0], ['claims', 'Убытки за 3 года', 1]]],
+            ['Документы', [['docCard', 'Карточка организации', 1], ['docContract', 'Договор с заказчиком', 0], ['phone', 'Телефон', 1]]]
+          ],
+          health: [
+            ['Коллектив', [['company', 'Организация', 1], ['people', 'Численность', 1], ['ages', 'Возрастная структура', 1], ['work', 'Характер работ', 1]]],
+            ['Программа', [['program', 'Состав программы', 1], ['clinics', 'Список клиник', 1], ['family', 'Включение членов семьи', 0], ['date', 'Дата начала', 1]]],
+            ['Документы', [['docList', 'Списочный состав', 1], ['phone', 'Контакт HR', 1]]]
+          ],
+          travel: [
+            ['Поездка', [['country', 'Страна', 1], ['date', 'Даты поездки', 1], ['people', 'Количество человек', 1], ['sum', 'Сумма покрытия', 1]]],
+            ['Условия', [['sport', 'Активный отдых и спорт', 0], ['chronic', 'Хронические заболевания', 0], ['visa', 'Требования консульства', 0]]],
+            ['Документы', [['docPassport', 'Паспорт', 1], ['phone', 'Телефон', 1]]]
+          ],
+          other: [
+            ['Основное', [['product', 'Вид страхования', 1], ['sum', 'Страховая сумма', 1], ['date', 'Дата начала', 1], ['term', 'Срок', 1], ['phone', 'Телефон', 1]]]
+          ]
+        }[group];
+        const sections = need.map(sec => ({
+          title: sec[0],
+          items: sec[1].map(it => {
+            const key = it[0];
+            const own = (st.leadEdits[x.at] || {})[key];
+            const v = own !== undefined ? own : dd[key];
+            const req = it[2] === 1;
+            const has = !!(v && String(v).trim());
+            return {
+              label: it[1],
+              value: v || '',
+              ph: req ? 'уточнить у клиента' : 'по желанию',
+              set: (e) => {
+                const val = e.target.value;
+                this.setState(s2 => {
+                  const per = { ...(s2.leadEdits[x.at] || {}), [key]: val };
+                  const leadEdits = { ...s2.leadEdits, [x.at]: per };
+                  try { localStorage.setItem('pins-crm-lead-edits', JSON.stringify(leadEdits)); } catch (e2) {}
+                  clearTimeout(this['_lg' + key]);
+                  this['_lg' + key] = setTimeout(() => this.logDeal(this.dealNo(x.at), 'Заполнено поле', it[1] + ': ' + val), 700);
+                  return { leadEdits };
+                });
+              },
+              valueColor: has ? '#14284B' : '#B03A2E',
+              border: has ? 'rgba(10,118,122,.3)' : (req ? 'rgba(176,58,46,.3)' : 'rgba(20,40,75,.09)'),
+              tag: has ? 'есть' : (req ? 'обязательно' : 'по желанию'),
+              tagColor: has ? '#0A767A' : (req ? '#B03A2E' : '#9AA6B8')
+            };
+          })
+        }));
+        const reqTotal = sections.reduce((n, s) => n + s.items.filter(q => q.tag !== 'по желанию').length, 0);
+        const reqHave = sections.reduce((n, s) => n + s.items.filter(q => q.tag === 'есть').length, 0);
+        const isOpen = st.openLead === x.at;
+        const stages = ['Новая', 'Собираем данные', 'Запрос в страховые', 'Расчёт клиенту', 'Согласование', 'Сделка совершена'];
+        const curStage = st.leadStage[x.at] || 'Новая';
+        const saved = !!st.leadSaved[x.at];
+        const formIdx = (() => {
+          const p = (dd.product || '').toLowerCase();
+          if (/автопарк|парк/.test(p)) return 6;
+          if (/осаго/.test(p)) return 7;
+          if (/каско/.test(p)) return 8;
+          if (/зелён/.test(p)) return 9;
+          if (/взр|поездк|границ/.test(p)) return 10;
+          if (/квартир|дом|дач/.test(p)) return 11;
+          if (/корпоративн/.test(p)) return 2;
+          if (/несчастн/.test(p)) return /сотрудник|коллектив|персонал|штат/.test(p) ? 2 : 12;
+          if (/дмс для сотрудник|сотрудник/.test(p)) return 1;
+          if (/дмс|жизн|здоров/.test(p)) return 13;
+          if (/ипотек|титул/.test(p)) return 14;
+          if (/груз/.test(p)) return /разов/.test(p) ? 4 : 3;
+          if (/ответственност/.test(p)) return 5;
+          if (/предприят|перерыв|смр|строительн|склад|имуществ/.test(p)) return 0;
+          return -1;
+        })();
+        const formTitles = ['Имущество юридического лица', 'ДМС для сотрудников', 'Корпоративный НС', 'Грузы: генеральный договор', 'Грузы: разовая перевозка', 'Ответственность и СРО', 'Автопарк компании', 'ОСАГО', 'КАСКО', 'Зелёная карта', 'Поездка за границу', 'Квартира и дом', 'Несчастный случай', 'Жизнь, здоровье и ДМС', 'Ипотека и титул'];
+        return {
+          formHref: formIdx >= 0 ? ('zayavlenie.dc.html?p=' + formIdx) : 'zayavlenie.dc.html',
+          blankDisplay: /имуществ|склад|помещен|здани|оборудован|товарн/i.test(dd.product || '') ? 'inline-block' : 'none',
+          blankHandoff: () => {
+            const src = { ...(dd || {}), ...(st.leadEdits[x.at] || {}) };
+            const map = {
+              company: 'name', inn: 'inn', ogrn: 'ogrn', address: 'objAddr', addrLegal: 'addrLegal',
+              owner: 'head', contact: 'contact', phone: 'phone', email: 'email', activity: 'objUse',
+              area: 'objArea', areaTotal: 'objAreaTotal', buildYear: 'objYear', floors: 'objFloors',
+              walls: 'objWalls', roof: 'objRoof', heat: 'objHeat', purpose: 'objPurpose',
+              right: 'objRight', lessor: 'objLessor', tenants: 'objTenants', storeHeight: 'objStoreH',
+              sumBuilding: 'sumBuilding', sumFinish: 'sumFinish', sumEquip: 'sumEquip', sumGoods: 'sumGoods',
+              sumEquipBiz: 'sumEquip', sumStock: 'sumGoods', sumConstruct: 'sumBuilding',
+              risks: 'risks', deductible: 'deductible', date: 'periodFrom', term: 'periodTerm',
+              claims: 'losses', prev: 'prev', turnover: 'turnover', bank: 'beneficiary', loanSum: 'benefDoc',
+              fireAlarm: 'objFire', sprinkler: 'fireSupp', alarm: 'objGuard', guard: 'guardPhys',
+              cctv: 'cctv', rent: 'objRent', gas: 'objHazard'
+            };
+            const v = {};
+            Object.keys(src).forEach(k => {
+              const t = map[k];
+              if (t && src[k] && !v[t]) v[t] = String(src[k]);
+            });
+            if (src.fireAlarm) v.objFire = src.fireAlarm === 'да' ? 'Автоматическая, исправна' : 'Не установлена';
+            if (src.alarm) v.objGuard = src.alarm === 'да' ? 'Пульт ЧОП с круглосуточным контролем' : 'Отсутствует';
+            if (src.gas) v.objHazard = src.gas === 'да' ? 'В помещении есть газовое оборудование' : 'не применяются';
+            if (src.rent) v.objRent = src.rent === 'да' ? 'Да, частично' : 'Нет';
+            try {
+              localStorage.setItem('pins-blank-data', JSON.stringify({ v, deal: this.dealNo(x.at), at: Date.now() }));
+            } catch (e2) {}
+            this.logDeal(this.dealNo(x.at), 'Сформирован бланк', 'Заявление по форме страховщика, данные котировки перенесены');
+          },
+          handoff: () => {
+            const src = { ...(dd || {}), ...(st.leadEdits[x.at] || {}) };
+            const map = {
+              phone: ['phone', 'phoneF'], owner: ['fio'], company: ['orgName'], address: ['objAddr', 'homeAddr', 'addrReg'],
+              area: ['objArea', 'homeArea'], buildYear: ['objYear'], activity: ['activity'], limit: ['limitTotal'],
+              sumConstruct: ['homeSumWalls'], sumFinish: ['homeSumFinish', 'sumFinish'], sumGoods: ['homeSumThings'],
+              sumBuilding: ['sumBuilding'], sumEquipBiz: ['sumEquip'], sumStock: ['sumGoods'], sumCargo: ['sumInsured'],
+              cargo: ['cargoName'], route: ['route'], people: ['staffCount'], program: ['program'],
+              country: ['tripCountry'], date: ['dateFrom', 'ffrom'], term: ['term'], bank: ['mtgBank'],
+              loanSum: ['mtgSum'], loanNo: ['mtgNo'], claims: ['claims'], sum: ['sumInsured']
+            };
+            const num = (x2) => {
+              const d = String(x2).replace(/[^\d]/g, '');
+              return d ? Number(d).toLocaleString('ru-RU') : '';
+            };
+            const moneyKeys = ['sumConstruct', 'sumFinish', 'sumGoods', 'sumEquipBiz', 'sumBuilding', 'sumStock', 'sumCargo', 'sum', 'sumBI', 'loanSum', 'limit'];
+            const v = {};
+            Object.keys(src).forEach(k => {
+              const targets = map[k];
+              if (!targets || !src[k]) return;
+              let val = String(src[k]);
+              if (moneyKeys.indexOf(k) >= 0) val = num(val) || val;
+              if (k === 'area') val = val.replace(/\s*(м2|м²|кв\.?\s?м|метр\S*)/gi, '').trim();
+              targets.forEach(t => { if (!v[t]) v[t] = val; });
+            });
+            const liabRaw = Number(String(src.sumLiab || src.limit || '').replace(/[^\d]/g, ''));
+            if (liabRaw > 0) {
+              v.homeLiab = liabRaw <= 500000 ? 'До 500 000 ₽' : (liabRaw <= 1000000 ? 'До 1 000 000 ₽' : 'До 3 000 000 ₽');
+              v.limitTotal = num(liabRaw);
+              v.mtgLiab = v.homeLiab;
+            } else if (src.sumLiab === '0') {
+              v.homeLiab = 'Не нужна';
+            }
+            if (src.gas || src.fireAlarm || src.sprinkler) {
+              v.objFire = src.sprinkler === 'да' ? 'АПС + спринклеры' : (src.fireAlarm === 'да' ? 'АПС' : 'Только огнетушители');
+            }
+            if (src.alarm) v.objGuard = src.alarm === 'да' ? 'Сигнализация на пульт' : 'Нет';
+            if (src.rent) v.homeLive = src.rent === 'да' ? 'Сдаётся в аренду' : 'Постоянное';
+            try {
+              localStorage.setItem('pins-zayavlenie-prefill', JSON.stringify({ p: formIdx, v, deal: this.dealNo(x.at), at: Date.now() }));
+            } catch (e2) {}
+            this.logDeal(this.dealNo(x.at), 'Открыто заявление', (formIdx >= 0 ? formTitles[formIdx] : 'выбор вида') + ' · данные котировки перенесены');
+          },
+          formLabel: formIdx >= 0 ? ('Заявление: ' + formTitles[formIdx]) : 'Выбрать заявление',
+          statuses: stages.map(label => {
+            const on = curStage === label;
+            return {
+              label,
+              pick: () => {
+                this.logDeal(this.dealNo(x.at), 'Смена статуса', curStage + ' → ' + label);
+                if (label === 'Сделка совершена') this.closeDeal(x.at, dd, st.leadEdits[x.at] || {});
+                this.setState(s2 => {
+                  const leadStage = { ...s2.leadStage, [x.at]: label };
+                  try { localStorage.setItem('pins-crm-lead-stage', JSON.stringify(leadStage)); } catch (e2) {}
+                  return { leadStage };
+                });
+              },
+              bg: on ? '#14284B' : 'transparent',
+              border: on ? '#14284B' : 'rgba(20,40,75,.16)',
+              color: on ? '#FBFCFD' : '#5A6B85'
+            };
+          }),
+          dealNote: 'сейчас: ' + curStage,
+          saveLabel: saved ? 'Карточка выгружена' : 'Создать сделку и выгрузить карточку',
+          saveBg: saved ? '#0A767A' : '#14284B',
+          saveNote: saved ? 'Сделка ' + this.dealNo(x.at) + ' · ' + curStage + ' · документы уходят в закрытый архив после закрытия' : '',
+          saveDeal: () => {
+            if (saved) return;
+            const per = { ...(dd || {}), ...(st.leadEdits[x.at] || {}) };
+            const no = this.dealNo(x.at);
+            try {
+              const raw = localStorage.getItem('pins-crm-deals');
+              const list = (raw ? JSON.parse(raw) : []).filter(d => d.leadAt !== x.at);
+              list.unshift({ id: no, leadAt: x.at, at: Date.now(), product: dd.product || 'Заявка с сайта', stage: curStage, data: per });
+              const trimmed = list.slice(0, 40);
+              localStorage.setItem('pins-crm-deals', JSON.stringify(trimmed));
+              this.setState({ dealsList: trimmed });
+            } catch (e2) {}
+            this.logDeal(no, 'Создана сделка', (dd.product || 'Заявка с сайта') + ' · карточка выгружена в раздел «Сделки»');
+            this.setState(s2 => {
+              const leadSaved = { ...s2.leadSaved, [x.at]: true };
+              const leadStage = { ...s2.leadStage, [x.at]: s2.leadStage[x.at] || 'Собираем данные' };
+              try {
+                localStorage.setItem('pins-crm-lead-saved', JSON.stringify(leadSaved));
+                localStorage.setItem('pins-crm-lead-stage', JSON.stringify(leadStage));
+              } catch (e3) {}
+              return { leadSaved, leadStage };
+            });
+          },
+          sections,
+          toggle: () => this.setState(s2 => ({ openLead: s2.openLead === x.at ? null : x.at })),
+          openDisplay: isOpen ? 'block' : 'none',
+          border: isOpen ? 'rgba(10,118,122,.45)' : 'rgba(20,40,75,.1)',
+          action: isOpen ? 'Свернуть вопросник' : 'Открыть вопросник для оформления →',
+          readyNote: reqHave + ' из ' + reqTotal + ' обязательных полей',
+          readyColor: reqHave >= reqTotal ? '#0A767A' : '#8A5A2B',
+          when: p(d.getDate()) + '.' + p(d.getMonth() + 1) + ', ' + p(d.getHours()) + ':' + p(d.getMinutes()),
+          source: x.source || 'сайт',
+          title: dd.product || 'Заявка с сайта',
+          summary: Object.keys(dd).filter(k => k !== 'product' && k !== 'status').map(k => (lab[k] || k) + ': ' + dd[k]).join(' · ')
+        };
+      }),
+      dealsDisplay: (st.dealsList && st.dealsList.length) ? 'block' : 'none',
+      dealsCount: (st.dealsList || []).length + ' в работе',
+      deals: (st.dealsList || []).filter((d, i, arr) => arr.findIndex(y => y.leadAt === d.leadAt) === i).map(d => {
+        const stage = st.leadStage[d.leadAt] || d.stage || 'Новая';
+        const dt = new Date(d.at);
+        const p2 = (n) => String(n).padStart(2, '0');
+        return {
+          id: d.id,
+          product: d.product,
+          open: () => this.setState({ tab: 0, openLead: d.leadAt }),
+          stage,
+          stageColor: stage === 'Сделка совершена' ? '#0A767A' : (stage === 'Новая' ? '#8A5A2B' : '#14284B'),
+          fields: Object.keys(d.data || {}).length + ' полей',
+          when: p2(dt.getDate()) + '.' + p2(dt.getMonth() + 1) + ', ' + p2(dt.getHours()) + ':' + p2(dt.getMinutes())
+        };
+      }),
+      logDisplay: (st.dealLog && st.dealLog.length) ? 'block' : 'none',
+      dealLog: (st.dealLog || []).slice(0, 12).map(l => {
+        const dt = new Date(l.at);
+        const p2 = (n) => String(n).padStart(2, '0');
+        return { ...l, when: p2(dt.getDate()) + '.' + p2(dt.getMonth() + 1) + ' ' + p2(dt.getHours()) + ':' + p2(dt.getMinutes()) };
+      }),
+      nav, pageTitle: navData[st.tab].label,
+      todayLine: '6 контактов запланировано, 1 просрочен',
+      liveLine: '3 новые заявки за час',
+      query: st.query,
+      setQuery: (e) => this.setState({ query: e.target.value }),
+
+      ...this.liveStats(),
+
+      isLeads: st.tab === 0, isTasks: st.tab === 1, isClients: st.tab === 2, isAnalytics: st.tab === 3, isSecurity: st.tab === 4, isTeam: st.tab === 5, isMail: st.tab === 6, isProfile: st.tab === 7,
+      profile,
+      post,
+      team, chat, mail,
+      roles, auditLog, secChecks, aiGate,
+      isKanban: st.view === 0, isTable: st.view === 1,
+
+      kpis, viewTabs, productFilters, board, rows,
+      stageCount: stageNames.length,
+      leadCount: list.length + ' заявок в выборке',
+
+      taskDate: '17 августа, понедельник',
+      taskFilters, tasks, week, renewals,
+      newTask: st.newTask,
+      setNewTask: (e) => this.setState({ newTask: e.target.value }),
+      addTask: () => { if (st.newTask.trim()) this.setState(s => ({ extra: s.extra.concat(s.newTask.trim()), newTask: '' })); },
+
+      clients, funnel, sources, managers,
+
+      hasDetail: !!detail,
+      detail: detail || {},
+      closeDetail: () => this.setState({ open: null }),
+      comment: st.comment,
+      setComment: (e) => this.setState({ comment: e.target.value })
+    };
+  }
+}
+</script>
+</body>
+</html>

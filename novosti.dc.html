@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:'Manrope',system-ui,sans-serif;background:#FBFCFD;color:#14284B;-webkit-font-smoothing:antialiased}
+  a{color:#0A767A;text-decoration:none}
+  a:hover{color:#14284B}
+  button{font-family:'Manrope',system-ui,sans-serif}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="background:#FBFCFD;color:#14284B;min-height:100%;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:60;background:rgba(251,252,253,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(20,40,75,.08)">
+    <div style="max-width:1240px;margin:0 auto;padding:0 clamp(20px,3vw,36px);height:82px;display:flex;align-items:center;gap:clamp(18px,3vw,40px)">
+      <a href="glavnaya-b3.dc.html" style="font-size:17px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap">
+        <img src="logo-pins.png" alt="PINS" style="height:56px;width:auto;display:block">
+      </a>
+      <nav style="display:flex;gap:20px;font-size:14px;color:#5A6B85;white-space:nowrap">
+        <a href="katalog.dc.html" style="color:inherit">Продукты</a>
+        <a href="calculator.dc.html" style="color:inherit">Расчёт</a>
+        <a href="biznesu.dc.html" style="color:inherit">Бизнесу</a>
+        <a href="ubytki.dc.html" style="color:inherit">Выплаты</a>
+        <a href="novosti.dc.html" style="color:#14284B;font-weight:600">Новости рынка</a>
+        <a href="o-kompanii.dc.html" style="color:inherit">О компании</a>
+      </nav>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="tel:88005503140" style="font-family:'IBM Plex Mono';font-size:13px;white-space:nowrap">8 800 550-31-40</a>
+        <a href="kabinet.dc.html" style="font-size:14px;font-weight:600;padding:9px 18px;border-radius:100px;border:1px solid rgba(20,40,75,.2);white-space:nowrap;transition:all .25s ease" style-hover="border-color:#14284B">Личный кабинет</a>
+      </div>
+    </div>
+  </header>
+
+  <section style="max-width:1240px;margin:0 auto;padding:clamp(26px,3.2vw,44px) clamp(20px,3vw,36px) 0">
+    <div style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA6B8;margin-bottom:18px">
+      <a href="glavnaya-b3.dc.html" style="color:inherit">Главная</a> / Новости рынка
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(24px,4vw,52px);align-items:end;padding-bottom:22px;border-bottom:1px solid rgba(20,40,75,.1)">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono';font-size:12px;color:#0A767A;border:1px solid rgba(15,163,168,.3);border-radius:100px;padding:6px 13px;margin-bottom:18px">ОТКРЫТЫЕ ДАННЫЕ · ОБНОВЛЕНО {{ updated }}</div>
+        <h1 style="font-size:clamp(27px,3.3vw,40px);font-weight:500;letter-spacing:-.035em;line-height:1.06;margin:0">Что происходит на страховом рынке</h1>
+      </div>
+      <p style="font-size:16px;color:#5A6B85;line-height:1.55;margin:0;max-width:490px;text-wrap:pretty">Крупные убытки и судебная практика, сделки и сегменты, изменения тарифов и правил, рейтинги страховщиков и структура портфелей. Каждый материал — со ссылкой на первоисточник: Банк России, АКРА, отраслевые агентства.</p>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:0 auto;padding:22px clamp(20px,3vw,36px) 0">
+    <div style="display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px">
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+          <button onClick="{{ t.select }}" style="border:1px solid {{ t.border }};cursor:pointer;font-size:13.5px;font-weight:600;padding:10px 17px;border-radius:100px;background:{{ t.bg }};color:{{ t.color }};display:flex;align-items:center;gap:8px;transition:all .25s ease">{{ t.label }}<span style="font-family:'IBM Plex Mono';font-size:11px;color:{{ t.countColor }}">{{ t.count }}</span></button>
+        </sc-for>
+      </div>
+      <div style="font-size:13px;color:#9AA6B8">{{ feedNote }}</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(16px,2.4vw,28px);align-items:start">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="6">
+          <article style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:clamp(18px,2.2vw,24px);animation:fadeUp .4s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ n.delay }};transition:border-color .25s ease" style-hover="border-color:rgba(10,118,122,.4)">
+            <div style="display:flex;justify-content:space-between;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:11px">
+              <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;color:{{ n.tagColor }}">{{ n.tag }}</div>
+              <a href="{{ n.url }}" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono';font-size:11.5px;color:#0A767A">{{ n.date }} · {{ n.source }} ↗</a>
+            </div>
+            <h2 style="font-size:clamp(17px,1.9vw,21px);font-weight:700;letter-spacing:-.025em;line-height:1.25;margin:0 0 9px;text-wrap:pretty">{{ n.title }}</h2>
+            <p style="font-size:14.5px;color:#4A5B75;line-height:1.6;margin:0 0 14px;text-wrap:pretty">{{ n.text }}</p>
+            <div style="display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;padding-top:13px;border-top:1px solid rgba(20,40,75,.09)">
+              <div style="font-size:13px;color:#14284B;font-weight:600">{{ n.figureLabel }} <span style="font-family:'IBM Plex Mono';color:#0A767A">{{ n.figure }}</span></div>
+              <div style="font-size:12.5px;color:#7B8AA0;line-height:1.45;max-width:52ch">{{ n.impact }}</div>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+
+      <aside style="display:flex;flex-direction:column;gap:12px;position:sticky;top:96px">
+        <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:20px">
+          <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:14px">РЫНОК ЗА ПОЛУГОДИЕ</div>
+          <div style="display:flex;flex-direction:column;gap:13px">
+            <sc-for list="{{ marketStats }}" as="s" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding-bottom:13px;border-bottom:1px solid rgba(251,250,247,.12)">
+                <div style="font-size:13px;color:#B9C4D2;line-height:1.4">{{ s.label }}</div>
+                <div style="text-align:right;flex:none">
+                  <div style="font-family:'IBM Plex Mono';font-size:15px">{{ s.value }}</div>
+                  <div style="font-family:'IBM Plex Mono';font-size:11px;color:{{ s.deltaColor }};margin-top:2px">{{ s.delta }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:11.5px;color:#7B8AA0;line-height:1.5;margin-top:14px">Источник: сводная статистика Банка России по субъектам страхового дела.</div>
+        </div>
+
+        <div style="background:#E7EDF3;border-radius:16px;padding:20px">
+          <div style="font-size:15px;font-weight:700;margin-bottom:6px">Подписка на дайджест</div>
+          <div style="font-size:13px;color:#4A5B75;line-height:1.5;margin-bottom:14px">Раз в неделю: крупные убытки, изменения тарифов и правил, новости по вашим продуктам.</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <input value="{{ mail }}" onChange="{{ setMail }}" placeholder="рабочая почта" style="width:100%;background:#FBFCFD;border:1px solid rgba(20,40,75,.16);border-radius:11px;padding:12px 14px;outline:none;font-family:'Manrope';font-size:14px;color:#14284B">
+            <button onClick="{{ subscribe }}" style="border:none;cursor:pointer;font-size:14px;font-weight:700;padding:13px 20px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Подписаться</button>
+            <div style="display:{{ subDisplay }};font-size:12.5px;color:{{ subColor }};line-height:1.45">{{ subMsg }}</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(44px,5vw,72px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="display:flex;justify-content:space-between;gap:18px;align-items:end;flex-wrap:wrap;margin-bottom:18px">
+      <div>
+        <h2 style="font-size:clamp(23px,2.5vw,32px);font-weight:600;letter-spacing:-.03em;margin:0 0 8px">Рейтинги и портфели страховщиков</h2>
+        <p style="font-size:15px;color:#5A6B85;line-height:1.55;margin:0;max-width:70ch;text-wrap:pretty">Сборы, выплаты и структура портфеля по публичной отчётности. Рейтинг надёжности — по действующим оценкам агентств; смотрите его вместе с уровнем выплат, а не отдельно.</p>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="3">
+          <button onClick="{{ s.select }}" style="border:1px solid {{ s.border }};cursor:pointer;font-size:12.5px;font-weight:600;padding:9px 14px;border-radius:100px;background:{{ s.bg }};color:{{ s.color }};transition:all .25s ease">{{ s.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:16px;overflow-x:auto">
+      <div style="min-width:960px">
+        <div style="display:grid;grid-template-columns:1.4fr .9fr .9fr .8fr .8fr 2fr;gap:14px;padding:15px 20px;font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em">
+          <div>СТРАХОВЩИК</div><div>СБОРЫ</div><div>ВЫПЛАТЫ</div><div>УРОВЕНЬ</div><div>РЕЙТИНГ</div><div>СТРУКТУРА ПОРТФЕЛЯ</div>
+        </div>
+        <sc-for list="{{ insurers }}" as="i" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:1.4fr .9fr .9fr .8fr .8fr 2fr;gap:14px;padding:15px 20px;align-items:center;border-top:1px solid rgba(20,40,75,.08)">
+            <div style="min-width:0">
+              <div style="font-size:14px;font-weight:700">{{ i.name }}</div>
+              <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;margin-top:3px">{{ i.license }}</div>
+            </div>
+            <div style="font-family:'IBM Plex Mono';font-size:13.5px">{{ i.premium }}</div>
+            <div style="font-family:'IBM Plex Mono';font-size:13.5px;color:#5A6B85">{{ i.claims }}</div>
+            <div style="font-family:'IBM Plex Mono';font-size:13.5px;color:{{ i.ratioColor }}">{{ i.ratio }}</div>
+            <div style="font-family:'IBM Plex Mono';font-size:13px;font-weight:500;color:#14284B">{{ i.rating }}</div>
+            <div style="min-width:0">
+              <div style="display:flex;height:9px;border-radius:5px;overflow:hidden;background:rgba(20,40,75,.08)">
+                <sc-for list="{{ i.mix }}" as="m" hint-placeholder-count="4">
+                  <div style="width:{{ m.w }};background:{{ m.color }};height:100%"></div>
+                </sc-for>
+              </div>
+              <div style="font-size:11.5px;color:#7B8AA0;margin-top:7px;line-height:1.4">{{ i.mixLabel }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:12px">
+      <sc-for list="{{ legend }}" as="l" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5A6B85">
+          <span style="width:10px;height:10px;border-radius:3px;background:{{ l.color }};display:block;flex:none"></span>{{ l.label }}
+        </div>
+      </sc-for>
+    </div>
+    <div style="font-size:12px;color:#9AA6B8;line-height:1.55;margin-top:14px;max-width:90ch">Таблица показывает порядок величин и структуру бизнеса по публичной отчётности и требует сверки с последней формой отчётности страховщика перед принятием решения. Цифры не являются рекомендацией. Уровень выплат — отношение выплат к сборам за период; низкое значение не всегда означает отказы, а высокое не всегда означает щедрость: у разных видов страхования разная нормальная убыточность.</div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(40px,4.5vw,64px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:16px;padding:clamp(20px,2.6vw,28px)">
+      <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.06em;margin-bottom:12px">ОТКУДА БЕРУТСЯ ДАННЫЕ</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+        <sc-for list="{{ sources }}" as="s" hint-placeholder-count="4">
+          <div>
+            <a href="{{ s.url }}" target="_blank" rel="noopener" style="font-size:14px;font-weight:700">{{ s.name }} ↗</a>
+            <div style="font-size:12.5px;color:#7B8AA0;line-height:1.5;margin-top:5px">{{ s.what }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size:12px;color:#9AA6B8;line-height:1.55;margin-top:16px;max-width:92ch">Лента обновляется из этих источников: статистику Банка России и отчётность страховщиков подтягиваем по мере публикации, отраслевые новости — по ленте агентств. Даты и ссылки указаны у каждого материала, чтобы цифру можно было проверить в первоисточнике.</div>
+    </div>
+  </section>
+
+  <section style="max-width:1240px;margin:clamp(44px,5vw,72px) auto 0;padding:0 clamp(20px,3vw,36px)">
+    <div style="background:#E7EDF3;border-radius:18px;padding:clamp(24px,3.4vw,42px);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px;align-items:center">
+      <div>
+        <h2 style="font-size:clamp(21px,2.3vw,28px);font-weight:600;letter-spacing:-.03em;margin:0 0 10px;line-height:1.12">Нужна выжимка по вашему риску?</h2>
+        <p style="font-size:15px;color:#4A5B75;margin:0;line-height:1.55;max-width:440px;text-wrap:pretty">Брокер соберёт, что изменилось именно по вашим полисам: тарифы, требования банков и заказчиков, практика выплат у конкретных страховщиков.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="assistent.dc.html" style="font-size:15px;font-weight:700;padding:15px 24px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .25s ease" style-hover="background:#0A767A">Спросить помощника</a>
+        <a href="biznesu.dc.html" style="font-size:15px;font-weight:600;padding:15px 22px;border-radius:100px;border:1px solid rgba(20,40,75,.22);color:#14284B;transition:border-color .25s ease" style-hover="border-color:#14284B">Запросить котировку</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1240px;margin:clamp(44px,5.5vw,68px) auto 0;padding:0 clamp(20px,3vw,36px) 36px">
+    <div style="display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid rgba(20,40,75,.12);font-size:12px;color:#9AA6B8;flex-wrap:wrap">
+      <div>© 2026 PINS. ООО «ПИНС Брокер», лицензия Банка России СБ-1247.</div>
+      <div style="display:flex;gap:18px"><a href="dannye.dc.html" style="color:inherit">Обработка данных</a><a href="o-kompanii.dc.html" style="color:inherit">Раскрытие информации</a></div>
+    </div>
+  </footer>
+
+  <div data-noprint="1" style="position:fixed;right:clamp(14px,2vw,26px);bottom:clamp(14px,2vw,26px);z-index:90;display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+    <details style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+      <summary style="display:flex;align-items:center;gap:9px;cursor:pointer;list-style:none;background:#14284B;color:#FBFCFD;border-radius:100px;padding:12px 20px;font-size:13.5px;font-weight:700;box-shadow:0 16px 34px -22px rgba(20,40,75,.7);white-space:nowrap">
+        <span style="width:8px;height:8px;border-radius:50%;background:#0FA3A8;display:block;flex:none"></span>Поддержка
+      </summary>
+      <div style="margin-top:8px;background:#14284B;color:#FBFCFD;border-radius:16px;padding:16px 18px;max-width:290px;box-shadow:0 22px 46px -26px rgba(20,40,75,.6)">
+        <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:9px">КРУГЛОСУТОЧНО</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.35;margin-bottom:12px">Нужна помощь или случился убыток?</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <a href="ubytki.dc.html#report" style="text-align:center;font-size:13.5px;font-weight:700;padding:11px 16px;border-radius:100px;background:#0A767A;color:#FBFCFD;transition:background .2s ease" style-hover="background:#FBFCFD;color:#14284B">Сообщить об убытке</a>
+          <a href="assistent.dc.html" style="text-align:center;font-size:13.5px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(251,250,247,.22);color:#FBFCFD;transition:border-color .2s ease" style-hover="border-color:#FBFCFD">Задать вопрос помощнику</a>
+          <a href="tel:88005503140" style="text-align:center;font-family:'IBM Plex Mono';font-size:13px;color:#B9C4D2;padding:6px 0">8 800 550-31-40</a>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:940}}">
+class Component extends DCLogic {
+  state = { tab: 0, sort: 0, mail: '', subMsg: '', subOk: false };
+
+  feed() {
+    return [
+      { cat: 'Рынок', tag: 'ПРОГНОЗ РЫНКА', date: '29.12.2025', source: 'АКРА', url: 'https://www.acra-ratings.ru/research/2837/',
+        title: 'АКРА: в 2026 году страховой рынок вырастет на 15% и достигнет 4,47 трлн рублей',
+        text: 'Главный вклад в динамику агентство отводит некредитному страхованию жизни — рост на 16%, или 335 млрд рублей, — и автострахованию. Отдельно отмечен сдвиг в сторону долгосрочных договоров: доля программ на срок свыше десяти лет в новых продажах выросла с 8% в 2024 году до примерно 18% в 2025-м.',
+        figureLabel: 'Прогноз объёма рынка', figure: '4,47 трлн ₽',
+        impact: 'Рост идёт за счёт накопительных программ, а не подешевевших рисковых полисов.' },
+      { cat: 'Рынок', tag: 'РЕГУЛИРОВАНИЕ', date: '2026', source: 'Банк России', url: 'https://cbr.ru/press/event/?id=23469',
+        title: 'С 2026 года действует запрет на заключение новых договоров ИСЖ',
+        text: 'Инвестиционное страхование жизни заменяет долевое страхование жизни: страховщики разрабатывают программы ДСЖ под спрос на продукты с инвестиционной составляющей. Полисы ИСЖ, оформленные до 2026 года, продолжают действовать.',
+        figureLabel: 'Действующие полисы ИСЖ', figure: 'сохраняются',
+        impact: 'Если у вас есть полис ИСЖ, он работает по прежним условиям — менять его не требуется.' },
+      { cat: 'Рынок', tag: 'ИТОГИ ГОДА', date: '2026', source: 'TAdviser (по данным ЦБ)', url: 'https://www.tadviser.ru/index.php/%D0%A1%D1%82%D0%B0%D1%82%D1%8C%D1%8F:%D0%A1%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_(%D1%80%D1%8B%D0%BD%D0%BE%D0%BA_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8)',
+        title: 'Число страховых компаний в России за год сократилось до 129',
+        text: 'Объём рынка страхования за год вырос на 6,9% и достиг 4 трлн рублей, чистая прибыль страховых компаний увеличилась на 8,5% и составила 502,3 млрд рублей. В страховании транспорта лидируют Ингосстрах, АльфаСтрахование и РЕСО-Гарантия.',
+        figureLabel: 'Действующих страховщиков', figure: '129',
+        impact: 'Рынок концентрируется: при выборе страховщика смотрите на устойчивость, а не только на цену.' },
+      { cat: 'Рынок', tag: 'СТРАХОВАНИЕ ЖИЗНИ', date: '2026', source: 'TAdviser (по данным ЦБ)', url: 'https://www.tadviser.ru/index.php/%D0%A1%D1%82%D0%B0%D1%82%D1%8C%D1%8F:%D0%A1%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_(%D1%80%D1%8B%D0%BD%D0%BE%D0%BA_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8)',
+        title: 'Сборы по страхованию жизни за год выросли на 10,7% и достигли 2,2 трлн рублей',
+        text: 'Рынок инвестиционного страхования жизни за год увеличился на 81,6% и достиг 911 млрд рублей. Объём перестрахования вырос на 23,9% до 155,4 млрд рублей.',
+        figureLabel: 'Взносы по страхованию жизни', figure: '2,2 трлн ₽',
+        impact: 'Основной приток дают накопительные программы — при выборе сравнивайте доходность и условия выхода.' },
+      { cat: 'Убытки', tag: 'СУДЕБНАЯ ПРАКТИКА', date: '26.05.2026', source: 'АСН', url: 'https://www.asn-news.ru/',
+        title: 'Конституционный суд ограничил «безусловное право» на ремонт по ОСАГО за счёт страховщика',
+        text: 'По сообщению отраслевого агентства, первое дело после постановления КС разворачивает сложившуюся практику по ОСАГО. Вопрос касается того, в каких случаях потерпевший может требовать именно ремонта, а не выплаты.',
+        figureLabel: 'Дата постановления', figure: '26.05.2026',
+        impact: 'При споре о ремонте по ОСАГО практика меняется — решение стоит согласовывать с юристом до подписания соглашения.' },
+      { cat: 'Убытки', tag: 'ОСАГО', date: '01.08.2026', source: 'обзор изменений законодательства', url: 'https://26.ru/text/world/2026/08/01/76561203/',
+        title: 'С 1 августа вступили в силу изменения, касающиеся суммы выплат по ОСАГО',
+        text: 'В подборке изменений месяца отмечено также, что вступает в силу новый порядок исключения операторов сервисов рассрочки из реестра Банка России.',
+        figureLabel: 'Дата вступления', figure: '01.08.2026',
+        impact: 'Перед подачей заявления по ДТП уточняйте актуальный лимит — он определяется на дату страхового случая.' },
+      { cat: 'Убытки', tag: 'ДИСКУССИЯ', date: '2026', source: 'АСН', url: 'https://www.asn-news.ru/',
+        title: 'Обсуждается отмена лимита выплат по ОСАГО',
+        text: 'Прозвучало предложение в перспективе лимит выплат по ОСАГО не увеличивать, а полностью отменить, чтобы обязательная страховка целиком покрывала ущерб от ДТП.',
+        figureLabel: 'Статус', figure: 'обсуждение',
+        impact: 'Пока лимит действует, разницу свыше него взыскивают с виновника — расширение ответственности закрывает этот риск.' },
+      { cat: 'Сделки', tag: 'СЕГМЕНТЫ', date: '2026', source: 'TAdviser (по данным ЦБ)', url: 'https://www.tadviser.ru/index.php/%D0%A1%D1%82%D0%B0%D1%82%D1%8C%D1%8F:%D0%A1%D1%82%D1%80%D0%B0%D1%85%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5_(%D1%80%D1%8B%D0%BD%D0%BE%D0%BA_%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8)',
+        title: 'Рынок страхования грузов сократился на 6,1% до 49,2 млрд рублей',
+        text: 'При этом объём морского страхования достиг 36 млрд рублей. Снижение по грузам отражает изменение логистических потоков и объёмов перевозок.',
+        figureLabel: 'Страхование грузов', figure: '49,2 млрд ₽',
+        impact: 'Для регулярных перевозок генеральный договор обычно дешевле разовых полисов на каждую отправку.' },
+      { cat: 'Сделки', tag: 'КОРПОРАТИВНЫЕ РИСКИ', date: 'август 2026', source: 'журнал «Профиль»', url: 'https://profile.ru/finance/riski-po-prejskurantu-s-kakimi-vyzovami-stolknulsya-strahovoj-rynok-nashej-strany-1883543/',
+        title: 'Сборы рынка растут примерно на 15% в год за счёт удорожания средних чеков',
+        text: 'По ДМС рост сборов был во многом обусловлен удорожанием платных медицинских услуг; в 2026 году ситуация принципиально не изменилась, поэтому ожидается увеличение выручки примерно на 10–12%.',
+        figureLabel: 'Ожидаемый рост ДМС', figure: '+10…12%',
+        impact: 'Коллективные программы ДМС стоит пересчитывать ежегодно: цена растёт вместе с медицинскими тарифами.' }
+    ];
+  }
+
+  insurerData() {
+    return [
+      { name: 'СОГАЗ', license: 'СИ №1208', premium: 412.6, claims: 189.4, rating: 'ruAAA', mix: [['Корпоративное имущество', 38], ['ДМС и жизнь', 31], ['Авто', 18], ['Прочее', 13]] },
+      { name: 'Ингосстрах', license: 'СИ №0928', premium: 188.2, claims: 104.7, rating: 'ruAA+', mix: [['Авто', 44], ['Имущество', 24], ['ДМС и жизнь', 19], ['Прочее', 13]] },
+      { name: 'АльфаСтрахование', license: 'СИ №2239', premium: 164.9, claims: 82.1, rating: 'ruAA+', mix: [['ДМС и жизнь', 36], ['Авто', 30], ['Имущество', 21], ['Прочее', 13]] },
+      { name: 'РЕСО-Гарантия', license: 'СИ №1209', premium: 152.4, claims: 88.6, rating: 'ruAA', mix: [['Авто', 57], ['Имущество', 20], ['ДМС и жизнь', 13], ['Прочее', 10]] },
+      { name: 'Росгосстрах', license: 'СИ №0001', premium: 121.7, claims: 71.3, rating: 'ruAA−', mix: [['Авто', 41], ['Имущество', 27], ['ДМС и жизнь', 16], ['Прочее', 16]] },
+      { name: 'ВСК', license: 'СИ №0621', premium: 118.3, claims: 64.9, rating: 'ruAA−', mix: [['Авто', 46], ['Имущество', 25], ['ДМС и жизнь', 17], ['Прочее', 12]] },
+      { name: 'Согласие', license: 'СИ №1307', premium: 74.5, claims: 42.8, rating: 'ruA+', mix: [['Авто', 39], ['Имущество', 30], ['ДМС и жизнь', 18], ['Прочее', 13]] },
+      { name: 'Ренессанс Страхование', license: 'СИ №1284', premium: 68.9, claims: 34.2, rating: 'ruAA−', mix: [['ДМС и жизнь', 42], ['Авто', 33], ['Имущество', 15], ['Прочее', 10]] }
+    ];
+  }
+
+  renderVals() {
+    const st = this.state;
+    const cats = ['Все', 'Убытки', 'Сделки', 'Рынок'];
+    const feed = this.feed();
+    const active = cats[st.tab];
+    const tagColors = { 'Убытки': '#8A5A2B', 'Сделки': '#0A767A', 'Рынок': '#5A6B85' };
+
+    const tabs = cats.map((label, i) => {
+      const on = st.tab === i;
+      const count = label === 'Все' ? feed.length : feed.filter(n => n.cat === label).length;
+      return {
+        label, count: String(count),
+        select: () => this.setState({ tab: i }),
+        bg: on ? '#14284B' : 'transparent',
+        border: on ? '#14284B' : 'rgba(20,40,75,.18)',
+        color: on ? '#FBFCFD' : '#5A6B85',
+        countColor: on ? '#9AA6B8' : '#9AA6B8'
+      };
+    });
+
+    const news = feed.filter(n => active === 'Все' || n.cat === active)
+      .map((n, i) => ({ ...n, tagColor: tagColors[n.cat] || '#5A6B85', delay: (i * 45) + 'ms' }));
+
+    const mixColors = ['#14284B', '#0A767A', '#8A5A2B', '#B9C4D2'];
+    const sortNames = ['По сборам', 'По уровню выплат', 'По алфавиту'];
+    const sorts = sortNames.map((label, i) => {
+      const on = st.sort === i;
+      return {
+        label,
+        select: () => this.setState({ sort: i }),
+        bg: on ? '#0A767A' : 'transparent',
+        border: on ? '#0A767A' : 'rgba(20,40,75,.18)',
+        color: on ? '#FBFCFD' : '#5A6B85'
+      };
+    });
+
+    const rows = this.insurerData().map(x => {
+      const ratio = Math.round((x.claims / x.premium) * 100);
+      return { ...x, ratioNum: ratio };
+    });
+    if (st.sort === 0) rows.sort((a, b) => b.premium - a.premium);
+    if (st.sort === 1) rows.sort((a, b) => b.ratioNum - a.ratioNum);
+    if (st.sort === 2) rows.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+
+    const fmt = (n) => n.toFixed(1).replace('.', ',') + ' млрд ₽';
+    const insurers = rows.map(x => ({
+      name: x.name, license: x.license, rating: x.rating,
+      premium: fmt(x.premium), claims: fmt(x.claims),
+      ratio: x.ratioNum + '%',
+      ratioColor: x.ratioNum >= 55 ? '#8A5A2B' : '#0A767A',
+      mix: x.mix.map((m, i) => ({ w: m[1] + '%', color: mixColors[i] })),
+      mixLabel: x.mix.map(m => m[0] + ' ' + m[1] + '%').join(' · ')
+    }));
+
+    return {
+      tabs, news, sorts, insurers,
+      updated: '18 августа 2026',
+      sources: [
+        { name: 'Банк России', url: 'https://cbr.ru/insurance/', what: 'Статистика по субъектам страхового дела, реестр страховщиков, регулирование' },
+        { name: 'АКРА', url: 'https://www.acra-ratings.ru/research/2837/', what: 'Прогнозы по рынку и рейтинги финансовой надёжности' },
+        { name: 'АСН — Агентство страховых новостей', url: 'https://www.asn-news.ru/', what: 'Отраслевые новости, судебная практика, споры по выплатам' },
+        { name: 'РСА', url: 'https://autoins.ru/', what: 'Статистика ОСАГО: средняя премия и выплата, КБМ' }
+      ],
+      feedNote: news.length + (news.length === 1 ? ' материал' : news.length < 5 ? ' материала' : ' материалов') + ' в разделе',
+      marketStats: [
+        { label: 'Объём рынка страхования', value: '4 трлн ₽', delta: '+6,9% за год', deltaColor: '#0FA3A8' },
+        { label: 'Прогноз на 2026 год (АКРА)', value: '4,47 трлн ₽', delta: '+15%, или 577 млрд ₽', deltaColor: '#0FA3A8' },
+        { label: 'Взносы по страхованию жизни', value: '2,2 трлн ₽', delta: '+10,7% за год', deltaColor: '#0FA3A8' },
+        { label: 'Действующих страховщиков', value: '129', delta: 'сокращение за год', deltaColor: '#C08A5A' },
+        { label: 'Прибыль страховых компаний', value: '502,3 млрд ₽', delta: '+8,5% за год', deltaColor: '#0FA3A8' }
+      ],
+      legend: [
+        { label: 'Имущество и корпоративные риски', color: '#14284B' },
+        { label: 'ДМС и страхование жизни', color: '#0A767A' },
+        { label: 'Автострахование', color: '#8A5A2B' },
+        { label: 'Прочие виды', color: '#B9C4D2' }
+      ],
+      mail: st.mail,
+      setMail: (e) => this.setState({ mail: e.target.value }),
+      subscribe: () => {
+        const v = st.mail.trim();
+        if (!v || v.indexOf('@') < 1) { this.setState({ subMsg: 'Укажите почту, на которую присылать дайджест.', subOk: false }); return; }
+        this.setState({ subMsg: 'Готово: дайджест будет приходить по вторникам на ' + v + '.', subOk: true, mail: '' });
+      },
+      subMsg: st.subMsg,
+      subDisplay: st.subMsg ? 'block' : 'none',
+      subColor: st.subOk ? '#0A767A' : '#B03A2E'
+    };
+  }
+}
+</script>
+</body>
+</html>

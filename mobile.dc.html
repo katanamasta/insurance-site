@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#FBFCFD;font-family:'Manrope',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:#14284B;text-decoration:none}
+  a:hover{color:#0A767A}
+  input::placeholder{color:#9AA6B8}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes wordIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="width:390px;max-width:100%;margin:0 auto;background:#FBFCFD;color:#14284B;min-height:844px;position:relative;overflow:hidden">
+
+  <div style="height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:13px;font-weight:600;font-family:'IBM Plex Mono'">
+    <span>9:41</span>
+    <span style="display:flex;gap:5px;align-items:center">
+      <span style="width:16px;height:9px;border:1px solid #14284B;border-radius:2px;display:block;position:relative"><span style="position:absolute;inset:1px;right:5px;background:#14284B;display:block"></span></span>
+    </span>
+  </div>
+
+  <header style="position:sticky;top:0;z-index:50;background:rgba(251,250,247,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,40,75,.08);height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 18px">
+    <a href="glavnaya-b3.dc.html" style="font-size:16px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:7px">
+      <img src="logo-pins.png" alt="PINS" style="height:46px;width:auto;display:block">
+    </a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <a href="tel:88005503140" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(20,40,75,.16);display:flex;align-items:center;justify-content:center;font-size:15px">☎</a>
+      <button onClick="{{ toggleMenu }}" style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(20,40,75,.16);background:{{ menuBg }};color:{{ menuColor }};cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .25s ease">{{ menuIcon }}</button>
+    </div>
+  </header>
+
+  <div style="overflow:hidden;max-height:{{ menuH }};transition:max-height .4s cubic-bezier(.2,.7,.3,1);background:#E7EDF3">
+    <div style="padding:14px 18px;display:flex;flex-direction:column;gap:2px">
+      <sc-for list="{{ menu }}" as="m" hint-placeholder-count="5">
+        <a href="{{ m.href }}" style="font-size:16px;font-weight:600;padding:12px 0;border-bottom:1px solid rgba(20,40,75,.1)">{{ m.label }}</a>
+      </sc-for>
+    </div>
+  </div>
+
+  <section style="padding:26px 18px 0">
+    <div style="display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono';font-size:11px;color:#5A6B85;border:1px solid rgba(20,40,75,.14);border-radius:100px;padding:6px 12px;margin-bottom:18px">
+      <span style="width:5px;height:5px;border-radius:50%;background:#0FA3A8;display:block"></span>
+      24 страховщика · с 2011 года
+    </div>
+    <h1 style="font-size:31px;font-weight:500;line-height:1.1;letter-spacing:-.03em;margin:0 0 14px">
+      Страхуем <span data-rotator="1" style="display:inline-block;color:#0A767A">{{ word }}</span> по цене страховой
+    </h1>
+    <p style="font-size:15px;color:#5A6B85;line-height:1.5;margin:0 0 20px">Одна анкета уходит во все компании сразу. Возвращается таблица с ценами и условиями — выбираете вы.</p>
+    <div style="display:flex;flex-direction:column;gap:9px">
+      <a href="calculator.dc.html" style="text-align:center;font-size:16px;font-weight:700;padding:16px 0;border-radius:100px;background:#0A767A;color:#FBFCFD">Сравнить предложения</a>
+      <a href="katalog.dc.html" style="text-align:center;font-size:16px;font-weight:600;padding:16px 0;border-radius:100px;border:1px solid rgba(20,40,75,.2)">Все виды страхования</a>
+    </div>
+  </section>
+
+  <section style="margin-top:24px;border-top:1px solid rgba(20,40,75,.1);border-bottom:1px solid rgba(20,40,75,.1);background:#F2F5F8;padding:12px 0;overflow:hidden">
+    <div style="display:flex;gap:32px;width:max-content;animation:ticker 34s linear infinite;font-family:'IBM Plex Mono';font-size:12px;color:#5A6B85;white-space:nowrap">
+      <sc-for list="{{ ticker }}" as="t" hint-placeholder-count="10">
+        <span style="display:flex;align-items:center;gap:32px">{{ t }}<span style="width:4px;height:4px;border-radius:50%;background:#0FA3A8;display:block"></span></span>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="padding:26px 18px 0">
+    <div style="font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:6px">Расчёт ОСАГО</div>
+    <div style="font-size:13px;color:#7B8AA0;margin-bottom:14px">Camry 2021 · Москва · стаж 9 лет</div>
+    <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.select }}" style="flex:none;border:1px solid {{ t.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:13px 16px;min-height:44px;border-radius:100px;background:{{ t.bg }};color:{{ t.color }};transition:all .25s ease">{{ t.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ offers }}" as="o" hint-placeholder-count="4">
+        <div style="background:{{ o.bg }};border:1px solid {{ o.border }};border-radius:14px;padding:15px 16px;animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both;animation-delay:{{ o.delay }}">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:9px">
+            <div style="display:flex;gap:10px;align-items:center;min-width:0">
+              <span style="width:28px;height:28px;border-radius:50%;background:#E7EDF3;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#5A6B85;flex:none">{{ o.initial }}</span>
+              <div style="min-width:0">
+                <div style="font-size:14px;font-weight:700">{{ o.name }}</div>
+                <div style="font-size:11px;color:#9AA6B8;margin-top:2px">{{ o.feature }}</div>
+              </div>
+            </div>
+            <div style="font-family:'IBM Plex Mono';font-size:17px;letter-spacing:-.03em;color:{{ o.priceColor }};white-space:nowrap">{{ o.price }}</div>
+          </div>
+          <div style="height:3px;background:#E7EDF3;border-radius:2px;overflow:hidden">
+            <div style="height:100%;width:{{ o.barW }};background:{{ o.barColor }}"></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <a href="calculator.dc.html" style="display:block;text-align:center;font-size:14px;font-weight:700;color:#0A767A;padding:14px 0">Все 24 предложения →</a>
+  </section>
+
+  <section style="padding:14px 18px 0">
+    <div style="font-size:20px;font-weight:600;letter-spacing:-.02em;margin-bottom:14px">Что можно застраховать</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
+        <a href="katalog.dc.html" style="background:#FFFFFF;border:1px solid rgba(20,40,75,.1);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:5px;min-height:112px">
+          <div style="font-family:'IBM Plex Mono';font-size:10px;color:{{ c.tagColor }};letter-spacing:.05em">{{ c.tag }}</div>
+          <div style="font-size:16px;font-weight:700;letter-spacing:-.02em;margin-top:auto">{{ c.title }}</div>
+          <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A">{{ c.price }}</div>
+        </a>
+      </sc-for>
+    </div>
+    <a href="katalog.dc.html" style="display:block;text-align:center;font-size:14px;font-weight:700;color:#0A767A;padding:16px 0">Ещё 4 направления →</a>
+  </section>
+
+  <section style="padding:10px 18px 0">
+    <div style="background:#E7EDF3;border-radius:16px;padding:20px">
+      <div style="font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px">Если случилось</div>
+      <div style="font-size:14px;color:#4A5B75;line-height:1.5;margin-bottom:16px">Звоните куратору, а не в страховую. Он подскажет, что делать на месте, и подаст документы за вас.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:baseline">
+            <div style="font-family:'IBM Plex Mono';font-size:12px;color:#0A767A">{{ t.when }}</div>
+            <div style="font-size:14px;font-weight:600">{{ t.title }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <a href="ubytki.dc.html" style="display:block;text-align:center;font-size:15px;font-weight:700;padding:14px 0;border-radius:100px;background:#14284B;color:#FBFCFD">Заявить о случае</a>
+    </div>
+  </section>
+
+  <section style="padding:24px 18px 0">
+    <div style="background:#14284B;color:#FBFCFD;border-radius:16px;padding:22px">
+      <div style="font-size:19px;font-weight:600;letter-spacing:-.02em;margin-bottom:8px">Начните с госномера</div>
+      <div style="font-size:14px;color:#9AA6B8;line-height:1.5;margin-bottom:16px">Марку, год и КБМ подтянем из баз. Расчёт займёт две минуты.</div>
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <input placeholder="А123ВС 777" style="width:100%;background:rgba(251,250,247,.08);border:1px solid rgba(251,250,247,.18);border-radius:100px;padding:14px 20px;outline:none;font-family:'IBM Plex Mono';font-size:16px;color:#FBFCFD">
+        <a href="calculator.dc.html" style="text-align:center;font-family:'Manrope';font-size:16px;font-weight:700;padding:15px 0;border-radius:100px;background:#0A767A;color:#FBFCFD">Рассчитать</a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="padding:26px 18px 90px">
+    <div style="font-size:11px;color:#9AA6B8;line-height:1.6">ООО «ПИНС Брокер», лицензия Банка России СБ-1247. Информация на сайте не является публичной офертой.</div>
+  </footer>
+
+  <div style="position:sticky;bottom:0;background:rgba(251,250,247,.94);backdrop-filter:blur(12px);border-top:1px solid rgba(20,40,75,.1);padding:8px 10px 22px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="4">
+      <a href="{{ n.href }}" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0;color:{{ n.color }}">
+        <span style="font-size:17px">{{ n.icon }}</span>
+        <span style="font-size:10px;font-weight:600">{{ n.label }}</span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  state = { tab: 0, menu: false, w: 0 };
+
+  componentDidMount() {
+    this._wt = setInterval(() => this.setState(s => ({ w: s.w + 1 })), 2100);
+  }
+  componentDidUpdate(pp, ps) {
+    if (ps && ps.w !== this.state.w) {
+      const el = (this.host || document).querySelector('[data-rotator]');
+      if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'wordIn .45s cubic-bezier(.2,.7,.3,1) both'; }
+    }
+  }
+  componentWillUnmount() { if (this._wt) clearInterval(this._wt); }
+
+  renderVals() {
+    const words = ['машину', 'квартиру', 'здоровье', 'поездку', 'груз', 'бизнес'];
+    const ticker = ['24 страховые компании', 'Лицензия СБ-1247', '1 100 000 полисов', 'Выплата за 11 дней', 'Работаем с 2011 года'];
+
+    const tabs = ['ОСАГО', 'КАСКО', 'Ипотека'].map((label, i) => ({
+      label,
+      select: () => this.setState({ tab: i }),
+      bg: this.state.tab === i ? '#14284B' : 'transparent',
+      color: this.state.tab === i ? '#FBFCFD' : '#5A6B85',
+      border: this.state.tab === i ? '#14284B' : 'rgba(20,40,75,.2)'
+    }));
+
+    const sets = [
+      [
+        { name: 'Ингосстрах', feature: 'полис в РСА за 4 минуты', p: 12100 },
+        { name: 'Согласие', feature: 'скидка за безаварийность', p: 12950 },
+        { name: 'Ренессанс Страхование', feature: 'аварийный комиссар', p: 13440 },
+        { name: 'АльфаСтрахование', feature: 'выплата без справок', p: 13910 }
+      ],
+      [
+        { name: 'Ингосстрах', feature: 'франшиза 30 000 ₽', p: 54200 },
+        { name: 'Ренессанс Страхование', feature: 'без франшизы', p: 61700 },
+        { name: 'АльфаСтрахование', feature: 'КАСКО и GAP', p: 66400 },
+        { name: 'Согласие', feature: 'эвакуатор и такси', p: 72300 }
+      ],
+      [
+        { name: 'АльфаСтрахование', feature: 'принимают все банки', p: 4120 },
+        { name: 'Ингосстрах', feature: 'конструктив и жизнь', p: 4480 },
+        { name: 'Согласие', feature: 'титул на три года', p: 4690 },
+        { name: 'Ренессанс Страхование', feature: 'продление без осмотра', p: 5010 }
+      ]
+    ];
+    const set = sets[this.state.tab];
+    const max = Math.max(...set.map(o => o.p));
+    const offers = set.map((o, i) => ({
+      name: o.name, feature: o.feature, initial: o.name.charAt(0),
+      price: o.p.toLocaleString('ru-RU') + ' ₽',
+      delay: (i * 60) + 'ms',
+      barW: Math.round((o.p / max) * 100) + '%',
+      barColor: i === 0 ? '#0A767A' : '#B9C4D2',
+      priceColor: i === 0 ? '#0A767A' : '#14284B',
+      bg: i === 0 ? '#F1FAFB' : '#FFFFFF',
+      border: i === 0 ? 'rgba(15,163,168,.3)' : 'rgba(20,40,75,.1)'
+    }));
+
+    const tagColors = { 'АВТО': '#0A767A', 'ИМУЩЕСТВО': '#7A6A55', 'ЖИЗНЬ': '#8A5A2B', 'ПОЕЗДКИ': '#5A6B85' };
+    const cards = [
+      { tag: 'АВТО', title: 'ОСАГО', price: 'от 3 240 ₽' },
+      { tag: 'АВТО', title: 'КАСКО', price: 'от 21 500 ₽' },
+      { tag: 'ИМУЩЕСТВО', title: 'Ипотека', price: 'от 4 100 ₽' },
+      { tag: 'ИМУЩЕСТВО', title: 'Квартира', price: 'от 2 700 ₽' },
+      { tag: 'ЖИЗНЬ', title: 'ДМС', price: 'от 19 900 ₽' },
+      { tag: 'ЖИЗНЬ', title: 'Жизнь и НС', price: 'от 900 ₽' },
+      { tag: 'ПОЕЗДКИ', title: 'ВЗР', price: 'от 480 ₽' },
+      { tag: 'ПОЕЗДКИ', title: 'Зелёная карта', price: 'от 2 900 ₽' }
+    ].map(c => ({ ...c, tagColor: tagColors[c.tag] }));
+
+    const timeline = [
+      { when: '0 часов', title: 'Звонок куратору' },
+      { when: '1 день', title: 'Документы поданы' },
+      { when: '11 дней', title: 'Деньги или ремонт' }
+    ];
+
+    const menu = [
+      { label: 'Продукты', href: 'katalog.dc.html' },
+      { label: 'Расчёт и сравнение', href: 'calculator.dc.html' },
+      { label: 'Бизнесу', href: 'biznesu.dc.html' },
+      { label: 'Выплаты', href: 'ubytki.dc.html' },
+      { label: 'О компании', href: 'o-kompanii.dc.html' }
+    ];
+
+    const nav = [
+      { icon: '⌂', label: 'Главная', href: 'mobile.dc.html', active: true },
+      { icon: '☰', label: 'Продукты', href: 'katalog.dc.html' },
+      { icon: '⊞', label: 'Расчёт', href: 'calculator.dc.html' },
+      { icon: '◔', label: 'Кабинет', href: 'kabinet.dc.html' }
+    ].map(n => ({ ...n, color: n.active ? '#0A767A' : '#9AA6B8' }));
+
+    return {
+      word: words[this.state.w % words.length],
+      ticker: ticker.concat(ticker),
+      tabs, offers, cards, timeline, menu, nav,
+      toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
+      menuH: this.state.menu ? '320px' : '0px',
+      menuIcon: this.state.menu ? '×' : '≡',
+      menuBg: this.state.menu ? '#14284B' : 'transparent',
+      menuColor: this.state.menu ? '#FBFCFD' : '#14284B'
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>PINS — заявления по формам страховщиков</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #E7EDF3; font-family: 'Manrope', system-ui, sans-serif; }
+  doc-page:not(:defined) { visibility: hidden; }
+  a { color: #0A767A; text-decoration: none; }
+  a:hover { color: #14284B; }
+  @media print { .noprint { display: none !important; } }
+</style>
+<script src="./doc-page.js"></script>
+<script src="./docx-fill.js"></script>
+</helmet>
+
+<div style="min-height:100%;background:#E7EDF3;color:#14284B">
+  <div class="noprint" style="position:sticky;top:0;z-index:20;background:rgba(251,252,253,.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(20,40,75,.1);padding:14px clamp(16px,4vw,40px)">
+    <div style="max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap">
+      <div style="min-width:0">
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#9AA6B8;letter-spacing:.08em;margin-bottom:4px">ЗАЯВЛЕНИЕ ПО ФОРМЕ СТРАХОВЩИКА</div>
+        <div style="font-size:17px;font-weight:700;letter-spacing:-.02em">{{ headline }}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <button onClick="{{ downloadDocx }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:14px;font-weight:700;padding:12px 20px;border-radius:100px;background:#14284B;color:#FBFCFD;transition:background .2s ease" style-hover="background:#0A767A">{{ docxLabel }}</button>
+        <button onClick="{{ doPrint }}" style="border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:600;padding:12px 17px;border-radius:100px;background:transparent;color:#14284B">Печать этой версии</button>
+        <a href="admin-crm.dc.html" style="font-size:13.5px;font-weight:600;padding:12px 17px;border-radius:100px;border:1px solid rgba(20,40,75,.18);color:#14284B">Вернуться в CRM</a>
+      </div>
+    </div>
+    <div style="max-width:1180px;margin:12px auto 0;display:flex;gap:7px;flex-wrap:wrap">
+      <sc-for list="{{ insurers }}" as="c" hint-placeholder-count="7">
+        <button onClick="{{ c.pick }}" style="border:1px solid {{ c.border }};cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:9px 15px;border-radius:100px;background:{{ c.bg }};color:{{ c.color }};transition:all .2s ease">{{ c.name }}</button>
+      </sc-for>
+    </div>
+    <div style="max-width:1180px;margin:10px auto 0;font-size:12.5px;color:#5A6B85;line-height:1.5">{{ fillNote }}</div>
+    <div style="max-width:1180px;margin:11px auto 0;background:#F2F5F8;border-radius:12px;padding:13px 16px;display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="min-width:0">
+        <div style="font-size:13.5px;font-weight:700;margin-bottom:4px">Загрузить прошлогоднее заявление</div>
+        <div style="font-size:12.5px;color:#5A6B85;line-height:1.45;text-wrap:pretty">Файл разбирается в браузере и никуда не отправляется: из него подставляются реквизиты, характеристики здания, защита и суммы. Формат DOCX или XLSX — те же бланки, что подписывались в прошлом году.</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-shrink:0">
+        <button onClick="{{ pullCrm }}" style="border:none;cursor:pointer;font-family:'Manrope';font-size:13.5px;font-weight:700;padding:11px 19px;border-radius:100px;background:#0A767A;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#14284B">Импортировать данные</button>
+        <label style="cursor:pointer;font-size:13.5px;font-weight:700;padding:11px 19px;border-radius:100px;background:#14284B;color:#FBFCFD;white-space:nowrap;transition:background .2s ease" style-hover="background:#0A767A">
+          <span>Выбрать файл</span>
+          <input type="file" accept=".docx,.xlsx,.XLSX,.doc,.txt" onChange="{{ importPick }}" style="display:none">
+        </label>
+        <a href="zayavlenie.dc.html?p=0" onClick="{{ toZayavlenie }}" style="display:{{ clearDisplay }};font-size:13px;font-weight:600;padding:11px 16px;border-radius:100px;border:1px solid rgba(10,118,122,.4);color:#0A767A;white-space:nowrap">Перенести в заявление</a>
+        <button onClick="{{ clearImport }}" style="display:{{ clearDisplay }};border:1px solid rgba(20,40,75,.18);cursor:pointer;font-family:'Manrope';font-size:13px;font-weight:600;padding:11px 16px;border-radius:100px;background:transparent;color:#14284B;white-space:nowrap">Очистить</button>
+      </div>
+    </div>
+    <div style="display:{{ importNoteDisplay }};max-width:1180px;margin:9px auto 0;font-size:12.5px;color:{{ importColor }};line-height:1.5">{{ importNote }}</div>
+    <div style="display:{{ importListDisplay }};max-width:1180px;margin:8px auto 0;display:flex;gap:6px;flex-wrap:wrap">
+      <sc-for list="{{ importedRows }}" as="r" hint-placeholder-count="6">
+        <div style="font-family:'IBM Plex Mono';font-size:11px;color:#0A767A;border:1px solid rgba(15,163,168,.3);border-radius:100px;padding:5px 11px">{{ r.text }}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <doc-page margin="0.6in">
+    <div style="font-family:'Manrope',sans-serif;color:#14284B">
+      <div style="display:flex;justify-content:space-between;gap:16px;align-items:flex-start;border-bottom:2px solid #14284B;padding-bottom:10px;margin-bottom:14px">
+        <div style="min-width:0">
+          <div style="font-size:15px;font-weight:700;line-height:1.3">{{ cur.company }}</div>
+          <div style="font-size:11.5px;color:#5A6B85;margin-top:3px">{{ cur.subtitle }}</div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#5A6B85;line-height:1.6">{{ docNo }}</div>
+          <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:#5A6B85;line-height:1.6">{{ docDate }}</div>
+        </div>
+      </div>
+
+      <div style="font-size:16.5px;font-weight:700;line-height:1.3;margin-bottom:6px">{{ cur.title }}</div>
+      <div style="font-size:11px;color:#5A6B85;line-height:1.5;margin-bottom:16px;text-wrap:pretty">{{ cur.warning }}</div>
+
+      <sc-for list="{{ sections }}" as="s" hint-placeholder-count="6">
+        <div style="margin-bottom:14px;break-inside:avoid">
+          <div style="font-size:12px;font-weight:700;background:#E7EDF3;padding:5px 8px;margin-bottom:0;border:1px solid rgba(20,40,75,.28);border-bottom:none">{{ s.heading }}</div>
+          <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="4">
+            <div style="border:1px solid rgba(20,40,75,.28);border-bottom:none;display:grid;grid-template-columns:{{ r.cols }};break-inside:avoid">
+              <div style="padding:4px 8px;font-size:10.5px;line-height:1.35;color:#4A5B75;border-right:{{ r.divider }}">{{ r.label }}</div>
+              <sc-if value="{{ r.isKv }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:4px 8px;font-size:10.5px;line-height:1.35;font-weight:{{ r.weight }};color:{{ r.color }};font-family:{{ r.font }}">{{ r.value }}</div>
+              </sc-if>
+              <sc-if value="{{ r.isCheck }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:4px 8px;display:flex;flex-wrap:wrap;gap:3px 12px">
+                  <sc-for list="{{ r.opts }}" as="o" hint-placeholder-count="3">
+                    <div style="font-size:10.5px;line-height:1.35;color:{{ o.color }};font-weight:{{ o.weight }};white-space:nowrap">{{ o.text }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <div style="border:1px solid rgba(20,40,75,.28);height:0"></div>
+        </div>
+      </sc-for>
+
+      <div style="margin-top:18px;font-size:10.5px;color:#5A6B85;line-height:1.55;text-wrap:pretty">Сведения, указанные в настоящем заявлении, являются существенными обстоятельствами для оценки страхового риска (ст. 944 ГК РФ). Страхователь подтверждает их полноту и достоверность и согласен на обработку персональных данных в соответствии с 152-ФЗ.</div>
+
+      <div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:26px;break-inside:avoid">
+        <div>
+          <div style="border-bottom:1px solid #14284B;height:26px"></div>
+          <div style="font-size:10.5px;color:#5A6B85;margin-top:5px;line-height:1.4">{{ signLeft }}</div>
+        </div>
+        <div>
+          <div style="border-bottom:1px solid #14284B;height:26px"></div>
+          <div style="font-size:10.5px;color:#5A6B85;margin-top:5px;line-height:1.4">Дата заполнения, печать организации</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;padding-top:10px;border-top:1px solid rgba(20,40,75,.15);display:flex;justify-content:space-between;gap:14px;font-size:10px;color:#9AA6B8;flex-wrap:wrap">
+        <div>Подготовлено брокером PINS · 8 800 550-31-40 · broker@pins.ru</div>
+        <div style="font-family:'IBM Plex Mono'">{{ footRef }}</div>
+      </div>
+    </div>
+  </doc-page>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { insurer: 0, v: {}, deal: '', loaded: false, imported: [], importNote: '', importOk: null, docxBusy: false };
+
+  // Читает нужные части office-архива без сторонних библиотек.
+  async unzip(blob, wanted) {
+    const buf = new Uint8Array(await blob.arrayBuffer());
+    const dv = new DataView(buf.buffer);
+    let eo = -1;
+    for (let i = buf.length - 22; i >= 0; i--) { if (dv.getUint32(i, true) === 0x06054b50) { eo = i; break; } }
+    if (eo < 0) throw new Error('это не файл Word или Excel');
+    const n = dv.getUint16(eo + 10, true);
+    let p = dv.getUint32(eo + 16, true);
+    const out = {};
+    for (let k = 0; k < n; k++) {
+      const method = dv.getUint16(p + 10, true);
+      const csize = dv.getUint32(p + 20, true);
+      const nameLen = dv.getUint16(p + 28, true);
+      const extraLen = dv.getUint16(p + 30, true);
+      const commLen = dv.getUint16(p + 32, true);
+      const lho = dv.getUint32(p + 42, true);
+      const name = new TextDecoder().decode(buf.slice(p + 46, p + 46 + nameLen));
+      if (wanted.some(w => name.startsWith(w))) {
+        const lnl = dv.getUint16(lho + 26, true);
+        const lel = dv.getUint16(lho + 28, true);
+        const start = lho + 30 + lnl + lel;
+        const data = buf.slice(start, start + csize);
+        out[name] = method === 0
+          ? new TextDecoder().decode(data)
+          : await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+      }
+      p += 46 + nameLen + extraLen + commLen;
+    }
+    return out;
+  }
+
+  // Word хранит служебные поля в w:instrText — их надо выбросить, иначе в значения
+  // попадают маркеры FORMCHECKBOX вместо ответов.
+  wordText(xml) {
+    const unesc = s => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    const clean = xml.replace(/<w:instrText[\s\S]*?<\/w:instrText>/g, '').replace(/<w:fldChar[^>]*\/>/g, '');
+    let t = '';
+    clean.replace(/<w:t(?:\s[^>]*)?>([\s\S]*?)<\/w:t>/g, (m, b) => { t += unesc(b); return m; });
+    return t.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // Строки документа: ячейки таблиц отдельно, абзацы отдельно.
+  wordRows(xml) {
+    const rows = [];
+    xml.replace(/<w:tr[\s>][\s\S]*?<\/w:tr>/g, (tr) => {
+      const cells = [];
+      tr.replace(/<w:tc[\s>][\s\S]*?<\/w:tc>/g, (tc) => { cells.push(this.wordText(tc)); return tc; });
+      if (cells.length) rows.push(cells);
+      return tr;
+    });
+    const paras = [];
+    xml.replace(/<w:p[\s>][\s\S]*?<\/w:p>/g, (pp) => { const t = this.wordText(pp); if (t) paras.push([t]); return pp; });
+    return rows.concat(paras);
+  }
+
+  // Пары «подпись графы — значение». Значение может лежать в следующей ячейке
+  // или внутри той же ячейки после двоеточия — оба случая встречаются в формах.
+  cellPairs(rows) {
+    const pairs = [];
+    const junk = /^(да|нет|руб|₽|%|№|г|с|по|иное|укажите|прочерк)?$/i;
+    const numbered = /^\d+(\.\d+)*\.?$/;
+
+    const splitColon = (cell) => {
+      const m = cell.match(/^(.{4,120}?):\s*(.{1,200})$/);
+      if (!m) return null;
+      const val = m[2].replace(/^[\s;:.,\-–—]+/, '').trim();
+      if (!val || junk.test(val)) return null;
+      return [m[1].trim(), val];
+    };
+
+    rows.forEach(cells => {
+      const list = cells.map(c => (c || '').trim());
+      let offset = 0;
+      if (list.length > 1 && numbered.test(list[0])) offset = 1;
+      const label = list[offset] || '';
+
+      // значение из соседних ячеек — каждая как отдельный кандидат, побеждает первая осмысленная
+      if (label.length > 3) {
+        list.slice(offset + 1).forEach(cell => {
+          if (cell && !junk.test(cell) && cell.length < 260) pairs.push([label, cell]);
+        });
+      }
+
+      // значение внутри самой ячейки
+      list.forEach(c => {
+        const p = splitColon(c);
+        if (p) pairs.push(p);
+      });
+    });
+    return pairs;
+  }
+
+  matchRules() {
+    return [
+      ['name', /полное наименование|наименование ?\/ ?фио страхователя|наименование страхователя|страхователь \(наименование/i],
+      ['inn', /^инн(\s*\/\s*(кпп|tin))?$|инн ?\/ ?кпп/i],
+      ['ogrn', /огрн/i],
+      ['addrLegal', /место нахождения|адрес места нахождения|юридический адрес/i],
+      ['addrPost', /почтовый адрес/i],
+      ['head', /руководител|единоличный исполнительный/i],
+      ['contact', /контактное лицо/i],
+      ['phone', /телефон/i],
+      ['email', /e-?mail|электронная почта/i],
+      ['bankDetails', /банковские реквизиты|расчётный счёт|р\/с/i],
+      ['objUse', /основной вид деятельности|вид деятельности|сфера деятельности/i],
+      ['turnover', /годовой оборот|выручка за год/i],
+      ['beneficiary', /выгодоприобретател/i],
+      ['benefRight', /права выгодоприобретателя|принадлежность.*имуществ|имущество принадлежит/i],
+      ['benefDoc', /договор залога|кредитный договор|договор лизинга/i],
+      ['periodFrom', /период страхования|срок страхования|срок действия договора/i],
+      ['deductible', /франшиз/i],
+      ['objAddr', /территория страхования|местонахождение имущества|адрес.*объект/i],
+      ['objPurpose', /функциональное назначение/i],
+      ['objYear', /год постройки/i],
+      ['objRepair', /год последнего капитального ремонта/i],
+      ['objAreaTotal', /общая площадь здания/i],
+      ['objArea', /занимаемая площадь|площадь территории страхования/i],
+      ['objFloors', /общее количество этажей|кол-?во этажей|количество этажей/i],
+      ['objFloorUsed', /занимаемый этаж/i],
+      ['objConstr', /конструктивный тип/i],
+      ['objHeat', /отоплени/i],
+      ['objStoreArea', /площадь складских/i],
+      ['objStoreH', /высота складирован/i],
+      ['objTenants', /основные арендаторы/i],
+      ['objLessor', /арендодател/i],
+      ['objNeighbors', /назначение примыкающих|смежных помещени/i],
+      ['objHazard', /огне-? ?и ?\/? ?или ?взрывоопасн|огневые работы/i],
+      ['objWorn', /аварийном ?\/ ?ветхом|ветхом состоянии/i],
+      ['objFire', /пожарная сигнализация|исправная автоматическая пожарная/i],
+      ['fireOut', /куда выведена|вывод сигнала|выводом на пульт/i],
+      ['fireSensors', /типы извещателей|тип датчиков/i],
+      ['fireCover', /процент охвата|площадь, покрываемая пожарной/i],
+      ['fireYear', /год установки извещателей/i],
+      ['fireSupp', /автоматического пожаротушения|спринклерная/i],
+      ['objGuard', /охранная сигнализация|охранной сигнализации/i],
+      ['guardPhys', /физическ|организованной физической|охрана территории/i],
+      ['guardMode', /график работы охраны|режим охраны/i],
+      ['guardArm', /оружие у охраны|вооружение/i],
+      ['guardPanic', /тревожная кнопка|экстренного вызова/i],
+      ['guardBars', /защита (на окнах|окон)|решётки|решетки/i],
+      ['cctv', /видеонаблюдени/i],
+      ['cctvKeep', /срок хранения записей/i],
+      ['losses', /убытк/i],
+      ['prev', /ранее страховалось|действующих договоров страхования|предыдущий страховщик/i],
+      ['bankruptcy', /банкротств|конкурсное производство|внешнее управление/i],
+      ['sanctions', /санкции/i],
+      ['bankArrears', /просроченная.*задолженность/i],
+      ['dual', /застраховано ли имущество в других|в других страховых компаниях/i],
+      ['sumBuilding', /здание.*коробка|здания, сооружения|конструктивные элементы/i],
+      ['sumFinish', /внутренняя отделка|отделка/i],
+      ['sumEngin', /инженерн(ое|о)/i],
+      ['sumGlass', /стекл|витрин|остеклен/i],
+      ['sumEquip', /оборудование/i],
+      ['sumFurn', /мебель/i],
+      ['sumIT', /компьютеры|оргтехник/i],
+      ['sumGoods', /товарные запасы|тмц|товары/i],
+      ['sumOuter', /внешние объекты|средства рекламы/i]
+    ];
+  }
+
+  isEmptyVal(s) {
+    const t = s.replace(/[–—\-_.\s]/g, '');
+    return !t || /^(нет|нетданных|прочерк)$/i.test(t);
+  }
+
+  // Убирает следы пустого бланка: заготовки дат, подчёркивания, обрывки соседних подписей.
+  cleanValue(raw) {
+    let v = (raw || '')
+      .replace(/Место для ввода даты\.?/gi, '')
+      .replace(/_{2,}/g, '')
+      .replace(/«\s*»/g, '')
+      .replace(/\(при наличии\)/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    // «154501003502; дата присвоения ОГРН: ;» → «154501003502»
+    const seg = v.split(';').map(s => s.trim()).filter(Boolean);
+    if (seg.length > 1) {
+      const meaningful = seg.filter(s => !/:$/.test(s) && !/^[.,\s]*$/.test(s));
+      if (meaningful.length) v = meaningful[0];
+    }
+    v = v.replace(/^[\s,.;:]+|[\s,;:]+$/g, '').trim();
+    // достраиваем парную кавычку, если название обрезано по границе ячейки
+    const open = (v.match(/«/g) || []).length, close = (v.match(/»/g) || []).length;
+    if (open > close) v = v + '»';
+    if (close > open) v = '«' + v;
+    return v.trim();
+  }
+
+  // Отличает настоящий ответ от неотмеченного варианта бланка или подписи соседней графы.
+  // Графы-идентификаторы: короткие названия вроде «ООО «Пиетра»» законны.
+  isNameKey(key) {
+    return /^(name|head|contact|beneficiary|objAddr|addrLegal|addrPost|objLessor|objTenants|prev)$/.test(key || '');
+  }
+
+  looksLikeAnswer(value, rules, key) {
+    const v = this.cleanValue(value);
+    // склеенные без пробелов варианты вроде «Имеется и исправноНеисправноОтсутствует»
+    if (/[а-яё][А-ЯЁ]/.test(v)) return false;
+    // подписи соседних граф, попавшие в ячейку значения
+    if (/^(год установки|краткое описание|минимальное расстояние|на каких этажах|дата присвоения|номер и дата|серия номер)/i.test(v)) return false;
+    // пустая заготовка даты: «с 20 г. по 20 г.»
+    if (/^с\s*(\d{2}\s*)?г?\.?\s*по/i.test(v) && !/\d{4}|\d{1,2}\s+[а-я]{3,}/i.test(v)) return false;
+    if (/^(частично|да|нет)\s*:?\s*%?$/i.test(v)) return false;
+    if (/%\s*от общего/i.test(v)) return false;
+    // в ячейке остались и «да», и «нет» — значит ни один вариант не отмечен
+    if (/(^|[^а-яё])да([^а-яё]|$)/i.test(v) && /(^|[^а-яё])нет([^а-яё]|$)/i.test(v)) return false;
+    if (/^(сайт в интернете|дата убытка|характер убытка|сумма ущерба|наименование|адрес)$/i.test(v)) return false;
+    // непарная скобка — обрывок соседней подписи
+    if ((v.match(/\(/g) || []).length !== (v.match(/\)/g) || []).length) return false;
+    // перечни вариантов из бланка, а не ответ
+    const optionWord = '(складское|торговое|производственное|административное|жилое|здание|помещение|сооружение|отдельно|стоящее|примыкающее|установлена|установлено|имеется|отсутствует|исправно|неисправно|страхователь|резидент|иное|воды|прочее|офис|склад|торговля|мп|р\\/с|к\\/с|бик|инн|кпп|снилс)';
+    if (new RegExp('^(не\\s+)?' + optionWord + '(\\s*[,;]?\\s*(не\\s+)?' + optionWord + '|\\s*\\(я\\)|\\s+в\\s+здании)*$', 'i').test(v)) return false;
+    // без цифр ответ должен быть содержательной фразой, а не обрывком графы
+    if (!this.isNameKey(key) && !/\d/.test(v) && (v.length < 12 || !/\s/.test(v))) return false;
+    return this.looksLikeAnswerCore(v, rules);
+  }
+
+  looksLikeAnswerCore(value, rules) {
+    const v = (value || '').trim();
+    if (v.length < 2 || v.length > 240) return false;
+    if (/[:;]$/.test(v)) return false;
+    if (/^\d+(\.\d+)*\.\s/.test(v)) return false;
+    if (/укажите|приложите|заполните|поясните|кол-?во:|место для ввода|при наличии|комментарии|если необходимо|если да|в т\.ч\. по другим|подпись|^мп\b/i.test(v)) return false;
+    if (/[ХX]{4,}/.test(v)) return false;
+    if (/(^|\s)да\s*\/?\s*нет(\s|$)/i.test(v) || /нет\s*;?\s*да/i.test(v) || /^да\s*нет$/i.test(v)) return false;
+    if ((v.match(/;/g) || []).length >= 2) return false;
+    if ((v.match(/\bкв\.м\.|\bруб\b/gi) || []).length >= 2 && !/\d/.test(v)) return false;
+    // значение, которое само является подписью графы, — это соседняя ячейка, а не ответ
+    if (rules.some(([, re]) => re.test(v))) return false;
+    // строки без цифр и длиннее пяти слов почти всегда перечень вариантов
+    if (!/\d/.test(v) && v.split(' ').length > 6) return false;
+    return true;
+  }
+
+  async importFile(file) {
+    const name = (file.name || '').toLowerCase();
+    let rows = null;
+    let text = '';
+    if (/\.(docx|doc)$/.test(name)) {
+      const parts = await this.unzip(file, ['word/document.xml']);
+      const xml = parts['word/document.xml'];
+      if (!xml) throw new Error('в файле нет текста Word — возможно, это старый формат .doc, его нужно пересохранить как .docx');
+      rows = this.wordRows(xml);
+    } else if (/\.xlsx$/.test(name)) {
+      const parts = await this.unzip(file, ['xl/sharedStrings.xml', 'xl/worksheets/sheet1.xml']);
+      const shared = [];
+      const ss = parts['xl/sharedStrings.xml'] || '';
+      ss.replace(/<si>([\s\S]*?)<\/si>/g, (m, inner) => {
+        shared.push(inner.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').trim());
+        return m;
+      });
+      const sheet = parts['xl/worksheets/sheet1.xml'] || '';
+      rows = [];
+      sheet.replace(/<row[^>]*>([\s\S]*?)<\/row>/g, (m, inner) => {
+        const cells = [];
+        inner.replace(/<c[^>]*?(t="(\w+)")?[^>]*>([\s\S]*?)<\/c>/g, (m2, a, type, body) => {
+          const val = (body.match(/<v>([\s\S]*?)<\/v>/) || [])[1] || (body.match(/<t[^>]*>([\s\S]*?)<\/t>/) || [])[1] || '';
+          cells.push((type === 's' ? (shared[parseInt(val, 10)] || '') : val.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim());
+          return m2;
+        });
+        rows.push(cells);
+        return m;
+      });
+    } else {
+      text = await file.text();
+      rows = text.split('\n').map(l => l.split(/\t|\|/).map(c => c.trim()));
+    }
+    const pairs = this.cellPairs(rows || []);
+    const rules = this.matchRules();
+    const found = {};
+    pairs.forEach(([label, value]) => {
+      if (this.isEmptyVal(value)) return;
+      const clean = this.cleanValue(value);
+      for (const [key, re] of rules) {
+        if (!re.test(label) || found[key]) continue;
+        if (this.looksLikeAnswer(value, rules, key)) found[key] = clean;
+        break;
+      }
+    });
+    return found;
+  }
+
+  componentDidMount() {
+    try {
+      const q = new URLSearchParams(location.search);
+      const raw = localStorage.getItem('pins-blank-data');
+      let v = {}, deal = '';
+      if (raw) {
+        const d = JSON.parse(raw);
+        v = d.v || {};
+        deal = d.deal || '';
+      }
+      if (!Object.keys(v).length) {
+        const draft = localStorage.getItem('pins-zayavlenie-draft');
+        if (draft) v = (JSON.parse(draft) || {}).v || {};
+      }
+      // Чистим значения, сохранённые до появления фильтра разбора.
+      const rules = this.matchRules();
+      const numeric = /^(sum|turnover|biIncome|fireCover|objFloors|objArea|objAreaTotal|objYear|objRepair|objStoreArea|dualShare)/;
+      let changed = false;
+      Object.keys(v).forEach(k => {
+        const raw = String(v[k] || '').trim();
+        const val = this.cleanValue(raw);
+        if (!val || (numeric.test(k) && !/\d/.test(val)) || !this.looksLikeAnswer(raw, rules, k)) {
+          delete v[k];
+          changed = true;
+          return;
+        }
+        if (val !== raw) { v[k] = val; changed = true; }
+      });
+      if (changed) {
+        try { localStorage.setItem('pins-blank-data', JSON.stringify({ v, deal, at: Date.now() })); } catch (e2) {}
+      }
+      const idx = parseInt(q.get('c'), 10);
+      this.setState({ v, deal, loaded: true, insurer: (!isNaN(idx) && idx >= 0 && idx < this.companies().length) ? idx : 0 });
+    } catch (e) { this.setState({ loaded: true }); }
+  }
+
+  companies() {
+    return [
+      { key: 'absolut', template: 'absolut.docx', name: 'Абсолют', company: 'ООО «Абсолют Страхование»',
+        subtitle: 'Заявление-анкета для малого и среднего бизнеса',
+        title: 'ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ИМУЩЕСТВА И ОТВЕТСТВЕННОСТИ ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Неполное заполнение настоящего заявления-анкеты даёт право страховщику воздержаться от предоставления котировки. Заявление подписывается руководителем или уполномоченным лицом и скрепляется печатью на каждой странице.',
+        order: ['insured', 'bank', 'period', 'objects', 'sums', 'risks', 'location', 'building', 'fire', 'guard', 'losses'] },
+      { key: 'ingos', template: '', name: 'Ингосстрах', company: 'СПАО «Ингосстрах»',
+        subtitle: 'Заявление на страхование имущества юридических лиц',
+        title: 'ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ИМУЩЕСТВА ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Заявление заполняется по всем графам. При отсутствии информации ставится прочерк. Сведения являются основанием для расчёта страховой премии.',
+        order: ['insured', 'benef', 'period', 'objects', 'sums', 'valuation', 'risks', 'location', 'building', 'fire', 'guard', 'losses', 'legal'] },
+      { key: 'rgs', template: 'rgs.docx', name: 'Росгосстрах', company: 'ПАО СК «Росгосстрах»',
+        subtitle: 'Заявление на страхование имущества юридических лиц',
+        title: 'ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ИМУЩЕСТВА ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Заявление является неотъемлемой частью договора страхования. Особое внимание уделите разделам о пожарной защите, охране и истории убытков — они определяют применяемые скидки.',
+        order: ['insured', 'benef', 'zalog', 'period', 'objects', 'sums', 'risks', 'location', 'building', 'storage', 'fire', 'guard', 'cctv', 'losses'] },
+      { key: 'soglasie', template: 'soglasie.docx', name: 'Согласие', company: 'ООО «СК «Согласие»',
+        subtitle: 'Приложение к договору страхования имущества юридических лиц',
+        title: 'ЗАЯВЛЕНИЕ О СТРАХОВАНИИ ИМУЩЕСТВА ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Настоящее заявление составлено на бланке страховщика. Просим заполнить все графы, поставить подпись и печать на каждом листе. При отсутствии информации вписывается «нет» либо ставится прочерк.',
+        order: ['insured', 'benef', 'period', 'rights', 'objects', 'sums', 'valuation', 'risks', 'location', 'building', 'fire', 'guard', 'losses'] },
+      { key: 'pari', template: 'pari.docx', name: 'Пари', company: 'АО СК «ПАРИ»',
+        subtitle: 'Заявление на страхование имущества юридических лиц',
+        title: 'ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ИМУЩЕСТВА ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Разделы о правовом статусе страхователя заполняются в рамках 115-ФЗ от 07.08.2001. Для предварительной оценки риска достаточно разделов 1–9.',
+        order: ['insured', 'bank', 'benef', 'period', 'objects', 'sums', 'valuation', 'risks', 'location', 'building', 'storage', 'fire', 'guard', 'cctv', 'losses', 'legal'] },
+      { key: 'sovkom', template: 'sovkom.docx', name: 'Совкомбанк', company: '«Совкомбанк страхование» (АО)',
+        subtitle: 'Анкета-заявление на страхование имущества юридических лиц',
+        title: 'АНКЕТА-ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ИМУЩЕСТВА ЮРИДИЧЕСКИХ ЛИЦ',
+        warning: 'Настоящая анкета-заявление является запросом страховщика в целях определения страхового риска и станет неотъемлемой частью договора страхования.',
+        order: ['insured', 'bank', 'benef', 'period', 'objects', 'sums', 'risks', 'location', 'building', 'neighbors', 'fire', 'guard', 'losses', 'legal'] },
+      { key: 'sovkom2', template: 'sovkom2.docx', name: 'Совкомбанк · залог', company: '«Совкомбанк страхование» (АО)',
+        subtitle: 'Анкета-заявление по залоговому имуществу, филиал «Корпоративный»',
+        title: 'АНКЕТА-ЗАЯВЛЕНИЕ НА СТРАХОВАНИЕ ЗАЛОГОВОГО ИМУЩЕСТВА',
+        warning: 'Анкета заполняется по имуществу, передаваемому в залог банку. Выгодоприобретателем назначается залогодержатель в размере остатка задолженности.',
+        order: ['insured', 'bank', 'benef', 'zalog', 'period', 'objects', 'sums', 'risks', 'location', 'building', 'neighbors', 'fire', 'guard', 'losses', 'legal'] }
+    ];
+  }
+
+  blocks(v) {
+    const g = (k, fallback) => {
+      const x = v[k];
+      return (x !== undefined && String(x).trim()) ? String(x) : (fallback || '');
+    };
+    const money = (k) => {
+      const x = g(k);
+      if (!x) return '';
+      const digits = x.replace(/[^\d]/g, '');
+      return digits ? digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽' : x;
+    };
+    const sumTotal = ['sumBuilding', 'sumEquip', 'sumGoods', 'sumFinish', 'sumEngin', 'sumGlass', 'sumFurn', 'sumIT', 'sumOuter', 'sumUnfin']
+      .reduce((acc, k) => acc + (parseInt(g(k).replace(/[^\d]/g, ''), 10) || 0), 0);
+
+    return {
+      insured: { title: '1. Страхователь', rows: [
+        ['Полное наименование', g('name')],
+        ['ИНН / КПП', g('inn')],
+        ['ОГРН', g('ogrn')],
+        ['Адрес места нахождения', g('addrLegal')],
+        ['Почтовый адрес', g('addrPost', 'совпадает с юридическим')],
+        ['Руководитель, должность', g('head')],
+        ['Действует на основании', g('basis')],
+        ['Основной вид деятельности', g('objUse')],
+        ['Годовой оборот', money('turnover')],
+        ['Контактное лицо', g('contact')],
+        ['Телефон', g('phone')],
+        ['Электронная почта', g('email')]
+      ] },
+      bank: { title: 'Банковские реквизиты', rows: [
+        ['Расчётный счёт, банк, БИК', g('bankDetails')],
+        ['Порядок обмена документами', g('edo')]
+      ] },
+      benef: { title: 'Выгодоприобретатель', rows: [
+        ['Наименование', g('beneficiary', 'Страхователь')],
+        ['Права на имущество', g('benefRight')],
+        ['Основание: договор, номер и дата', g('benefDoc')]
+      ] },
+      zalog: { title: 'Залоговое обременение', rows: [
+        ['Залогодержатель, кредитный договор', g('beneficiary')],
+        ['Договор залога, номер и дата', g('benefDoc')],
+        ['Просроченная задолженность свыше 30 дней', g('bankArrears', 'нет')]
+      ] },
+      period: { title: 'Срок страхования и оплата', rows: [
+        ['Дата начала страхования', g('periodFrom')],
+        ['Срок действия договора', g('periodTerm', '12 месяцев')],
+        ['Франшиза', g('deductible', 'без франшизы')],
+        ['Размер франшизы', g('deductibleSum')],
+        ['Порядок оплаты премии', g('payment')]
+      ] },
+      rights: { title: 'Права на принимаемое имущество', rows: [
+        ['Имущество принадлежит страхователю', g('objRight')],
+        ['Арендодатель, договор аренды', g('objLessor')],
+        ['Часть площадей сдаётся в аренду', g('objRent')],
+        ['Доступ страхователя к имуществу ограничен', g('access', 'нет')]
+      ] },
+      objects: { title: 'Состав имущества, принимаемого на страхование', rows: [
+        ['Вид принимаемого имущества', g('objKind')],
+        ['Состав товарных запасов', g('goodsKind')],
+        ['Загрузка склада: максимум и в среднем', g('goodsMax')],
+        ['Незавершённое строительство', money('sumUnfin')]
+      ] },
+      sums: { title: 'Страховые суммы по группам имущества', rows: [
+        ['Здания, сооружения, помещения', money('sumBuilding')],
+        ['Внутренняя и внешняя отделка', money('sumFinish')],
+        ['Инженерное оборудование и сети', money('sumEngin')],
+        ['Стёкла, витрины, остекление', money('sumGlass')],
+        ['Оборудование производственное и торговое', money('sumEquip')],
+        ['Мебель и предметы интерьера', money('sumFurn')],
+        ['Компьютеры и оргтехника', money('sumIT')],
+        ['Товарные запасы', money('sumGoods')],
+        ['Внешние объекты: реклама, антенны', money('sumOuter')],
+        ['ИТОГО страховая сумма', sumTotal ? sumTotal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽' : ''],
+        ['НДС в страховой сумме', g('vat')],
+        ['Валюта', g('currency', 'рубли')]
+      ] },
+      valuation: { title: 'Определение действительной стоимости', rows: [
+        ['Порядок определения стоимости', g('sumBasis')],
+        ['Документ, подтверждающий стоимость', g('sumBasis') === 'Оценка независимого эксперта' ? 'отчёт об оценке' : 'выписка из баланса, карточка учёта основных средств'],
+        ['Имущество застраховано в других компаниях', g('dual', 'нет')],
+        ['Доля двойного страхования', g('dualShare') ? g('dualShare') + ' %' : '']
+      ] },
+      risks: { title: 'Страховые риски', rows: [
+        ['Заявленные риски', g('risks')],
+        ['Перерыв в деятельности', g('bi')],
+        ['Среднемесячная выручка для расчёта перерыва', money('biIncome')]
+      ] },
+      location: { title: 'Территория страхования', rows: [
+        ['Точный адрес места страхования', g('objAddr')],
+        ['Функциональное назначение', g('objPurpose')],
+        ['Характер деятельности на территории', g('objUse')],
+        ['Иные организации на территории', g('thirdParty')],
+        ['Основные арендаторы', g('objTenants')]
+      ] },
+      building: { title: 'Характеристика здания', rows: [
+        ['Год постройки', g('objYear')],
+        ['Год последнего капитального ремонта', g('objRepair')],
+        ['Общая площадь здания, м²', g('objAreaTotal')],
+        ['Занимаемая площадь, м²', g('objArea')],
+        ['Количество этажей в здании', g('objFloors')],
+        ['Занимаемые этажи', g('objFloorUsed')],
+        ['Конструктивный тип', g('objConstr')],
+        ['Материал стен и перекрытий', g('objWalls')],
+        ['Кровля', g('objRoof')],
+        ['Отопление', g('objHeat')],
+        ['Имущество в подвале или жилом здании', g('objBasement', 'нет')],
+        ['Аварийное или ветхое состояние', g('objWorn', 'нет')],
+        ['Строительно-монтажные работы в период страхования', g('objBuild', 'не ведутся')],
+        ['Огне- и взрывоопасные вещества, огневые работы', g('objHazard')],
+        ['Бани и сауны на территории', g('objSauna', 'нет')]
+      ] },
+      neighbors: { title: 'Окружение объекта', rows: [
+        ['Назначение смежных помещений', g('objNeighbors')],
+        ['Общепит по соседству, выше или ниже', g('objFood', 'нет')]
+      ] },
+      storage: { title: 'Складирование', rows: [
+        ['Площадь складских помещений, м²', g('objStoreArea')],
+        ['Высота складирования и способ хранения', g('objStoreH')],
+        ['Склад отапливаемый, вид отопления', g('objHeat')],
+        ['Система аспирации', g('fireAspir', 'не требуется')]
+      ] },
+      fire: { title: 'Системы и средства пожарной защиты', rows: [
+        ['Пожарная сигнализация', g('objFire')],
+        ['Куда выведен сигнал', g('fireOut')],
+        ['Типы извещателей', g('fireSensors')],
+        ['Охват территории извещателями', g('fireCover') ? g('fireCover') + ' %' : ''],
+        ['Год установки системы', g('fireYear')],
+        ['Регулярное техническое обслуживание', g('fireService')],
+        ['Автоматическое пожаротушение', g('fireSupp')],
+        ['Первичные средства и гидранты', g('firePrim')]
+      ] },
+      guard: { title: 'Охрана объекта', rows: [
+        ['Охранная сигнализация', g('objGuard')],
+        ['Что защищает сигнализация', g('guardSensors')],
+        ['Физическая охрана', g('guardPhys')],
+        ['График охраны', g('guardMode')],
+        ['Численность охраны днём и ночью', g('guardCount')],
+        ['Оружие у охраны', g('guardArm', 'нет')],
+        ['Тревожная кнопка', g('guardPanic')],
+        ['Защита окон первого и цокольного этажа', g('guardBars')]
+      ] },
+      cctv: { title: 'Видеонаблюдение', rows: [
+        ['Система видеонаблюдения', g('cctv')],
+        ['Срок хранения записей', g('cctvKeep')],
+        ['Режим записи', g('cctv') === 'Есть, вывод на круглосуточный пост' ? 'круглосуточно' : '']
+      ] },
+      losses: { title: 'История убытков и предыдущее страхование', rows: [
+        ['Убытки за последние 3–5 лет', g('losses')],
+        ['Предыдущий страховщик и номер полиса', g('prev')]
+      ] },
+      legal: { title: 'Правовой статус страхователя', rows: [
+        ['Внешнее управление, конкурсное производство, банкротство', g('bankruptcy', 'нет')],
+        ['Санкции США или ЕС', g('sanctions', 'нет')],
+        ['Просроченная задолженность перед банком или лизингодателем', g('bankArrears', 'нет')]
+      ] }
+    };
+  }
+
+  // Собирает данные из всех источников CRM: заявки помощника, сделки, черновики заявлений.
+  collectFromCrm() {
+    const read = (k) => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } };
+    const map = {
+      company: 'name', name: 'name', orgName: 'name', inn: 'inn', ogrn: 'ogrn',
+      addrLegal: 'addrLegal', addrPost: 'addrPost', address: 'objAddr', objAddr: 'objAddr',
+      owner: 'head', head: 'head', basis: 'basis', contact: 'contact',
+      phone: 'phone', phoneF: 'phone', email: 'email', emailF: 'email', edo: 'edo',
+      bankDetails: 'bankDetails', activity: 'objUse', objUse: 'objUse', turnover: 'turnover',
+      area: 'objArea', objArea: 'objArea', objAreaTotal: 'objAreaTotal',
+      buildYear: 'objYear', objYear: 'objYear', objRepair: 'objRepair',
+      objFloors: 'objFloors', objFloorUsed: 'objFloorUsed', objConstr: 'objConstr',
+      walls: 'objWalls', objWalls: 'objWalls', roof: 'objRoof', objRoof: 'objRoof',
+      heat: 'objHeat', objHeat: 'objHeat', purpose: 'objPurpose', objPurpose: 'objPurpose',
+      right: 'objRight', objRight: 'objRight', objLessor: 'objLessor', objTenants: 'objTenants',
+      objStoreH: 'objStoreH', objStoreArea: 'objStoreArea', objNeighbors: 'objNeighbors',
+      objHazard: 'objHazard', objWorn: 'objWorn', objBuild: 'objBuild', objRent: 'objRent',
+      sumBuilding: 'sumBuilding', sumConstruct: 'sumBuilding', sumFinish: 'sumFinish',
+      sumEngin: 'sumEngin', sumGlass: 'sumGlass', sumEquip: 'sumEquip', sumEquipBiz: 'sumEquip',
+      sumFurn: 'sumFurn', sumIT: 'sumIT', sumGoods: 'sumGoods', sumStock: 'sumGoods',
+      sumOuter: 'sumOuter', sumUnfin: 'sumUnfin', sumBasis: 'sumBasis', vat: 'vat', currency: 'currency',
+      goodsKind: 'goodsKind', goodsMax: 'goodsMax',
+      risks: 'risks', bi: 'bi', biIncome: 'biIncome',
+      objFire: 'objFire', fireOut: 'fireOut', fireSensors: 'fireSensors', fireCover: 'fireCover',
+      fireYear: 'fireYear', fireService: 'fireService', fireSupp: 'fireSupp', firePrim: 'firePrim',
+      objGuard: 'objGuard', guardSensors: 'guardSensors', guardPhys: 'guardPhys', guardMode: 'guardMode',
+      guardCount: 'guardCount', guardArm: 'guardArm', guardPanic: 'guardPanic', guardBars: 'guardBars',
+      cctv: 'cctv', cctvKeep: 'cctvKeep',
+      periodFrom: 'periodFrom', date: 'periodFrom', periodTerm: 'periodTerm', term: 'periodTerm',
+      deductible: 'deductible', deductibleSum: 'deductibleSum', payment: 'payment',
+      beneficiary: 'beneficiary', bank: 'beneficiary', benefRight: 'benefRight',
+      benefDoc: 'benefDoc', loanNo: 'benefDoc', losses: 'losses', claims: 'losses', prev: 'prev',
+      dual: 'dual', dualShare: 'dualShare', bankArrears: 'bankArrears', bankruptcy: 'bankruptcy',
+      sanctions: 'sanctions', access: 'access', thirdParty: 'thirdParty'
+    };
+    const yesNo = {
+      objFire: v => v === 'да' ? 'Автоматическая, исправна' : (v === 'нет' ? 'Не установлена' : v),
+      objGuard: v => v === 'да' ? 'Пульт ЧОП с круглосуточным контролем' : (v === 'нет' ? 'Отсутствует' : v),
+      objHazard: v => v === 'да' ? 'В помещении есть газовое оборудование' : (v === 'нет' ? 'не применяются' : v),
+      objRent: v => v === 'да' ? 'Да, частично' : (v === 'нет' ? 'Нет' : v)
+    };
+
+    // Источники в порядке приоритета: свежий бланк, сделки, заявки помощника, черновик заявления.
+    const sources = [];
+    const blank = read('pins-blank-data');
+    if (blank && blank.v) sources.push(blank.v);
+    const deals = read('pins-crm-deals');
+    if (Array.isArray(deals)) deals.forEach(d => { if (d && d.data) sources.push(d.data); });
+    const edits = read('pins-crm-lead-edits');
+    if (edits) Object.keys(edits).forEach(k => sources.push(edits[k]));
+    const inbox = read('pins-crm-inbox');
+    if (Array.isArray(inbox)) inbox.forEach(x => { if (x && x.data) sources.push(x.data); });
+    const draft = read('pins-zayavlenie-draft');
+    if (draft && draft.v) sources.push(draft.v);
+
+    const out = {};
+    sources.forEach(src => {
+      if (!src || typeof src !== 'object') return;
+      Object.keys(src).forEach(k => {
+        const t = map[k];
+        const raw = src[k];
+        if (!t || out[t] || raw === undefined || raw === null) return;
+        const val = String(raw).trim();
+        if (!val || /^(нет данных|—|-)$/i.test(val)) return;
+        out[t] = yesNo[t] ? yesNo[t](val.toLowerCase()) : val;
+      });
+    });
+    // Наименование в заявках помощника иногда лежит вместе с ИНН одной строкой.
+    if (!out.name && out.inn && /[А-Яа-я]/.test(out.inn)) {
+      const parts = out.inn.split(/,|·/);
+      if (parts.length > 1) { out.name = parts[0].trim(); out.inn = parts.slice(1).join(' ').trim(); }
+    }
+    return out;
+  }
+
+  // Разделы в нумерации и формулировках самой страховой компании.
+  formSections(v, key) {
+    const g = (k, fb) => { const x = v[k]; return (x !== undefined && String(x).trim()) ? String(x).trim() : (fb || ''); };
+    // В денежные графы попадают только числа: текст без цифр — это мусор разбора.
+    const money = (k) => {
+      const x = g(k); if (!x) return '';
+      const d = x.replace(/[^\d]/g, '');
+      return d ? d.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
+    };
+    const kv = (label, value) => ({ kind: 'kv', label, value });
+    const ck = (label, options, value) => ({ kind: 'check', label, options, value });
+    const total = ['sumBuilding', 'sumEquip', 'sumGoods', 'sumFinish', 'sumEngin', 'sumGlass', 'sumFurn', 'sumIT', 'sumOuter', 'sumUnfin']
+      .reduce((a, k) => a + (parseInt(g(k).replace(/[^\d]/g, ''), 10) || 0), 0);
+    const totalStr = total ? String(total).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') : '';
+
+    const strahovatel = (no) => ({ no, title: 'Информация о Страхователе', rows: [
+      kv('Наименование / ФИО Страхователя', g('name')),
+      kv('Место нахождения / адрес регистрации', g('addrLegal')),
+      kv('Почтовый адрес', g('addrPost')),
+      kv('ИНН / КПП', g('inn')),
+      kv('ОГРН', g('ogrn')),
+      kv('Банковские реквизиты: р/с, банк, БИК', g('bankDetails')),
+      kv('Руководитель, должность', g('head')),
+      ck('Действует на основании', ['Устава', 'Доверенности', 'Приказа'], g('basis')),
+      kv('Контактное лицо', g('contact')),
+      kv('Телефон', g('phone')),
+      kv('E-mail', g('email')),
+      kv('Основной вид деятельности', g('objUse')),
+      kv('Годовой оборот, руб.', money('turnover'))
+    ] });
+
+    const vygodo = (no) => ({ no, title: 'Выгодоприобретатель', rows: [
+      kv('Наименование / ФИО Выгодоприобретателя', g('beneficiary', 'Страхователь')),
+      ck('Права на имущество', ['Залог (ипотека)', 'Лизинг', 'Аренда', 'Собственность', 'Иное'], g('benefRight')),
+      kv('Договор, номер и дата', g('benefDoc'))
+    ] });
+
+    const period = (no) => ({ no, title: 'Период страхования и оплата', rows: [
+      kv('Просим установить период страхования: с', g('periodFrom')),
+      ck('Срок действия договора', ['12 месяцев', '6 месяцев', 'На срок работ', 'Иной'], g('periodTerm')),
+      ck('Франшиза', ['Без франшизы', 'Условная', 'Безусловная', 'На выбор страховщика'], g('deductible')),
+      kv('Размер франшизы', g('deductibleSum')),
+      ck('Порядок оплаты премии', ['Единовременно', 'Два платежа', 'Ежеквартально', 'Рассрочка 12 мес.'], g('payment'))
+    ] });
+
+    const sostav = (no, title) => ({ no, title: title || 'Информация об объектах страхования, страховых суммах', rows: [
+      kv('Здания, сооружения, помещения («коробка»)', money('sumBuilding')),
+      kv('Внутренняя и внешняя отделка', money('sumFinish')),
+      kv('Инженерно-коммуникационные системы и сети', money('sumEngin')),
+      kv('Окна, витрины, витражи, остекление', money('sumGlass')),
+      kv('Оборудование производственное, торговое', money('sumEquip')),
+      kv('Мебель, предметы интерьера, инвентарь', money('sumFurn')),
+      kv('Компьютеры, бытовая и оргтехника', money('sumIT')),
+      kv('Товарные запасы (по стоимости приобретения)', money('sumGoods')),
+      kv('Внешние объекты: антенны, мачты, средства рекламы', money('sumOuter')),
+      kv('Незавершённое строительство', money('sumUnfin')),
+      kv('ИТОГО страховая сумма, руб.', totalStr),
+      ck('НДС', ['С учётом НДС', 'Без учёта НДС'], g('vat')),
+      ck('Валюта страховой суммы', ['Рубли', 'USD', 'EUR'], g('currency')),
+      ck('Порядок определения действительной стоимости', ['Балансовая стоимость', 'Восстановительная стоимость', 'Оценка независимого эксперта', 'Заявленная стоимость'], g('sumBasis')),
+      ck('Состав товарных запасов', ['Товары для перепродажи', 'Готовая продукция', 'Сырьё и материалы', 'В том числе ГСМ'], g('goodsKind')),
+      kv('Максимальная и средняя загрузка склада, руб.', g('goodsMax')),
+      ck('Застраховано ли имущество в других страховых компаниях', ['Нет', 'Да', 'Частично'], g('dual')),
+      kv('Доля двойного страхования, %', g('dualShare'))
+    ] });
+
+    const riski = (no) => ({ no, title: 'Страховые риски', rows: [
+      kv('Заявленные к покрытию риски', g('risks')),
+      ck('Перерыв в деятельности', ['Не требуется', 'До 3 месяцев', 'До 6 месяцев', 'До 12 месяцев'], g('bi')),
+      kv('Среднемесячная выручка для расчёта перерыва, руб.', money('biIncome'))
+    ] });
+
+    const mesto = (no) => ({ no, title: 'Информация о месторасположении', rows: [
+      kv('Территория страхования: точный адрес, корпус, офис', g('objAddr')),
+      ck('Функциональное назначение здания', ['Складское', 'Торговое', 'Производственное', 'Административное', 'Жилое', 'Иное'], g('objPurpose')),
+      kv('Характер деятельности на территории страхования', g('objUse')),
+      ck('Права на эксплуатируемые площади', ['Собственность', 'Аренда', 'Лизинг', 'Оперативное управление'], g('objRight')),
+      kv('Арендодатель, номер и дата договора аренды', g('objLessor')),
+      ck('Площади сдаются в аренду', ['Нет', 'Да, частично', 'Да, полностью'], g('objRent')),
+      kv('Основные арендаторы', g('objTenants')),
+      kv('Иные организации на территории страхования', g('thirdParty'))
+    ] });
+
+    const zdanie = (no) => ({ no, title: 'Здание и окрестности', rows: [
+      kv('Год постройки', g('objYear')),
+      kv('Год последнего капитального ремонта', g('objRepair')),
+      kv('Общая площадь здания, кв. м', g('objAreaTotal')),
+      kv('Занимаемая площадь, кв. м', g('objArea')),
+      kv('Общее количество этажей', g('objFloors')),
+      kv('Занимаемый этаж (этажи)', g('objFloorUsed')),
+      ck('Конструктивный тип здания', ['Камень, негорючие перекрытия', 'Камень, деревянные перекрытия или кровля', 'Металлокаркас, негорючие стены', 'Металлокаркас, горючий утеплитель', 'Конструкция из древесины'], g('objConstr')),
+      kv('Материал стен и перекрытий', g('objWalls')),
+      kv('Кровля', g('objRoof')),
+      ck('Отопление', ['Центральное', 'Автономное газовое', 'Электрическое', 'Отсутствует, склад неотапливаемый'], g('objHeat')),
+      ck('Имущество в подвальном помещении или жилом здании', ['Нет', 'Да, подвал', 'Да, жилое здание'], g('objBasement')),
+      kv('Назначение примыкающих зданий и помещений', g('objNeighbors')),
+      ck('Общепит в смежных помещениях, выше или ниже', ['Нет', 'Да'], g('objFood')),
+      kv('Огне- и взрывоопасные вещества, огневые работы', g('objHazard')),
+      ck('Бани и сауны на территории', ['Нет', 'Да'], g('objSauna')),
+      ck('Здание в аварийном или ветхом состоянии', ['Нет', 'Да'], g('objWorn')),
+      ck('Строительно-монтажные и отделочные работы', ['Не ведутся', 'Ведутся', 'Запланированы'], g('objBuild'))
+    ] });
+
+    const sklad = (no) => ({ no, title: 'Складирование', rows: [
+      kv('Общая площадь складских помещений, кв. м', g('objStoreArea')),
+      kv('Высота складирования и способ хранения', g('objStoreH')),
+      ck('Система аспирации', ['Не требуется', 'Установлена'], g('fireAspir'))
+    ] });
+
+    const pozhar = (no) => ({ no, title: 'Системы и средства пожарной защиты', rows: [
+      ck('Пожарная сигнализация', ['Автоматическая, исправна', 'Ручная кнопочная', 'Не установлена'], g('objFire')),
+      ck('Куда выведен сигнал', ['Пульт МЧС', 'Пульт службы охраны объекта', 'Внутренний пост', 'Никуда'], g('fireOut')),
+      ck('Типы извещателей', ['Дымовые', 'Тепловые', 'Дымовые и тепловые', 'Пламени', 'Датчики газа'], g('fireSensors')),
+      kv('Процент охвата территории извещателями', g('fireCover')),
+      kv('Год установки системы', g('fireYear')),
+      ck('Регулярное техническое обслуживание', ['Да, по договору', 'Нет'], g('fireService')),
+      ck('Автоматическое пожаротушение', ['Отсутствует', 'Спринклерная водяная', 'Порошковая', 'Газовая или хладоновая', 'Пенотушение'], g('fireSupp')),
+      kv('Первичные средства пожаротушения, гидранты', g('firePrim'))
+    ] });
+
+    const ohrana = (no) => ({ no, title: 'Охрана объекта', rows: [
+      ck('Охранная сигнализация', ['Пульт Росгвардии или МВД', 'Пульт ЧОП с круглосуточным контролем', 'Локальная, без вывода', 'Отсутствует'], g('objGuard')),
+      kv('Что защищает сигнализация', g('guardSensors')),
+      ck('Физическая охрана', ['ЧОП по договору', 'Вневедомственная охрана МВД', 'Служба безопасности', 'Охрана арендодателя', 'Отсутствует'], g('guardPhys')),
+      ck('График работы охраны', ['Круглосуточно', 'Только во внерабочее время', 'Днём'], g('guardMode')),
+      kv('Численность охраны днём и ночью', g('guardCount')),
+      ck('Наличие оружия у охраны', ['Нет', 'Да'], g('guardArm')),
+      ck('Тревожная кнопка', ['Есть', 'Нет'], g('guardPanic')),
+      ck('Защита окон первого и цокольного этажа', ['Решётки или жалюзи на всех', 'Частично', 'Отсутствует', 'Окон на первом этаже нет'], g('guardBars'))
+    ] });
+
+    const video = (no) => ({ no, title: 'Системы видеонаблюдения', rows: [
+      ck('Видеонаблюдение', ['Есть, вывод на круглосуточный пост', 'Есть, запись без поста', 'Отсутствует'], g('cctv')),
+      kv('Срок хранения записей', g('cctvKeep'))
+    ] });
+
+    const ubytki = (no) => ({ no, title: 'История убытков и предыдущее страхование', rows: [
+      kv('Убытки за последние 3–5 лет: дата, характер, сумма ущерба', g('losses')),
+      kv('Предыдущий страховщик и номер полиса', g('prev'))
+    ] });
+
+    const status = (no) => ({ no, title: 'Правовой статус Страхователя (115-ФЗ)', rows: [
+      ck('Внешнее управление, конкурсное производство, банкротство', ['Нет', 'Да'], g('bankruptcy')),
+      ck('Торговые или экономические санкции США или ЕС', ['Нет', 'Да'], g('sanctions')),
+      ck('Просроченная свыше 30 дней задолженность перед банком или лизингодателем', ['Нет', 'Да'], g('bankArrears')),
+      ck('Доступ Страхователя к имуществу ограничен или отсутствует', ['Нет', 'Да'], g('access'))
+    ] });
+
+    const zalog = (no) => ({ no, title: 'Залоговое обременение', rows: [
+      kv('Залогодержатель, кредитный договор', g('beneficiary')),
+      kv('Договор залога, номер и дата', g('benefDoc')),
+      ck('Просроченная задолженность свыше 30 дней', ['Нет', 'Да'], g('bankArrears'))
+    ] });
+
+    if (key === 'absolut') {
+      return [strahovatel('1.'), vygodo('1.2.'), ubytki('1.3.'), period('1.4.'), sostav('2.'), riski('2.3.'), mesto('3.1.'), zdanie('3.2.'), pozhar('3.3.'), ohrana('3.4.')];
+    }
+    if (key === 'ingos') {
+      return [strahovatel('1.'), vygodo('2.'), period('3.'), sostav('4.', 'Состав и стоимость имущества, принимаемого на страхование'), riski('5.'), mesto('6.'), zdanie('7.'), pozhar('8.'), ohrana('9.'), ubytki('10.'), status('11.')];
+    }
+    if (key === 'rgs') {
+      return [strahovatel('1.1.'), mesto('1.2.'), vygodo('1.4.'), zalog('1.5.'), sostav('2.'), riski('2.5.'), zdanie('3.'), sklad('3.5.'), pozhar('4.1.'), ohrana('4.2.'), video('4.3.'), period('5.'), ubytki('5.6.')];
+    }
+    if (key === 'soglasie') {
+      return [strahovatel('1.'), vygodo('2.'), period('3.'), sostav('4.', 'Состав и стоимость имущества, принимаемого на страхование'), riski('5.'), mesto('6.'), zdanie('7.'), pozhar('8.'), ohrana('9.'), ubytki('10.')];
+    }
+    if (key === 'pari') {
+      return [strahovatel('1.'), vygodo('1.2.'), period('2.'), sostav('4.'), riski('6.'), mesto('7.1.'), zdanie('7.5.'), sklad('7.13.'), pozhar('8.'), ohrana('9.'), video('9.13.'), ubytki('10.12.'), status('10.6.')];
+    }
+    // Совкомбанк: сквозная нумерация 1.x
+    const sk = [strahovatel('1.'), vygodo('1.14.'), period('1.20.'), sostav('2.'), riski('2.6.'), mesto('3.'), zdanie('3.5.'), pozhar('4.'), ohrana('5.'), video('5.9.'), ubytki('6.'), status('7.')];
+    if (key === 'sovkom2') sk.splice(2, 0, zalog('1.18.'));
+    return sk;
+  }
+
+  labelFor(key) {
+    const blocks = this.blocks(this.state.v || {});
+    const dict = {
+      name: 'наименование', inn: 'ИНН', ogrn: 'ОГРН', addrLegal: 'юридический адрес', addrPost: 'почтовый адрес',
+      head: 'руководитель', contact: 'контактное лицо', phone: 'телефон', email: 'почта', bankDetails: 'реквизиты',
+      objUse: 'вид деятельности', turnover: 'оборот', beneficiary: 'выгодоприобретатель', benefRight: 'права на имущество',
+      benefDoc: 'договор залога', periodFrom: 'срок страхования', deductible: 'франшиза', objAddr: 'адрес объекта',
+      objPurpose: 'назначение', objYear: 'год постройки', objRepair: 'капремонт', objAreaTotal: 'площадь здания',
+      objArea: 'занимаемая площадь', objFloors: 'этажей', objFloorUsed: 'занимаемый этаж', objConstr: 'конструктив',
+      objHeat: 'отопление', objStoreArea: 'площадь склада', objStoreH: 'высота складирования', objTenants: 'арендаторы',
+      objLessor: 'арендодатель', objNeighbors: 'смежные помещения', objHazard: 'опасные вещества', objWorn: 'состояние',
+      objFire: 'пожарная сигнализация', fireOut: 'вывод сигнала', fireSensors: 'извещатели', fireCover: 'охват АПС',
+      fireYear: 'год установки АПС', fireSupp: 'пожаротушение', objGuard: 'охранная сигнализация', guardPhys: 'физохрана',
+      guardMode: 'график охраны', guardArm: 'оружие', guardPanic: 'тревожная кнопка', guardBars: 'защита окон',
+      cctv: 'видеонаблюдение', cctvKeep: 'хранение записей', losses: 'убытки', prev: 'прошлый полис',
+      bankruptcy: 'банкротство', sanctions: 'санкции', bankArrears: 'задолженность', dual: 'двойное страхование',
+      sumBuilding: 'сумма по зданию', sumFinish: 'сумма по отделке', sumEngin: 'сумма по инженерии',
+      sumGlass: 'сумма по остеклению', sumEquip: 'сумма по оборудованию', sumFurn: 'сумма по мебели',
+      sumIT: 'сумма по технике', sumGoods: 'сумма по товарам', sumOuter: 'сумма по внешним объектам'
+    };
+    return dict[key] || key;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const list = this.companies();
+    const cur = list[st.insurer] || list[0];
+    const v = st.v || {};
+    const norm = (s) => String(s || '').toLowerCase().replace(/[ёе]/g, 'е').replace(/[^а-я0-9]/g, '');
+    const raw = this.formSections(v, cur.key);
+
+    const sections = raw.map(sec => ({
+      heading: (sec.no ? sec.no + ' ' : '') + sec.title,
+      rows: sec.rows.map(r => {
+        if (r.kind === 'check') {
+          const val = norm(r.value);
+          const hit = val ? r.options.findIndex(o => norm(o) === val || (val.length > 3 && (norm(o).indexOf(val) === 0 || val.indexOf(norm(o)) === 0))) : -1;
+          return {
+            isKv: false, isCheck: true, label: r.label, cols: '46% 1fr', divider: '1px solid rgba(20,40,75,.28)',
+            value: '', weight: '400', color: '#14284B', font: "'Manrope', sans-serif",
+            filled: hit >= 0,
+            opts: r.options.map((o, i) => ({
+              text: (i === hit ? '☒ ' : '☐ ') + o,
+              color: i === hit ? '#14284B' : '#9AA6B8',
+              weight: i === hit ? '700' : '400'
+            }))
+          };
+        }
+        const has = !!(r.value && String(r.value).trim());
+        return {
+          isKv: true, isCheck: false, label: r.label, cols: '46% 1fr', divider: '1px solid rgba(20,40,75,.28)',
+          value: has ? r.value : '',
+          weight: has ? '600' : '400',
+          color: '#14284B',
+          font: /руб|инн|огрн|телефон|кв\. м|год|%|р\/с|дата|с$/i.test(r.label) ? "'IBM Plex Mono', monospace" : "'Manrope', sans-serif",
+          opts: [],
+          filled: has
+        };
+      })
+    }));
+
+    const filled = sections.reduce((a, s) => a + s.rows.filter(r => r.filled).length, 0);
+    const total = sections.reduce((a, s) => a + s.rows.length, 0);
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0') + '.' + String(today.getMonth() + 1).padStart(2, '0') + '.' + today.getFullYear();
+
+    return {
+      cur,
+      sections,
+      headline: cur.company,
+      docNo: st.deal ? ('Сделка ' + st.deal) : 'Заявление без номера',
+      docDate: 'от ' + dd + ' г.',
+      footRef: (st.deal || 'PINS') + ' · ' + cur.key.toUpperCase(),
+      signLeft: (v.head || 'Руководитель') + ', подпись',
+      fillNote: total
+        ? ('Заполнено ' + filled + ' из ' + total + ' граф этой формы. Пустые графы остаются для заполнения от руки, в списках вариантов отмечен выбранный.' + (st.deal ? '' : ' Данные взяты из последнего черновика заявления: откройте бланк из карточки сделки, чтобы подтянуть её данные.'))
+        : 'Данных нет: откройте бланк из карточки сделки в CRM.',
+      insurers: list.map((c, i) => ({
+        name: c.name,
+        pick: () => this.setState({ insurer: i }),
+        bg: i === st.insurer ? '#14284B' : 'transparent',
+        border: i === st.insurer ? '#14284B' : 'rgba(20,40,75,.18)',
+        color: i === st.insurer ? '#FBFCFD' : '#5A6B85'
+      })),
+      importNoteDisplay: st.importNote ? 'block' : 'none',
+      importNote: st.importNote,
+      importColor: st.importOk === false ? '#B03A2E' : '#0A767A',
+      importListDisplay: st.imported.length ? 'flex' : 'none',
+      importedRows: st.imported.map(k => ({ text: this.labelFor(k) })),
+      clearDisplay: Object.keys(st.v || {}).length ? 'inline-block' : 'none',
+      clearImport: () => {
+        try { localStorage.removeItem('pins-blank-data'); } catch (e) {}
+        this.setState({ v: {}, imported: [], importNote: 'Бланк очищен: все подставленные данные удалены, включая сохранённые ранее.', importOk: true });
+      },
+      importPick: async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        this.setState({ importNote: 'Разбираем файл…', importOk: true });
+        try {
+          const found = await this.importFile(file);
+          const keys = Object.keys(found);
+          if (!keys.length) {
+            this.setState({ importNote: 'Файл прочитан, но заполненных граф в нём не нашлось: похоже, заявление было подписано на бумаге, а в файле остался пустой бланк.', importOk: false });
+            return;
+          }
+          this.setState(s => {
+            const v = { ...s.v };
+            const added = [];
+            keys.forEach(k => { if (!v[k]) { v[k] = found[k]; added.push(k); } });
+            try { localStorage.setItem('pins-blank-data', JSON.stringify({ v, deal: s.deal, at: Date.now() })); } catch (e2) {}
+            return {
+              v,
+              imported: added,
+              importOk: true,
+              importNote: added.length
+                ? ('Из прошлогоднего заявления перенесено граф: ' + added.length + '. Суммы и срок страхования проверьте отдельно — они меняются при пролонгации.')
+                : 'Все найденные графы уже были заполнены данными сделки, файл ничего не добавил.'
+            };
+          });
+        } catch (err) {
+          this.setState({ importNote: 'Не удалось прочитать файл: ' + (err && err.message ? err.message : 'неизвестная ошибка') + '.', importOk: false });
+        }
+      },
+      pullCrm: () => {
+        const found = this.collectFromCrm();
+        const keys = Object.keys(found);
+        if (!keys.length) {
+          this.setState({ importNote: 'Готовых данных в CRM нет: ни заявок помощника, ни черновиков заявлений. Загрузите прошлогоднее заявление файлом или заполните анкету.', importOk: false });
+          return;
+        }
+        this.setState(s => {
+          const v = { ...s.v };
+          const added = [];
+          keys.forEach(k => { if (!v[k]) { v[k] = found[k]; added.push(k); } });
+          try { localStorage.setItem('pins-blank-data', JSON.stringify({ v, deal: s.deal, at: Date.now() })); } catch (e) {}
+          return {
+            v,
+            imported: [...new Set([...s.imported, ...added])],
+            importOk: true,
+            importNote: added.length
+              ? ('Из CRM подставлено граф: ' + added.length + '. Источник: заявки помощника, карточки сделок и черновики заявлений.')
+              : 'Все графы, которые есть в CRM, уже заполнены в этом бланке.'
+          };
+        });
+      },
+      toZayavlenie: () => {
+        try {
+          localStorage.setItem('pins-zayavlenie-prefill', JSON.stringify({ p: 0, v: st.v, deal: st.deal || 'прошлогоднее заявление', at: Date.now() }));
+        } catch (e) {}
+      },
+      docxLabel: st.docxBusy ? 'Готовим файл…' : 'Скачать бланк .docx',
+      downloadDocx: async () => {
+        const file = cur.template;
+        if (!file) {
+          this.setState({ importNote: 'Форма Ингосстраха ведётся в Excel — для неё используйте печать этой версии, её принимают в электронном виде.', importOk: false });
+          return;
+        }
+        this.setState({ docxBusy: true, importNote: 'Заполняем оригинальный бланк ' + cur.name + '…', importOk: true });
+        try {
+          const rules = this.matchRules()
+            .map(([key, re]) => [re, this.state.v[key]])
+            .filter(r => r[1]);
+          const out = await window.PinsDocx.fillDocx('forms/' + file, rules, {
+            name: 'Заявление ' + cur.name + (st.deal ? ' ' + st.deal : '') + '.docx'
+          });
+          const url = URL.createObjectURL(out.blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = out.name;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 4000);
+          this.setState({
+            docxBusy: false,
+            importOk: true,
+            importNote: out.filled
+              ? ('Готово: оригинальный бланк ' + cur.name + ' заполнен, подставлено граф: ' + out.filled + '. Остальные графы и галочки заполняются в Word.')
+              : 'Бланк скачан, но подставлять было нечего: сначала импортируйте данные или загрузите прошлогоднее заявление.'
+          });
+        } catch (err) {
+          this.setState({ docxBusy: false, importOk: false, importNote: 'Не удалось заполнить бланк: ' + (err && err.message ? err.message : 'ошибка') + '.' });
+        }
+      },
+      doPrint: () => window.print()
+    };
+  }
+}
+
+</script>
+</body>
+</html>
